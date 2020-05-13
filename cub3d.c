@@ -6,19 +6,54 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/06 14:24:05 by akramp        #+#    #+#                 */
-/*   Updated: 2020/05/08 16:24:35 by akramp        ########   odam.nl         */
+/*   Updated: 2020/05/13 12:37:29 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <mlx.h>
+#include <unistd.h>
+#include <stdlib.h>
 
-typedef struct	s_data {
+typedef struct	s_data 
+{
 	void		*img;
 	char		*addr;
 	int			bits_per_pixel;
 	int			line_length;
 	int			endian;
 }				t_data;
+
+typedef struct	s_vars
+{
+	void		*mlx;
+	void		*win;
+	int			x;
+	int			y;
+	int			xmax;
+	int			ymax;
+}				t_vars;
+
+void	ft_putchar_fd(char c, int fd)
+{
+	write(fd, &c, 1);
+}
+
+void	ft_putnbr_fd(int n, int fd)
+{
+	if (n == -2147483648)
+	{
+		ft_putnbr_fd(-2, fd);
+		n = 147483648;
+	}
+	if (n < 0)
+	{
+		ft_putchar_fd('-', fd);
+		n = n * -1;
+	}
+	if (n >= 10)
+		ft_putnbr_fd(n / 10, fd);
+	ft_putchar_fd((n % 10) + '0', fd);
+}
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
@@ -28,85 +63,109 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
+// void	make_blocky(int x, int y, unsigned int num, int maxx, int maxy, t_data img)
+// {
+// 	while (y < maxy)
+// 	{
+// 		x = 0;
+// 		while (x < maxx)
+// 		{
+// 			my_mlx_pixel_put(&img, x, y, num);
+// 			x++;
+// 		}
+// 		y++;
+// 	}
+// }
+
+int		keys(int keycode, t_vars *vars)
+{
+	ft_putnbr_fd(keycode, 1);
+	write(1, "\n", 1);
+	if (keycode == 53)
+	{
+		mlx_destroy_window(vars->mlx, vars->win);
+		exit(1);
+	}
+	return(0);
+}
+
 int		main(void)
 {
-	void	*mlx;
-	void	*mlx_win;
-	int		x;
-	int		y;
-	int		xmax;
-	int 	ymax;
 	t_data	img;
+	t_vars	vars;
 
-	mlx = mlx_init();
-	mlx_win = mlx_new_window(mlx, 1920, 1080, "Hello world!");
-	img.img = mlx_new_image(mlx, 1920, 1080);
+	vars.mlx = mlx_init();
+	vars.win = mlx_new_window(vars.mlx, 1920, 1080, "Hello world!");
+	img.img = mlx_new_image(vars.mlx, 1920, 1080);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
 								&img.line_length,&img.endian);
-	y = 0;
-	while (y < 1080)
+	vars.y = 0;
+	vars.x = 0;
+	write(1, "lol\n", 4);
+	while (vars.y < 1080)
 	{
-		x = 0;
-		while (x < 1920)
+		vars.x = 0;
+		while (vars.x < 1920)
 		{
-			my_mlx_pixel_put(&img, x, y, 0x27273a);
-			x++;
+			my_mlx_pixel_put(&img, vars.x, vars.y, 0x27273a);
+			vars.x++;
 		}
-		y++;
+		vars.y++;
 	}
-	y = 200;
-	while (y < 700)
+	mlx_key_hook(vars.win, keys, &vars);
+	vars.y = 200;
+	while (vars.y < 700)
 	{
-		x = 500;
-		while (x < 1000)
+		vars.x = 500;
+		while (vars.x < 1000)
 		{
-			my_mlx_pixel_put(&img, x, y, 0xf8c275);
-			x++;
+			my_mlx_pixel_put(&img, vars.x, vars.y, 0xf8c275);
+			vars.x++;
 		}
-		y++;
+		vars.y++;
 	}
-	y = 400;
-	while (y < 600)
+	vars.y = 400;
+	while (vars.y < 600)
 	{
-		x = 800;
-		while (x < 1000)
+		vars.x = 800;
+		while (vars.x < 1000)
 		{
-			my_mlx_pixel_put(&img, x, y, 0xc7adfb);
-			x++;
+			my_mlx_pixel_put(&img, vars.x, vars.y, 0xc7adfb);
+			vars.x++;
 		}
-		y++;
+		vars.y++;
 	}
-	y = 300;
-	xmax = 1000;
-	while (y < 600)
+	vars.y = 300;
+	vars.xmax = 1000;
+	while (vars.y < 600)
 	{
-		x = 500;
-		while (x < xmax)
+		vars.x = 500;
+		while (vars.x < vars.xmax)
 		{
-			my_mlx_pixel_put(&img, x, y, 0x97f36d);
-			x++;
+			my_mlx_pixel_put(&img, vars.x, vars.y, 0x97f36d);
+			vars.x++;
 		}
-		if(xmax > 0)
-			xmax--;
-		y++;
+		if(vars.xmax > 0)
+			vars.xmax--;
+		vars.y++;
 	}
-	y = 400;
-	xmax = 900;
-	ymax = 600;
-	while (y < ymax)
+	vars.y = 400;
+	vars.xmax = 900;
+	vars.ymax = 600;
+	while (vars.y < vars.ymax)
 	{
-		x = 800;
-		while (x < xmax)
+		vars.x = 800;
+		while (vars.x < vars.xmax)
 		{
-			my_mlx_pixel_put(&img, x, y, 0xe34f8c);
-			x++;
+			my_mlx_pixel_put(&img, vars.x, vars.y, 0xe34f8c);
+			vars.x++;
 		}
-		ymax--;
-		xmax--;
-		y++;
+		vars.ymax--;
+		vars.xmax--;
+		vars.y++;
 	}
-	mlx_put_image_to_window(mlx, mlx_win, img.img, 0, 0);
-	mlx_loop(mlx);
+	mlx_put_image_to_window(vars.mlx, vars.win, img.img, 0, 0);
+	mlx_loop(vars.mlx);
 }
 
 //purple 0xc7adfb
