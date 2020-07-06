@@ -1,0 +1,6 @@
+[submodule "intra-uuid-247c04c2-419f-4e2c-bfe5-c27218ebfc60-2890961"]
+	path = intra-uuid-247c04c2-419f-4e2c-bfe5-c27218ebfc60-2890961
+	url = git@vogsphere-v2.codam.nl:vogsphere/intra-uuid-247c04c2-419f-4e2c-bfe5-c27218ebfc60-2890961
+[submodule "intra-uuid-035eda73-9729-4ad9-8682-3796330c47fb-3014997"]
+	path = intra-uuid-035eda73-9729-4ad9-8682-3796330c47fb-3014997
+	url = git@vogsphere-v2.codam.nl:vogsphere/intra-uuid-035eda73-9729-4ad9-8682-3796330c47fb-3014997

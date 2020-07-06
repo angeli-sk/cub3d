@@ -6,7 +6,7 @@
 #    By: akramp <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/05/06 13:52:49 by akramp        #+#    #+#                  #
-#    Updated: 2020/05/07 14:45:31 by akramp        ########   odam.nl          #
+#    Updated: 2020/06/25 16:35:12 by akramp        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ FLAGSMLX =  -L. -lmlx -framework OpenGL -framework AppKit
 
 #✧･ﾟ: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ *✧･ﾟ:* SOURCES ✧*:･ﾟ✧: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ﾟ: *✧･ﾟ:#
 
-SRC = cub3d.c
+SRC = bleepbloop.c
 OBJ :=	${SRC:%.c=%.o}
 
 #✧･ﾟ: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ *✧･ﾟ:* COLORS ✧*:･ﾟ✧: *✧･ﾟ:* ✧ *:･ﾟ✧*:･ﾟ✧✧･ﾟ: *✧･ﾟ:#

@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/05/06 14:24:05 by akramp        #+#    #+#                 */
-/*   Updated: 2020/05/13 12:37:29 by akramp        ########   odam.nl         */
+/*   Updated: 2020/06/25 16:29:52 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,20 +63,6 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
-// void	make_blocky(int x, int y, unsigned int num, int maxx, int maxy, t_data img)
-// {
-// 	while (y < maxy)
-// 	{
-// 		x = 0;
-// 		while (x < maxx)
-// 		{
-// 			my_mlx_pixel_put(&img, x, y, num);
-// 			x++;
-// 		}
-// 		y++;
-// 	}
-// }
-
 int		keys(int keycode, t_vars *vars)
 {
 	ft_putnbr_fd(keycode, 1);
@@ -86,14 +72,39 @@ int		keys(int keycode, t_vars *vars)
 		mlx_destroy_window(vars->mlx, vars->win);
 		exit(1);
 	}
-	return(0);
+	return (0);
+}
+
+int	render_next_frame()	
+{
+	return (0);
+}
+
+int draw(t_vars *vars)
+{
+	int     img_width;
+    int		img_height;
+
+	img_width = 1000;
+	img_height = 1000;
+	t_data img;
+	img.img = mlx_new_image(vars->mlx, 1920, 1080);
+	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
+								&img.line_length,&img.endian);
+	img.img = mlx_xpm_file_to_image(vars->mlx, "./yolanda.xpm", &img_width, &img_height);
+	mlx_put_image_to_window(vars->mlx, vars->win, img.img, 0, 0);
+	return (1);
 }
 
 int		main(void)
 {
 	t_data	img;
 	t_vars	vars;
+	int     img_width;
+	int     img_height;
 
+	img_width = 1000;
+	img_height = 1000;
 	vars.mlx = mlx_init();
 	vars.win = mlx_new_window(vars.mlx, 1920, 1080, "Hello world!");
 	img.img = mlx_new_image(vars.mlx, 1920, 1080);
@@ -112,46 +123,12 @@ int		main(void)
 		}
 		vars.y++;
 	}
-	mlx_key_hook(vars.win, keys, &vars);
-	vars.y = 200;
-	while (vars.y < 700)
-	{
-		vars.x = 500;
-		while (vars.x < 1000)
-		{
-			my_mlx_pixel_put(&img, vars.x, vars.y, 0xf8c275);
-			vars.x++;
-		}
-		vars.y++;
-	}
-	vars.y = 400;
-	while (vars.y < 600)
-	{
-		vars.x = 800;
-		while (vars.x < 1000)
-		{
-			my_mlx_pixel_put(&img, vars.x, vars.y, 0xc7adfb);
-			vars.x++;
-		}
-		vars.y++;
-	}
-	vars.y = 300;
-	vars.xmax = 1000;
-	while (vars.y < 600)
-	{
-		vars.x = 500;
-		while (vars.x < vars.xmax)
-		{
-			my_mlx_pixel_put(&img, vars.x, vars.y, 0x97f36d);
-			vars.x++;
-		}
-		if(vars.xmax > 0)
-			vars.xmax--;
-		vars.y++;
-	}
+
 	vars.y = 400;
 	vars.xmax = 900;
 	vars.ymax = 600;
+	//mlx_loop_hook(vars.mlx, render_next_frame(), vars);
+
 	while (vars.y < vars.ymax)
 	{
 		vars.x = 800;
@@ -164,7 +141,8 @@ int		main(void)
 		vars.xmax--;
 		vars.y++;
 	}
-	mlx_put_image_to_window(vars.mlx, vars.win, img.img, 0, 0);
+
+	mlx_loop_hook(vars.mlx, draw, &vars.mlx);
 	mlx_loop(vars.mlx);
 }
 
