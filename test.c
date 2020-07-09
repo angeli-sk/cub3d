@@ -155,7 +155,7 @@ int	mapping(char *line, t_cub3d *cub)
 	while (retval == 1)
 	{
 		retval = get_next_line(fd, &line);
-		while (line[i] == ' ' || line[i] == '\t')	
+		while (ft_isspace(line[i]) == 1)
 			i++;
 		ret = jumping(line, cub, i, ret);
 		i = 0;
@@ -204,12 +204,11 @@ void	validity(t_cub3d *cub, int ret)
 	x = 0;
 	y = 0;
 	error = 0;
-	//printf("ret = %d", ret);
 	while (y < ret)
 	{
-		while (cub->map[y][x] == ' ' || cub->map[y][x] == '\t')
+		while (ft_isspace(cub->map[y][x]) == 1)
 			x++;
-		error = checkborder(cub, x, y, ret);
+		//error = checkborder(cub, x, y, ret);
 		// error = checkplayer();
 		// if (error == -1)
 		// 	novalidmapyo();
@@ -229,7 +228,8 @@ void	cub3d(void)
 	ret = mapping(line, &cub);
 	cub.map = ft_split(cub.temp, '\n');
 	freevars(line, &cub);
-	validity(&cub, ret);
+		printf("ret = %d", ret);
+	//validity(&cub, ret);
 }
 
 int		main(void)
