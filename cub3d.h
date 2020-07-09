@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/07 16:40:24 by akramp        #+#    #+#                 */
-/*   Updated: 2020/06/26 17:22:28 by akramp        ########   odam.nl         */
+/*   Updated: 2020/07/09 16:24:13 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,24 @@
 
 typedef struct	s_cub3d
 {
-	int RX;
-	int RY;
-	char *NO;
-	char *SO;
-	char *WE;
-	char *EA;
-	char *S;
-	int FR;
-	int FG;
-	int FB;
-	int CR;
-	int CG;
-	int CB;
-	char *temp;
-	char **map;
+	int		rx;
+	int		ry;
+	char	*no;
+	char	*so;
+	char	*we;
+	char	*ea;
+	char	*s;
+	int		fr;
+	int		fg;
+	int		fb;
+	int		cr;
+	int		cg;
+	int		cb;
+	char	*temp;
+	char	**map;
+	int		error;
+	int		maxstrlen;
+	int		i;
 }				t_cub3d;
 
 typedef struct s_mapinfo
@@ -46,6 +49,7 @@ typedef struct s_mapinfo
 void cub3d(void);
 
 //libft
-char	*ft_strjoin_c3d(char const *s1, char const *s2);
+char	*ft_strjoin_c3d(t_cub3d *cub, char const *s1, char const *s2);
+t_cub3d *cub;
 
 #endif

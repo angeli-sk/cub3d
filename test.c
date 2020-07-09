@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/04 14:57:29 by akramp        #+#    #+#                 */
-/*   Updated: 2020/07/04 21:04:29 by akramp        ########   odam.nl         */
+/*   Updated: 2020/07/09 16:23:33 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,21 +52,21 @@ void	struct_num(char **line, int *adr1, int *adr2, int *adr3)
 	}
 }
 
-char	*struct_path(t_cub3d *cub, int i, char **line)
+char	*struct_path(t_cub3d *cub, char **line)
 {
 	int		len;
 	char	*temp;
 
-	while ((*line)[i] != '.')
-		i++;
-	len = ft_strlen(&(*line)[i]);
+	while ((*line)[(cub->i)] != '.')
+		(cub->i)++;
+	len = ft_strlen(&(*line)[(cub->i)]);
 	temp = malloc((sizeof(char) * len) + 1);
 	temp[len] = '\0';
-	ft_strlcpy(temp, &(*line)[i], len);
+	ft_strlcpy(temp, &(*line)[(cub->i)], len);
 	return (temp);
 }
 
-int		read_map(t_cub3d *cub, char *line, int i, int ret)
+int		read_map(t_cub3d *cub, char *line, int ret)
 {
 	int chk;
 	int len;
@@ -74,10 +74,12 @@ int		read_map(t_cub3d *cub, char *line, int i, int ret)
 	chk = 0;
 	if (cub->temp == 0)
 		chk = 1;
-	cub->temp = ft_strjoin_c3d(cub->temp, line);
+	cub->temp = ft_strjoin_c3d(cub, cub->temp, line);
+	printf("\naxlne = %d\n", cub->maxstrlen);
 	if (chk == 1)
 	{
 		len = ft_strlen(cub->temp);
+		cub->maxstrlen = len;
 		cub->temp[len] = '\n';
 		cub->temp[len + 1] = '\0';
 	}
@@ -88,66 +90,69 @@ int		read_map(t_cub3d *cub, char *line, int i, int ret)
 
 void	struct_init(t_cub3d *cub)
 {
-	cub->RX = 0;
-	cub->RY = 0;
-	cub->NO = 0;
-	cub->SO = 0;
-	cub->WE = 0;
-	cub->EA = 0;
-	cub->S = 0;
-	cub->FR = 0;
-	cub->FG = 0;
-	cub->FB = 0;
-	cub->CR = 0;
-	cub->CG = 0;
-	cub->CB = 0;
+	cub->rx = 0;
+	cub->ry = 0;
+	cub->no = 0;
+	cub->so = 0;
+	cub->we = 0;
+	cub->ea = 0;
+	cub->s = 0;
+	cub->fr = 0;
+	cub->fr = 0;
+	cub->fb = 0;
+	cub->cr = 0;
+	cub->cg = 0;
+	cub->cb = 0;
 	cub->temp = 0;
 	cub->map = 0;
+	cub->error = 0;
+	cub->i = 0;
+	cub->maxstrlen = 0;
 }
 
-int		jumping(char *line, t_cub3d *cub, int i, int ret)
+int		jumping(char *line, t_cub3d *cub, int ret)
 {
-	if ((line[i] == 'R' && line[i + 1] == ' '))
-		struct_num(&line, &cub->RX, &cub->RY, &cub->RY);
-	if (line[i] == 'N' && line[i + 1] == 'O')
-		cub->NO = struct_path(cub, i, &line);
-	if (line[i] == 'S' && line[i + 1] == 'O')
-		cub->SO = struct_path(cub, i, &line);
-	if (line[i] == 'W' && line[i + 1] == 'E')
-		cub->WE = struct_path(cub, i, &line);
-	if (line[i] == 'E' && line[i + 1] == 'A')
-		cub->EA = struct_path(cub, i, &line);
-	if (line[i] == 'S' && line[i + 1] == ' ')
-		cub->S = struct_path(cub, i, &line);
-	if (line[i] == 'F' && line[i + 1] == ' ')
-		struct_num(&line, &cub->FR, &cub->FG, &cub->FB);
-	if (line[i] == 'C' && line[i + 1] == ' ')
-		struct_num(&line, &cub->CR, &cub->CG, &cub->CB);
-	if (line[i] == '0' || line[i] == '1')
-		ret = read_map(cub, line, i, ret);
+	if ((line[(cub->i)] == 'R' && line[(cub->i) + 1] == ' '))
+		struct_num(&line, &cub->rx, &cub->ry, &cub->ry);
+	if (line[(cub->i)] == 'N' && line[(cub->i) + 1] == 'O')
+		cub->no = struct_path(cub, &line);
+	if (line[(cub->i)] == 'S' && line[(cub->i) + 1] == 'O')
+		cub->so = struct_path(cub, &line);
+	if (line[(cub->i)] == 'W' && line[(cub->i) + 1] == 'E')
+		cub->we = struct_path(cub, &line);
+	if (line[(cub->i)] == 'E' && line[(cub->i) + 1] == 'A')
+		cub->ea = struct_path(cub, &line);
+	if (line[(cub->i)] == 'S' && line[(cub->i) + 1] == ' ')
+		cub->s = struct_path(cub, &line);
+	if (line[(cub->i)] == 'F' && line[(cub->i) + 1] == ' ')
+		struct_num(&line, &cub->fr, &cub->fr, &cub->fb);
+	if (line[(cub->i)] == 'C' && line[(cub->i) + 1] == ' ')
+		struct_num(&line, &cub->cr, &cub->cg, &cub->cb);
+	if (line[(cub->i)] == '0' || line[(cub->i)] == '1')
+		ret = read_map(cub, line, ret);
+	else
+		cub->error = -1; //do sumthng with this lazy ass
 	return (ret);
 }
 
 void	freevars(char *line, t_cub3d *cub)
 {
 	free(line);
-	free(cub->NO);
-	free(cub->SO);
-	free(cub->WE);
-	free(cub->EA);
-	free(cub->S);
+	free(cub->no);
+	free(cub->so);
+	free(cub->we);
+	free(cub->ea);
+	free(cub->s);
 	free(cub->temp);
 }
 
 int	mapping(char *line, t_cub3d *cub)
 {
 	int fd;
-	int i;
 	int retval;
 	int ret;
 
 	fd = open("map.cub", O_RDONLY);
-	i = 0;
 	ret = 0;
 	line = NULL;
 	struct_init(cub);
@@ -155,14 +160,13 @@ int	mapping(char *line, t_cub3d *cub)
 	while (retval == 1)
 	{
 		retval = get_next_line(fd, &line);
-		while (ft_isspace(line[i]) == 1)
-			i++;
-		ret = jumping(line, cub, i, ret);
-		i = 0;
+		while (line[cub->i] == ' ')
+			(cub->i)++;
+		ret = jumping(line, cub, ret);
 		if (retval == 1)
 			free(line);
 	}
-	cub->map = ft_split(cub->temp, '\n');
+	cub->map = ft_split_c3d(t_cub3d *cub, cub->temp, '\n');
 	close(fd);
 	return (ret);
 }
@@ -204,11 +208,12 @@ void	validity(t_cub3d *cub, int ret)
 	x = 0;
 	y = 0;
 	error = 0;
+	//printf("ret = %d", ret);
 	while (y < ret)
 	{
-		while (ft_isspace(cub->map[y][x]) == 1)
+		while (cub->map[y][x] == ' ' || cub->map[y][x] == '\t')
 			x++;
-		//error = checkborder(cub, x, y, ret);
+		error = checkborder(cub, x, y, ret);
 		// error = checkplayer();
 		// if (error == -1)
 		// 	novalidmapyo();
@@ -228,8 +233,7 @@ void	cub3d(void)
 	ret = mapping(line, &cub);
 	cub.map = ft_split(cub.temp, '\n');
 	freevars(line, &cub);
-		printf("ret = %d", ret);
-	//validity(&cub, ret);
+	validity(&cub, ret);
 }
 
 int		main(void)

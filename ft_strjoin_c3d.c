@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/06 18:51:57 by akramp        #+#    #+#                 */
-/*   Updated: 2020/06/24 11:26:55 by akramp        ########   odam.nl         */
+/*   Updated: 2020/07/09 16:12:24 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static char	*ft_check(char const *s1, char const *s2)
 	return (0);
 }
 
-char	*ft_strjoin_c3d(char const *s1, char const *s2)
+char	*ft_strjoin_c3d(t_cub3d *cub, char const *s1, char const *s2)
 {
 	int		i;
 	int		n;
@@ -62,9 +62,11 @@ char	*ft_strjoin_c3d(char const *s1, char const *s2)
 	i = 0;
 	n = 0;
 	if ((s1 == 0 && s2 == 0) || s1 == 0 || s2 == 0)
-		return (ft_check(s1, s2)); //turned dis around
+		return (ft_check(s1, s2));
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);
+	if (s2_len > cub->maxstrlen)
+		cub->maxstrlen = s2_len;
 	str = (char *)malloc(sizeof(char) * (s1_len + s2_len) + 2);
 	if (str == 0)
 	{
