@@ -13,7 +13,7 @@
 #include "cub3d.h"
 #include <stdlib.h>
 
-static char	**ft_free(char **split, int x)
+static char	**ft_free_split(char **split, int x)
 {
 	while (x >= 0)
 	{
@@ -24,7 +24,7 @@ static char	**ft_free(char **split, int x)
 	return (0);
 }
 
-static char	**ft_write_string(char *s, char c, char **split, int max_y)
+static char	**ft_write_string(char *s, t_splitty *spty, char **split, int max_y)
 {
 	int i;
 	int x;
@@ -35,22 +35,22 @@ static char	**ft_write_string(char *s, char c, char **split, int max_y)
 	y = 0;
 	while (s[i] != '\0' && y < max_y)
 	{
-		while (s[i] == c && s[i] != '\0')
+		while (s[i] == (spty->c) && s[i] != '\0')
 			i++;
-		while (s[i] != c && s[i] != '\0')
+		while (s[i] != (spty->c) && s[i] != '\0')
 		{
 			split[y][x] = s[i];
 			x++;
 			i++;
 		}
-		split[y][x] = '\0';
+		split[y][(spty->maxlen)] = '\0';
 		y++;
 		x = 0;
 	}
 	return (split);
 }
 
-static char	**ft_char_count(char *s, char c, char **split, int y)
+static char	**ft_char_count(char *s, char **split, t_splitty *spty, t_cub3d *cub)
 {
 	int count;
 	int x;
@@ -59,18 +59,19 @@ static char	**ft_char_count(char *s, char c, char **split, int y)
 	x = 0;
 	while (*s != '\0')
 	{
-		while (*s == c && *s != '\0')
+		while (*s == (spty->c) && *s != '\0')
 			s++;
-		while (*s != c && *s != '\0')
+		while (*s != (spty->c) && *s != '\0')
 		{
 			count++;
 			s++;
 		}
-		if (x < y)
+		if (x < (spty->y))
 		{
-			split[x] = (char *)malloc(sizeof(char) * count + 1);
+			printf("\ncubmax=%d\n", cub->maxstrlen);
+			split[x] = (char *)ft_calloc_mlx((cub->maxstrlen + 1), (sizeof(char)));
 			if (split[x] == 0)
-				return (ft_free(split, x));
+				return (ft_free_split(split, x));
 			x++;
 		}
 		count = 0;
@@ -101,24 +102,25 @@ static int	ft_string_count(char *s, char c, int y)
 
 char		**ft_split_c3d(t_cub3d *cub, char const *s, char c)
 {
-	int		y;
-	int		len;
-	char	*copy_s;
-	char	**split;
+	t_splitty	spty;
+	char		*copy_s;
+	char		**split;
 
-	y = 0;
-	len = 0;
+	spty.y = 0;
+	spty.len = 0;
+	spty.c = c;
+	spty.maxlen = cub->maxstrlen;
 	copy_s = (char *)s;
 	if (s == 0)
 		return (0);
-	y = ft_string_count(copy_s, c, y);
-	split = (char **)malloc(sizeof(char *) * (y + 1));
+	spty.y = ft_string_count(copy_s, c, spty.y);
+	split = (char **)malloc(sizeof(char *) * ((spty.y)+ 1));
 	if (split == 0)
 		return (0);
-	split = ft_char_count(copy_s, c, split, y);
+	split = ft_char_count(copy_s, split, &spty, cub);
 	if (split == 0)
 		return (0);
-	split = ft_write_string(copy_s, c, split, y);
-	split[y] = 0;
+	split = ft_write_string(copy_s, &spty, split, spty.y);
+	split[spty.y] = 0;
 	return (split);
 }

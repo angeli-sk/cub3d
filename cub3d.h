@@ -12,9 +12,9 @@
 
 #ifndef CUB3D_H
 # define CUB3D_H
-# include <sys/_types/_size_t.h>
 # include "./libft/libft.h"
 # include "./get_next_line/get_next_line.h"
+#include <stdio.h>
 
 typedef struct	s_cub3d
 {
@@ -38,6 +38,14 @@ typedef struct	s_cub3d
 	int		i;
 }				t_cub3d;
 
+typedef struct s_splitty
+{
+	int		y;
+	int		len;
+	char	c;
+	int		maxlen;
+}				t_splitty;
+
 typedef struct s_mapinfo
 {
 	char wall;
@@ -50,6 +58,7 @@ void cub3d(void);
 
 //libft
 char	*ft_strjoin_c3d(t_cub3d *cub, char const *s1, char const *s2);
-t_cub3d *cub;
-
+char		**ft_split_c3d(t_cub3d *cub, char const *s, char c);
+void	*ft_calloc_mlx(size_t count, size_t size);
+void	ft_bzero_mlx(void *s, size_t n);
 #endif

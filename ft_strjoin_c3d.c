@@ -39,9 +39,6 @@ static char	*ft_fil(char *str, char const *s1, char const *s2)
 
 static char	*ft_check(char const *s1, char const *s2)
 {
-	int		s1_len;
-	int		s2_len;
-	
 	if (s1 == 0 && s2 == 0)
 		return (0);
 	if (s1 == 0)
@@ -53,14 +50,10 @@ static char	*ft_check(char const *s1, char const *s2)
 
 char	*ft_strjoin_c3d(t_cub3d *cub, char const *s1, char const *s2)
 {
-	int		i;
-	int		n;
 	int		s1_len;
 	int		s2_len;
 	char	*str;
 
-	i = 0;
-	n = 0;
 	if ((s1 == 0 && s2 == 0) || s1 == 0 || s2 == 0)
 		return (ft_check(s1, s2));
 	s1_len = ft_strlen(s1);
