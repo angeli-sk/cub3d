@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/04 14:57:29 by akramp        #+#    #+#                 */
-/*   Updated: 2020/07/09 16:23:33 by akramp        ########   odam.nl         */
+/*   Updated: 2020/07/15 19:34:00 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,43 @@
 #include <sys/stat.h>
 #include "./cub3d.h"
 
-void	num_check(int *i, char **line, int *start)
+int	num_check(int *i, char **line, int *start, int error)
 {
 	while (((*line)[*i] < '0') || ((*line)[*i] > '9'))
-		(*i)++;
+	{
+		if ((*line)[*i] == ' ')
+			(*i)++;
+		else
+			error = -2;
+	}	
 	*start = *i;
 	while (((*line)[*i] >= '0') && ((*line)[*i] <= '9'))
 		(*i)++;
+	return (error);
+}
+
+int		ft_error_res(int num, int error) //error checker for correct resolution
+{
+	if (num <= 0)
+		error = -2;
+	//check if rmax screen res is okay
+	if (error != 0)
+		ft_error_c3d();
+	return (error);
+}
+
+void	ft_error_c3d(int error)
+{
+	if (error == -2)
+		write(1, "R is fricked", 12);
+	exit();
+}
+
+int	strcut_num_loopcheck(int *adr, int error, char *temp)
+{
+	*adr = ft_atoi(temp);
+	error = ft_error_res(*adr, error);
+	return (error);
 }
 
 void	struct_num(char **line, int *adr1, int *adr2, int *adr3)
@@ -31,21 +61,23 @@ void	struct_num(char **line, int *adr1, int *adr2, int *adr3)
 	int		check;
 	char	*temp;
 	int		i;
+	int		error;
 
 	start = 0;
 	check = 1;
 	i = 0;
+	error = 0;
 	while ((*line)[i] != '\0')
 	{
-		num_check(&i, line, &start);
+		num_check(&i, line, &start, error);
 		temp = malloc((i - start) * sizeof(char) + 1);
 		ft_strlcpy(temp, &(*line)[start], (i - start) + 1);
 		if (check == 1)
-			*adr1 = ft_atoi(temp);
+			error = strcut_num_loopcheck(adr1, error, temp);
 		if (check == 2)
-			*adr2 = ft_atoi(temp);
+			error = strcut_num_loopcheck(adr2, error, temp);
 		if (check == 3)
-			*adr3 = ft_atoi(temp);
+			error = strcut_num_loopcheck(adr3, error, temp);
 		free(temp);
 		check++;
 		i++;
@@ -130,8 +162,8 @@ int		jumping(char *line, t_cub3d *cub, int ret)
 		struct_num(&line, &cub->cr, &cub->cg, &cub->cb);
 	if (line[(cub->i)] == '0' || line[(cub->i)] == '1')
 		ret = read_map(cub, line, ret);
-	else
-		cub->error = -1; //do sumthng with this lazy ass
+	// else
+	// 	cub->error = -1; //do sumthng with this lazy ass
 	return (ret);
 }
 
@@ -166,7 +198,7 @@ int	mapping(char *line, t_cub3d *cub)
 		if (retval == 1)
 			free(line);
 	}
-	cub->map = ft_split_c3d(t_cub3d *cub, cub->temp, '\n');
+	cub->map = ft_split_c3d(cub, cub->temp, '\n');
 	close(fd);
 	return (ret);
 }
@@ -208,7 +240,7 @@ void	validity(t_cub3d *cub, int ret)
 	x = 0;
 	y = 0;
 	error = 0;
-	//printf("ret = %d", ret);
+	printf("ret = %d", ret);
 	while (y < ret)
 	{
 		while (cub->map[y][x] == ' ' || cub->map[y][x] == '\t')
@@ -229,9 +261,15 @@ void	cub3d(void)
 	char	*line;
 	t_cub3d cub;
 	int ret;
-
+	int i =0;
 	ret = mapping(line, &cub);
 	cub.map = ft_split(cub.temp, '\n');
+	while (i <= 13)
+	{
+		printf("==%s\n",(cub.map)[i]);
+		i++;
+	}
+
 	freevars(line, &cub);
 	validity(&cub, ret);
 }
