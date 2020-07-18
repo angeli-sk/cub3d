@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/08 13:29:41 by akramp        #+#    #+#                 */
-/*   Updated: 2020/07/09 16:32:11 by akramp        ########   odam.nl         */
+/*   Updated: 2020/07/18 20:20:49 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static char	**ft_write_string(char *s, t_splitty *spty, char **split, int max_y)
 	return (split);
 }
 
-static char	**ft_char_count(char *s, char **split, t_splitty *spty, t_cub3d *cub)
+static char	**ft_c_count(char *s, char **split, t_splitty *spty, t_cub3d *cub)
 {
 	int count;
 	int x;
@@ -68,8 +68,7 @@ static char	**ft_char_count(char *s, char **split, t_splitty *spty, t_cub3d *cub
 		}
 		if (x < (spty->y))
 		{
-			printf("\ncubmax=%d\n", cub->maxstrlen);
-			split[x] = (char *)ft_calloc_mlx((cub->maxstrlen + 1), (sizeof(char)));
+			split[x] = ft_calloc_mlx((cub->maxstrlen + 1), (sizeof(char)));
 			if (split[x] == 0)
 				return (ft_free_split(split, x));
 			x++;
@@ -114,10 +113,10 @@ char		**ft_split_c3d(t_cub3d *cub, char const *s, char c)
 	if (s == 0)
 		return (0);
 	spty.y = ft_string_count(copy_s, c, spty.y);
-	split = (char **)malloc(sizeof(char *) * ((spty.y)+ 1));
+	split = (char **)ft_calloc(sizeof(char *), ((spty.y) + 1));
 	if (split == 0)
 		return (0);
-	split = ft_char_count(copy_s, split, &spty, cub);
+	split = ft_c_count(copy_s, split, &spty, cub);
 	if (split == 0)
 		return (0);
 	split = ft_write_string(copy_s, &spty, split, spty.y);

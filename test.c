@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/04 14:57:29 by akramp        #+#    #+#                 */
-/*   Updated: 2020/07/18 14:32:09 by akramp        ########   odam.nl         */
+/*   Updated: 2020/07/18 20:18:37 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@ int	num_check(int *i, char **line, int *start, int error)
 
 	while (((*line)[*i] < '0') || ((*line)[*i] > '9'))
 	{
-		printf("||%c||\n",(*line)[*i]);
+		//printf("||c=%c||\n||d=%d||\n||s=%s||\n",(*line)[*i], *i, &(*line)[*i]);
 		
 		if ((*line)[*i] == ' ' || (*line)[*i] == 'R' || (*line)[*i] == 'F' || (*line)[*i] == 'C')
 		{
 			if ((*line)[*i] == 'R' || (*line)[*i] == 'F' || (*line)[*i] == 'C')
 				letter = (*line)[*i];
 			(*i)++;
-		}	
+		}
 		else
 		{
 			printf("\n\nletter = %c\n\n", letter);
@@ -61,9 +61,7 @@ void	ft_error_c3d(int error)
 		write(1, "ERROR;\tC is fricked\n", 20);
 	if (error == -17)
 		write(1, "ERROR;\t??? is fricked\n", 22);
-	else
-		write(1, "ERROR;\twot lemao???\n", 20);
-	printf("lemao");
+	printf("LEMAO");
 	exit(0);
 }
 
@@ -98,6 +96,8 @@ void	struct_num(char **line, int *adr1, int *adr2, int *adr3)
 	error = 0;
 	while ((*line)[i] != '\0')
 	{
+		while (((*line)[i] < '0') || ((*line)[i] > '9'))
+			i++;
 		error = num_check(&i, line, &start, error);
 		if (error != 0)
 			ft_error_c3d(error);
@@ -138,7 +138,7 @@ int		read_map(t_cub3d *cub, char *line, int ret)
 	if (cub->temp == 0)
 		chk = 1;
 	cub->temp = ft_strjoin_c3d(cub, cub->temp, line);
-	printf("\naxlne = %d\n", cub->maxstrlen);
+	//printf("\naxlne = %d\n", cub->maxstrlen);
 	if (chk == 1)
 	{
 		len = ft_strlen(cub->temp);
@@ -146,7 +146,7 @@ int		read_map(t_cub3d *cub, char *line, int ret)
 		cub->temp[len] = '\n';
 		cub->temp[len + 1] = '\0';
 	}
-	printf("~~temp=%s && line=%s\n~~", cub->temp, line);
+	//printf("~~temp=%s && line=%s\n~~", cub->temp, line);
 	ret++;
 	return (ret);
 }
@@ -198,8 +198,11 @@ int		jumping(char *line, t_cub3d *cub, int ret)
 	return (ret);
 }
 
-void	freevars(char *line, t_cub3d *cub)
+void	freevars(char *line, t_cub3d *cub, int ret)
 {
+	int i;
+
+	i = 0;
 	free(line);
 	free(cub->no);
 	free(cub->so);
@@ -207,6 +210,12 @@ void	freevars(char *line, t_cub3d *cub)
 	free(cub->ea);
 	free(cub->s);
 	free(cub->temp);
+	while (i <= ret)
+	{
+		free(cub->map[i]);
+		i++;
+	}
+	free(cub->map);
 }
 
 int	mapping(char *line, t_cub3d *cub)
@@ -230,6 +239,8 @@ int	mapping(char *line, t_cub3d *cub)
 		if (retval == 1)
 			free(line);
 	}
+	free(line);
+	//printf("=-=%s=-=\n", cub->temp);
 	cub->map = ft_split_c3d(cub, cub->temp, '\n');
 	close(fd);
 	return (ret);
@@ -272,7 +283,7 @@ void	validity(t_cub3d *cub, int ret)
 	x = 0;
 	y = 0;
 	error = 0;
-	printf("ret = %d", ret);
+	//printf("ret = %d", ret);
 	while (y < ret)
 	{
 		while (cub->map[y][x] == ' ' || cub->map[y][x] == '\t')
@@ -295,16 +306,16 @@ void	cub3d(void)
 	int ret;
 	//int i =0;
 	ret = mapping(line, &cub);
-	cub.map = ft_split(cub.temp, '\n');
-	// while (i <= 13)
+	//printf("ret=%d\n", ret);
+	// while (i < ret)
 	// {
 	// 	printf("==%s\n",(cub.map)[i]);
 	// 	i++;
 	// }
-	printf("lemao\n");
+	//printf("lemao\n");
 	printf("RX=%d\nRY=%d\nNO=%s\nSO=%s\nWE=%s\nEA=%s\nS=%s\n", cub.rx, cub.ry, cub.no, cub.so, cub.we, cub.ea, cub.s);
-	printf("Fr=%i\nFg=%i\nFb=%i\nC=%i\nCg=%i\nCb=%i\n",cub.fr, cub.fg, cub.fb,cub.cr, cub.cg, cub.cb);
-	freevars(line, &cub);
+	printf("Fr=%i\nFg=%i\nFb=%i\nC=%i\nCg=%i\nCb=%i\n",cub.fr, cub.fg, cub.fb, cub.cr, cub.cg, cub.cb);
+	freevars(line, &cub, ret);
 	//validity(&cub, ret);
 }
 
