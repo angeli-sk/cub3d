@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/04 14:57:29 by akramp        #+#    #+#                 */
-/*   Updated: 2020/07/18 20:18:37 by akramp        ########   odam.nl         */
+/*   Updated: 2020/07/18 22:49:14 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,20 @@ void	ft_error_c3d(int error)
 		write(1, "ERROR;\tF is fricked\n", 20);
 	if (error == -4)
 		write(1, "ERROR;\tC is fricked\n", 20);
+	if (error == -5)
+		write(1, "ERROR;\tNO is fricked\n", 21);
+	if (error == -6)
+		write(1, "ERROR;\tSO is fricked\n", 21);
+	if (error == -7)
+		write(1, "ERROR;\tWE is fricked\n", 21);
+	if (error == -8)
+		write(1, "ERROR;\tEA is fricked\n", 21);
+	if (error == -9)
+		write(1, "ERROR;\tS is fricked\n", 20);
 	if (error == -17)
 		write(1, "ERROR;\t??? is fricked\n", 22);
 	printf("LEMAO");
-	exit(0);
+	exit(1);
 }
 
 int		ft_error_res(int num, int error) //error checker for correct resolution
@@ -153,24 +163,24 @@ int		read_map(t_cub3d *cub, char *line, int ret)
 
 void	struct_init(t_cub3d *cub)
 {
-	cub->rx = 0;
-	cub->ry = 0;
+	cub->rx = -1;
+	cub->ry = -1;
 	cub->no = 0;
 	cub->so = 0;
 	cub->we = 0;
 	cub->ea = 0;
 	cub->s = 0;
-	cub->fr = 0;
-	cub->fr = 0;
-	cub->fb = 0;
-	cub->cr = 0;
-	cub->cg = 0;
-	cub->cb = 0;
+	cub->fr = -1;
+	cub->fr = -1;
+	cub->fb = -1;
+	cub->cr = -1;
+	cub->cg = -1;
+	cub->cb = -1;
 	cub->temp = 0;
 	cub->map = 0;
-	cub->error = 0;
-	cub->i = 0;
-	cub->maxstrlen = 0;
+	cub->error = -1;
+	cub->i = -1;
+	cub->maxstrlen = -1;
 }
 
 int		jumping(char *line, t_cub3d *cub, int ret)
@@ -246,57 +256,63 @@ int	mapping(char *line, t_cub3d *cub)
 	return (ret);
 }
 
-int	checkborder(t_cub3d *cub, int x, int y, int ret)
-{
-	int error;
+// int	checkborder(t_cub3d *cub, int x, int y, int ret)
+// {
+// 	int error;
 
-	error = 0;
-	while (y == 0 && cub->map[y][x] != '\n')
+// 	error = 0;
+// 	while (y == 0 && cub->map[y][x] != '\n')
+// 	{
+// 		if (cub->map[y][x] != '1' && cub->map[y][x] != ' ')
+// 			error = -1;
+// 		x++;
+// 	}
+// 	x = 0;
+// 	while (y > 0 && y < ret && cub->map[y][x] != '\n')
+// 	{
+// 		if (cub->map[y][0] != '1' && cub->map[y][0] != ' ')
+// 			error = -1;
+// 		x++;
+// 	}
+// 	x = 0;
+// 	while (y == ret && cub->map[y][x] != '\n')
+// 	{
+// 		if (cub->map[y][x] != '1')
+// 			error = -1;
+// 		x++;
+// 	}
+// 	return (error);
+// }
+
+void	check_if_empty(t_cub3d *cub)
+{
+	if (cub->rx == 0 || cub->ry == 0)
+		cub->error = -2;
+	if (cub->no == 0)
+		cub->error = -5;
+	if (cub->so == 0)
+		cub->error = -6;
+	if(cub->we == 0)
+		cub->error = -7;
+	if(cub->ea == 0)
+		cub->error = -8;
+	if(cub->s == 0)
+		cub->error = -9;
+	if((cub->fr < 0 || cub->fr > 255) || (cub->fg < 0 || cub->fg > 255)
+	|| (cub->fb < 0 || cub->fb > 255))
+		cub->error = -3;
+	if((cub->cr < 0 || cub->cr > 255) || (cub->cg < 0 || cub->cg > 255)
+	|| (cub->cb < 0 || cub->cb > 255))
 	{
-		if (cub->map[y][x] != '1' && cub->map[y][x] != ' ')
-			error = -1;
-		x++;
-	}
-	x = 0;
-	while (y > 0 && y < ret && cub->map[y][x] != '\n')
-	{
-		if (cub->map[y][0] != '1' && cub->map[y][0] != ' ')
-			error = -1;
-		x++;
-	}
-	x = 0;
-	while (y == ret && cub->map[y][x] != '\n')
-	{
-		if (cub->map[y][x] != '1')
-			error = -1;
-		x++;
-	}
-	return (error);
+		cub->error = -4;
+		printf("XINO\n");
+	}	
 }
 
-void	validity(t_cub3d *cub, int ret)
+void	validity(t_cub3d *cub)
 {
-	int x;
-	int y;
-	int error;
-
-	x = 0;
-	y = 0;
-	error = 0;
-	//printf("ret = %d", ret);
-	while (y < ret)
-	{
-		while (cub->map[y][x] == ' ' || cub->map[y][x] == '\t')
-			x++;
-		//error = checkborder(cub, x, y, ret);
-		// error = checkplayer();
-		// if (error == -1)
-		// 	novalidmapyo();
-		//printf("\nMAPPOINTIETS = %c & x = %d & y = %d\n", cub->map[y][x], x, y);
-		y++;
-		x = 0;
-	}
-	//printf("\nMAPPOINTIETS = %c & x = %d & y = %d\n", cub->map[y][x], x, y);
+	check_if_empty(cub);
+	ft_error_c3d(cub->error);
 }
 
 void	cub3d(void)
@@ -316,7 +332,7 @@ void	cub3d(void)
 	printf("RX=%d\nRY=%d\nNO=%s\nSO=%s\nWE=%s\nEA=%s\nS=%s\n", cub.rx, cub.ry, cub.no, cub.so, cub.we, cub.ea, cub.s);
 	printf("Fr=%i\nFg=%i\nFb=%i\nC=%i\nCg=%i\nCb=%i\n",cub.fr, cub.fg, cub.fb, cub.cr, cub.cg, cub.cb);
 	freevars(line, &cub, ret);
-	//validity(&cub, ret);
+	validity(&cub);
 }
 
 int		main(void)
