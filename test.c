@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/04 14:57:29 by akramp        #+#    #+#                 */
-/*   Updated: 2020/07/15 19:34:00 by akramp        ########   odam.nl         */
+/*   Updated: 2020/07/18 14:32:09 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,53 @@
 
 int	num_check(int *i, char **line, int *start, int error)
 {
+	char letter;
+
 	while (((*line)[*i] < '0') || ((*line)[*i] > '9'))
 	{
-		if ((*line)[*i] == ' ')
+		printf("||%c||\n",(*line)[*i]);
+		
+		if ((*line)[*i] == ' ' || (*line)[*i] == 'R' || (*line)[*i] == 'F' || (*line)[*i] == 'C')
+		{
+			if ((*line)[*i] == 'R' || (*line)[*i] == 'F' || (*line)[*i] == 'C')
+				letter = (*line)[*i];
 			(*i)++;
+		}	
 		else
-			error = -2;
-	}	
+		{
+			printf("\n\nletter = %c\n\n", letter);
+			if (letter == 'R')
+				error = -2;
+			if (letter == 'F')
+				error = -3;
+			if (letter == 'C')
+				error = -4;
+			else
+				error = -17;
+			break ;
+		}
+	}	//printf("lemao");
 	*start = *i;
 	while (((*line)[*i] >= '0') && ((*line)[*i] <= '9'))
 		(*i)++;
 	return (error);
+}
+
+void	ft_error_c3d(int error)
+{
+	printf("error = %d\n", error);
+	if (error == -2)
+		write(1, "ERROR;\tR is fricked\n", 20);
+	if (error == -3)
+		write(1, "ERROR;\tF is fricked\n", 20);
+	if (error == -4)
+		write(1, "ERROR;\tC is fricked\n", 20);
+	if (error == -17)
+		write(1, "ERROR;\t??? is fricked\n", 22);
+	else
+		write(1, "ERROR;\twot lemao???\n", 20);
+	printf("lemao");
+	exit(0);
 }
 
 int		ft_error_res(int num, int error) //error checker for correct resolution
@@ -37,21 +73,14 @@ int		ft_error_res(int num, int error) //error checker for correct resolution
 		error = -2;
 	//check if rmax screen res is okay
 	if (error != 0)
-		ft_error_c3d();
+		ft_error_c3d(error);
 	return (error);
-}
-
-void	ft_error_c3d(int error)
-{
-	if (error == -2)
-		write(1, "R is fricked", 12);
-	exit();
 }
 
 int	strcut_num_loopcheck(int *adr, int error, char *temp)
 {
 	*adr = ft_atoi(temp);
-	error = ft_error_res(*adr, error);
+	//error = ft_error_res(*adr, error);
 	return (error);
 }
 
@@ -69,7 +98,9 @@ void	struct_num(char **line, int *adr1, int *adr2, int *adr3)
 	error = 0;
 	while ((*line)[i] != '\0')
 	{
-		num_check(&i, line, &start, error);
+		error = num_check(&i, line, &start, error);
+		if (error != 0)
+			ft_error_c3d(error);
 		temp = malloc((i - start) * sizeof(char) + 1);
 		ft_strlcpy(temp, &(*line)[start], (i - start) + 1);
 		if (check == 1)
@@ -94,7 +125,7 @@ char	*struct_path(t_cub3d *cub, char **line)
 	len = ft_strlen(&(*line)[(cub->i)]);
 	temp = malloc((sizeof(char) * len) + 1);
 	temp[len] = '\0';
-	ft_strlcpy(temp, &(*line)[(cub->i)], len);
+	ft_strlcpy(temp, &((*line)[(cub->i)]), len + 1);
 	return (temp);
 }
 
@@ -157,7 +188,7 @@ int		jumping(char *line, t_cub3d *cub, int ret)
 	if (line[(cub->i)] == 'S' && line[(cub->i) + 1] == ' ')
 		cub->s = struct_path(cub, &line);
 	if (line[(cub->i)] == 'F' && line[(cub->i) + 1] == ' ')
-		struct_num(&line, &cub->fr, &cub->fr, &cub->fb);
+		struct_num(&line, &cub->fr, &cub->fg, &cub->fb);
 	if (line[(cub->i)] == 'C' && line[(cub->i) + 1] == ' ')
 		struct_num(&line, &cub->cr, &cub->cg, &cub->cb);
 	if (line[(cub->i)] == '0' || line[(cub->i)] == '1')
@@ -191,6 +222,7 @@ int	mapping(char *line, t_cub3d *cub)
 	retval = 1;
 	while (retval == 1)
 	{
+		(cub->i) = 0;
 		retval = get_next_line(fd, &line);
 		while (line[cub->i] == ' ')
 			(cub->i)++;
@@ -245,7 +277,7 @@ void	validity(t_cub3d *cub, int ret)
 	{
 		while (cub->map[y][x] == ' ' || cub->map[y][x] == '\t')
 			x++;
-		error = checkborder(cub, x, y, ret);
+		//error = checkborder(cub, x, y, ret);
 		// error = checkplayer();
 		// if (error == -1)
 		// 	novalidmapyo();
@@ -261,17 +293,19 @@ void	cub3d(void)
 	char	*line;
 	t_cub3d cub;
 	int ret;
-	int i =0;
+	//int i =0;
 	ret = mapping(line, &cub);
 	cub.map = ft_split(cub.temp, '\n');
-	while (i <= 13)
-	{
-		printf("==%s\n",(cub.map)[i]);
-		i++;
-	}
-
+	// while (i <= 13)
+	// {
+	// 	printf("==%s\n",(cub.map)[i]);
+	// 	i++;
+	// }
+	printf("lemao\n");
+	printf("RX=%d\nRY=%d\nNO=%s\nSO=%s\nWE=%s\nEA=%s\nS=%s\n", cub.rx, cub.ry, cub.no, cub.so, cub.we, cub.ea, cub.s);
+	printf("Fr=%i\nFg=%i\nFb=%i\nC=%i\nCg=%i\nCb=%i\n",cub.fr, cub.fg, cub.fb,cub.cr, cub.cg, cub.cb);
 	freevars(line, &cub);
-	validity(&cub, ret);
+	//validity(&cub, ret);
 }
 
 int		main(void)
