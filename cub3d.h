@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/07 16:40:24 by akramp        #+#    #+#                 */
-/*   Updated: 2020/07/09 16:24:13 by akramp        ########   odam.nl         */
+/*   Updated: 2020/07/19 14:16:38 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ typedef struct	s_cub3d
 	int		error;
 	int		maxstrlen;
 	int		i;
+	int		maxrx;
+	int		maxry;
 }				t_cub3d;
 
 typedef struct s_splitty
@@ -46,7 +48,17 @@ typedef struct s_splitty
 	int		maxlen;
 }				t_splitty;
 
-typedef struct s_mapinfo
+typedef struct	s_struct_num
+{
+	int		st;
+	int		check;
+	char	*temp;
+	int		i;
+	char	ltr;
+	int		error;
+}				t_struct_num;
+
+typedef struct	s_mapinfo
 {
 	char wall;
 	char item;
@@ -56,7 +68,7 @@ typedef struct s_mapinfo
 
 void cub3d(void);
 
-//libft
+/*libft*/
 char	*ft_strjoin_c3d(t_cub3d *cub, char const *s1, char const *s2);
 char		**ft_split_c3d(t_cub3d *cub, char const *s, char c);
 void	*ft_calloc_mlx(size_t count, size_t size);
