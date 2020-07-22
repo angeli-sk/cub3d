@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/07 16:40:24 by akramp        #+#    #+#                 */
-/*   Updated: 2020/07/19 14:16:38 by akramp        ########   odam.nl         */
+/*   Updated: 2020/07/22 16:41:25 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,17 @@ typedef struct	s_cub3d
 	int		cb;
 	char	*temp;
 	char	**map;
+	char	**mapcopy;
+	int		beginmap;
 	int		error;
 	int		maxstrlen;
 	int		i;
 	int		maxrx;
 	int		maxry;
+	int		players;
+	int		objects;
+	int		startx;
+	int		starty;
 }				t_cub3d;
 
 typedef struct s_splitty
