@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/04 14:57:29 by akramp        #+#    #+#                 */
-/*   Updated: 2020/07/19 16:20:57 by akramp        ########   odam.nl         */
+/*   Updated: 2020/07/22 18:27:11 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,10 @@ void	ft_error_c3d(int error)
 		write(1, "ERROR;\tPath is fricked\n", 23);
 	if (error == -11)
 		write(1, "ERROR;\tno gucci man\n", 21);
+	if (error == -12)
+		write(1, "ERROR;\tThere's sum garbo man, clean it\n", 39);
+	if (error == -13)
+		write(1, "ERROR;\tYour map is fricked\n", 27);
 	if (error == -17)
 		write(1, "ERROR;\t??? is fricked\n", 22);
 	printf("LEMAO");
@@ -166,7 +170,6 @@ int		read_map(t_cub3d *cub, char *line, int ret)
 	if (cub->temp == 0)
 		chk = 1;
 	cub->temp = ft_strjoin_c3d(cub, cub->temp, line);
-	//printf("\naxlne = %d\n", cub->maxstrlen);
 	if (chk == 1)
 	{
 		len = ft_strlen(cub->temp);
@@ -174,7 +177,6 @@ int		read_map(t_cub3d *cub, char *line, int ret)
 		cub->temp[len] = '\n';
 		cub->temp[len + 1] = '\0';
 	}
-	//printf("~~temp=%s && line=%s\n~~", cub->temp, line);
 	ret++;
 	return (ret);
 }
@@ -196,11 +198,17 @@ void	struct_init(t_cub3d *cub)
 	cub->cb = -1;
 	cub->temp = 0;
 	cub->map = 0;
+	cub->mapcopy = 0;
 	cub->error = 0;
+	cub->beginmap = 0;
 	cub->i = -1;
 	cub->maxstrlen = -1;
 	cub->maxrx = 1920;			//add function that actually calculates dis bish
 	cub->maxry = 1080;
+	cub->players = 0;
+	cub->objects = 0;
+	cub->startx = 0;
+	cub->starty = 0;
 }
 
 int	ft_checkmapplacement(t_cub3d *cub)
@@ -210,41 +218,43 @@ int	ft_checkmapplacement(t_cub3d *cub)
 	|| cub->fg == -1 || cub->fb == -1 || cub->cr == -1 || cub->cg == -1 || cub->cb == -1)
 	{
 		cub->error = -11;
-		if (cub->error != 0)
+	if (cub->error != 0)
 		ft_error_c3d(cub->error);
 		return(-1);
 	}	
 	return (0);
 }
 
-int		jumping(char *line, t_cub3d *cub, int ret)
+int		parsing(char *line, t_cub3d *cub, int ret)
 {
 	printf("jumping|%d\n\tline=%s\n", cub->cb, line);
 	if ((line[(cub->i)] == 'R' && line[(cub->i) + 1] == ' '))
 		struct_num(line, &cub->rx, &cub->ry, &cub->ry);
-	if (line[(cub->i)] == 'N' && line[(cub->i) + 1] == 'O')
+	else if (line[(cub->i)] == 'N' && line[(cub->i) + 1] == 'O')
 		cub->no = struct_path(cub, &line);
-	if (line[(cub->i)] == 'S' && line[(cub->i) + 1] == 'O')
+	else if (line[(cub->i)] == 'S' && line[(cub->i) + 1] == 'O')
 		cub->so = struct_path(cub, &line);
-	if (line[(cub->i)] == 'W' && line[(cub->i) + 1] == 'E')
+	else if (line[(cub->i)] == 'W' && line[(cub->i) + 1] == 'E')
 		cub->we = struct_path(cub, &line);
-	if (line[(cub->i)] == 'E' && line[(cub->i) + 1] == 'A')
+	else if (line[(cub->i)] == 'E' && line[(cub->i) + 1] == 'A')
 		cub->ea = struct_path(cub, &line);
-	if (line[(cub->i)] == 'S' && line[(cub->i) + 1] == ' ')
+	else if (line[(cub->i)] == 'S' && line[(cub->i) + 1] == ' ')
 		cub->s = struct_path(cub, &line);
-	if (line[(cub->i)] == 'F' && line[(cub->i) + 1] == ' ')
+	else if (line[(cub->i)] == 'F' && line[(cub->i) + 1] == ' ')
 		struct_num(line, &cub->fr, &cub->fg, &cub->fb);
-	if (line[(cub->i)] == 'C' && line[(cub->i) + 1] == ' ')
+	else if (line[(cub->i)] == 'C' && line[(cub->i) + 1] == ' ')
 		struct_num(line, &cub->cr, &cub->cg, &cub->cb);
-	if (line[(cub->i)] == '0' || line[(cub->i)] == '1')
+	else if (line[(cub->i)] == '0' || line[(cub->i)] == '1')
 	{
+		cub->beginmap = 1;
 		if(ft_checkmapplacement(cub) == 0)
 			ret = read_map(cub, line, ret);
-		
 	}
-		
-	// else
-	// 	cub->error = -1; //do sumthng with this lazy ass
+	else if (line[(cub->i)] != '\0' && cub->beginmap == 0)
+	{
+		cub->error = -12; //do sumthng with this lazy ass
+		ft_error_c3d(cub->error);
+	}
 	return (ret);
 }
 
@@ -263,9 +273,11 @@ void	freevars(char *line, t_cub3d *cub, int ret)
 	while (i <= ret)
 	{
 		free(cub->map[i]);
+		free(cub->mapcopy[i]);
 		i++;
 	}
 	free(cub->map);
+	free(cub->mapcopy);
 }
 
 int	mapping(char *line, t_cub3d *cub)
@@ -286,13 +298,13 @@ int	mapping(char *line, t_cub3d *cub)
 		while (line[cub->i] == ' ')
 			(cub->i)++;
 		printf("mapping|%d\n", cub->cb);
-		ret = jumping(line, cub, ret);
+		ret = parsing(line, cub, ret);
 		if (retval == 1)
 			free(line);
 	}
 	free(line);
-	//printf("=-=%s=-=\n", cub->temp);
 	cub->map = ft_split_c3d(cub, cub->temp, '\n');
+	cub->mapcopy = ft_split_c3d(cub, cub->temp, '\n');
 	close(fd);
 	return (ret);
 }
@@ -320,11 +332,67 @@ void	check_if_empty(t_cub3d *cub)
 		cub->error = -4;
 }
 
-void	validity(t_cub3d *cub)
+void	playerobjcheck(t_cub3d *cub, int ret)
+{
+	int x;
+	int y;
+
+	x = 0;
+	y = 0;
+	while (y < ret)
+	{
+		while (cub->mapcopy[y][x] != '\0')
+		{
+			if (cub->mapcopy[y][x] != 'N' && cub->mapcopy[y][x] != '2'
+			&& cub->mapcopy[y][x] != '1' && cub->mapcopy[y][x] != '0' && cub->mapcopy[y][x] != ' ')
+				cub->error = -13;
+			if (cub->mapcopy[y][x] == 'N')
+			{
+				cub->players++;
+				cub->startx = x;
+				cub->starty = y;
+			}
+			if (cub->mapcopy[y][x] == '2')
+				cub->objects++;
+			x++;
+		}
+		x = 0;
+		y++;
+	}
+}
+
+void	ft_floodfill(t_cub3d *cub, int maxy)
+{
+	int x;
+	int y;
+
+	x = cub->startx;
+	y = cub->starty;
+	if (x == 0 || y == 0 || x == cub->maxstrlen || (y + 1) == maxy || 
+		cub->mapcopy[y][x + 1] == '\0' || cub->mapcopy[y][x] == '\0' ||
+		cub->error != 0)
+	{
+		cub->error = -13;
+		return ;
+	}
+	//if ()
+}
+
+void	mapvalidity(t_cub3d *cub, int ret)
+{
+	playerobjcheck(cub, ret);
+	if (cub->players == 1)
+		ft_floodfill(cub, ret);
+	if (cub->error != 0)
+		ft_error_c3d(cub->error);
+}
+
+void	validity(t_cub3d *cub, int ret)
 {
 	check_if_empty(cub);
 	if (cub->error != 0)
 		ft_error_c3d(cub->error);
+	mapvalidity(cub,  ret);
 }
 
 void	cub3d(void)
@@ -332,25 +400,28 @@ void	cub3d(void)
 	char	*line;
 	t_cub3d cub;
 	int ret;
-	//int i =0;
+
 	ret = mapping(line, &cub);
+	
 	//printf("ret=%d\n", ret);
-	// while (i < ret)
-	// {
-	// 	printf("==%s\n",(cub.map)[i]);
-	// 	i++;
-	// }
-	//printf("lemao\n");
+	int i = 0;
+	while (i < ret)
+	{
+		printf("==%s\n",(cub.mapcopy)[i]);
+		i++;
+	}
+	printf("lemao\n");
 	printf("RX=%d\nRY=%d\nNO=%s\nSO=%s\nWE=%s\nEA=%s\nS=%s\n", cub.rx, cub.ry, cub.no, cub.so, cub.we, cub.ea, cub.s);
 	printf("Fr=%i\nFg=%i\nFb=%i\nC=%i\nCg=%i\nCb=%i\n",cub.fr, cub.fg, cub.fb, cub.cr, cub.cg, cub.cb);
+	validity(&cub, ret);
 	freevars(line, &cub, ret);
-	validity(&cub);
+	
 }
 
 int		main(void)
 {
 	cub3d();
-	// while(1)
+	// while(1)		///newlines are fricked!!in map !!
 	// ;
 	return (0);
 }
