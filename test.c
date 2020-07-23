@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/04 14:57:29 by akramp        #+#    #+#                 */
-/*   Updated: 2020/07/22 18:27:11 by akramp        ########   odam.nl         */
+/*   Updated: 2020/07/23 18:36:26 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ void	struct_num(char *line, int *adr1, int *adr2, int *adr3)
 	while (line[snum.i] != '\0')
 	{
 		if (snum.check > 3)
-			snum.error = -18;	/*Error for too many numbers, 3 the max yo*/
+			snum.error = -18;	/*Error; for too many numbers, 3 the max yo*/
 		snum.error = num_check(&snum, line, &(snum.st));
 		if (snum.error != 0)
 			ft_error_c3d(snum.error);
@@ -146,11 +146,12 @@ char	*struct_path(t_cub3d *cub, char **line)
 {
 	int		len;
 	char	*temp;
-
+	
+	len = 0;
 	while ((*line)[(cub->i)] != '.' && (*line)[(cub->i)] != '/'
 	&& (*line)[(cub->i)] != '\0')
 		(cub->i)++;
-	if ((*line)[(cub->i)] == '\0')
+	if ((*line)[(cub->i) + 2] == '\0')
 		cub->error = -10;
 	if (cub->error != 0)
 		ft_error_c3d(cub->error);
@@ -170,6 +171,7 @@ int		read_map(t_cub3d *cub, char *line, int ret)
 	if (cub->temp == 0)
 		chk = 1;
 	cub->temp = ft_strjoin_c3d(cub, cub->temp, line);
+	printf("LINE=[[%s]]\nTEMP=[%s]\n", line, cub->temp);
 	if (chk == 1)
 	{
 		len = ft_strlen(cub->temp);
@@ -213,15 +215,16 @@ void	struct_init(t_cub3d *cub)
 
 int	ft_checkmapplacement(t_cub3d *cub)
 {
-	if (cub->rx == -1 || cub->ry == -1 || cub->no == 0 || cub->so == 0 
-	|| cub->we == 0 || cub->ea == 0 || cub->s == 0 || cub->fr == -1 
-	|| cub->fg == -1 || cub->fb == -1 || cub->cr == -1 || cub->cg == -1 || cub->cb == -1)
+	if (cub->rx == -1 || cub->ry == -1 || cub->no == 0 || cub->so == 0
+	|| cub->we == 0 || cub->ea == 0 || cub->s == 0 || cub->fr == -1
+	|| cub->fg == -1 || cub->fb == -1 || cub->cr == -1 || cub->cg == -1
+	|| cub->cb == -1)
 	{
 		cub->error = -11;
-	if (cub->error != 0)
-		ft_error_c3d(cub->error);
-		return(-1);
-	}	
+		if (cub->error != 0)
+			ft_error_c3d(cub->error);
+		return (-1);
+	}
 	return (0);
 }
 
@@ -247,12 +250,17 @@ int		parsing(char *line, t_cub3d *cub, int ret)
 	else if (line[(cub->i)] == '0' || line[(cub->i)] == '1')
 	{
 		cub->beginmap = 1;
-		if(ft_checkmapplacement(cub) == 0)
+		if (ft_checkmapplacement(cub) == 0)
 			ret = read_map(cub, line, ret);
 	}
 	else if (line[(cub->i)] != '\0' && cub->beginmap == 0)
 	{
-		cub->error = -12; //do sumthng with this lazy ass
+		cub->error = -12;
+		ft_error_c3d(cub->error);
+	}
+	else if (line[0] == '\0' && cub->beginmap == 1)
+	{
+		cub->error = -13;
 		ft_error_c3d(cub->error);
 	}
 	return (ret);
@@ -280,7 +288,7 @@ void	freevars(char *line, t_cub3d *cub, int ret)
 	free(cub->mapcopy);
 }
 
-int	mapping(char *line, t_cub3d *cub)
+int	readfile(char *line, t_cub3d *cub)
 {
 	int fd;
 	int retval;
@@ -297,7 +305,6 @@ int	mapping(char *line, t_cub3d *cub)
 		retval = get_next_line(fd, &line);
 		while (line[cub->i] == ' ')
 			(cub->i)++;
-		printf("mapping|%d\n", cub->cb);
 		ret = parsing(line, cub, ret);
 		if (retval == 1)
 			free(line);
@@ -361,28 +368,69 @@ void	playerobjcheck(t_cub3d *cub, int ret)
 	}
 }
 
-void	ft_floodfill(t_cub3d *cub, int maxy)
+void	ft_floodfill(t_cub3d *cub, int y, int x, int maxy)
 {
-	int x;
-	int y;
-
-	x = cub->startx;
-	y = cub->starty;
-	if (x == 0 || y == 0 || x == cub->maxstrlen || (y + 1) == maxy || 
-		cub->mapcopy[y][x + 1] == '\0' || cub->mapcopy[y][x] == '\0' ||
-		cub->error != 0)
+	int i = 0;
+	while (i < maxy)
 	{
-		cub->error = -13;
+		printf("==%s\n",(cub->mapcopy)[i]);
+		i++;
+	}
+	printf("\n");
+	if (x == 0 || y == 0 || x == cub->maxstrlen || (y + 1) == maxy ||
+		cub->mapcopy[y][x + 1] == '\0' || cub->mapcopy[y][x] == '\0')
+	{
+		cub->error = 0;
 		return ;
 	}
-	//if ()
+	cub->mapcopy[y][x] = 'x';
+	if (cub->mapcopy[y - 1][x] != '1')
+	{
+		printf("\033[38;5;218mN\033[0m\n");
+		ft_floodfill(cub, y - 1, x, maxy);
+	}
+	if (cub->mapcopy[y - 1][x + 1] != '1')
+	{
+		printf("\033[38;5;218mNE\033[0m\n");
+		ft_floodfill(cub, y - 1, x + 1, maxy);
+	}
+	if (cub->mapcopy[y][x + 1] != '1')
+	{
+		printf("\033[38;5;218mE\033[0m\n");
+		ft_floodfill(cub, y, x + 1, maxy);
+	}
+	if (cub->mapcopy[y + 1][x + 1] != '1')
+	{
+		printf("\033[38;5;218mSE\033[0m\n");
+		ft_floodfill(cub, y + 1, x + 1, maxy);
+	}
+	if (cub->mapcopy[y + 1][x] != '1')
+	{
+		printf("\033[38;5;218mS\033[0m\n");
+		ft_floodfill(cub, y + 1, x, maxy);
+	}
+	if (cub->mapcopy[y + 1][x - 1] != '1')
+	{
+		printf("\033[38;5;218mSW\033[0m\n");
+		ft_floodfill(cub, y + 1, x - 1, maxy);
+	}
+	if (cub->mapcopy[y][x - 1] != '1')
+	{
+		printf("\033[38;5;218mW\033[0m\n");
+		ft_floodfill(cub, y, x - 1, maxy);
+	}
+	if (cub->mapcopy[y - 1][x - 1] != '1')
+	{
+		printf("\033[38;5;218mNW\033[0m\n");
+		ft_floodfill(cub, y - 1, x - 1, maxy);
+	}
 }
 
 void	mapvalidity(t_cub3d *cub, int ret)
 {
 	playerobjcheck(cub, ret);
 	if (cub->players == 1)
-		ft_floodfill(cub, ret);
+		ft_floodfill(cub, cub->starty, cub->startx, ret);
 	if (cub->error != 0)
 		ft_error_c3d(cub->error);
 }
@@ -401,7 +449,7 @@ void	cub3d(void)
 	t_cub3d cub;
 	int ret;
 
-	ret = mapping(line, &cub);
+	ret = readfile(line, &cub);
 	
 	//printf("ret=%d\n", ret);
 	int i = 0;
@@ -414,6 +462,12 @@ void	cub3d(void)
 	printf("RX=%d\nRY=%d\nNO=%s\nSO=%s\nWE=%s\nEA=%s\nS=%s\n", cub.rx, cub.ry, cub.no, cub.so, cub.we, cub.ea, cub.s);
 	printf("Fr=%i\nFg=%i\nFb=%i\nC=%i\nCg=%i\nCb=%i\n",cub.fr, cub.fg, cub.fb, cub.cr, cub.cg, cub.cb);
 	validity(&cub, ret);
+	i = 0;
+	while (i < ret)
+	{
+		printf("=2=%s\n",(cub.mapcopy)[i]);
+		i++;
+	}
 	freevars(line, &cub, ret);
 	
 }
