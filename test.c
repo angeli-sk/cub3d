@@ -384,42 +384,42 @@ void	ft_floodfill(t_cub3d *cub, int y, int x, int maxy)
 		return ;
 	}
 	cub->mapcopy[y][x] = 'x';
-	if (cub->mapcopy[y - 1][x] != '1')
+	if (cub->mapcopy[y - 1][x] != '1' && cub->mapcopy[y - 1][x] != 'x')
 	{
 		printf("\033[38;5;218mN\033[0m\n");
 		ft_floodfill(cub, y - 1, x, maxy);
 	}
-	if (cub->mapcopy[y - 1][x + 1] != '1')
+	if (cub->mapcopy[y - 1][x + 1] != '1' && cub->mapcopy[y - 1][x + 1] != 'x')
 	{
 		printf("\033[38;5;218mNE\033[0m\n");
 		ft_floodfill(cub, y - 1, x + 1, maxy);
 	}
-	if (cub->mapcopy[y][x + 1] != '1')
+	if (cub->mapcopy[y][x + 1] != '1' && cub->mapcopy[y][x + 1] != 'x')
 	{
 		printf("\033[38;5;218mE\033[0m\n");
 		ft_floodfill(cub, y, x + 1, maxy);
 	}
-	if (cub->mapcopy[y + 1][x + 1] != '1')
+	if (cub->mapcopy[y + 1][x + 1] != '1' && cub->mapcopy[y + 1][x + 1] != 'x')
 	{
 		printf("\033[38;5;218mSE\033[0m\n");
 		ft_floodfill(cub, y + 1, x + 1, maxy);
 	}
-	if (cub->mapcopy[y + 1][x] != '1')
+	if (cub->mapcopy[y + 1][x] != '1'&& cub->mapcopy[y + 1][x] != 'x')
 	{
 		printf("\033[38;5;218mS\033[0m\n");
 		ft_floodfill(cub, y + 1, x, maxy);
 	}
-	if (cub->mapcopy[y + 1][x - 1] != '1')
+	if (cub->mapcopy[y + 1][x - 1] != '1'&& cub->mapcopy[y + 1][x - 1] != 'x')
 	{
 		printf("\033[38;5;218mSW\033[0m\n");
 		ft_floodfill(cub, y + 1, x - 1, maxy);
 	}
-	if (cub->mapcopy[y][x - 1] != '1')
+	if (cub->mapcopy[y][x - 1] != '1' && cub->mapcopy[y][x - 1] != 'x')
 	{
 		printf("\033[38;5;218mW\033[0m\n");
 		ft_floodfill(cub, y, x - 1, maxy);
 	}
-	if (cub->mapcopy[y - 1][x - 1] != '1')
+	if (cub->mapcopy[y - 1][x - 1] != '1' && cub->mapcopy[y - 1][x - 1] != 'x')
 	{
 		printf("\033[38;5;218mNW\033[0m\n");
 		ft_floodfill(cub, y - 1, x - 1, maxy);
