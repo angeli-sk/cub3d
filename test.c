@@ -16,46 +16,6 @@
 #include <sys/stat.h>
 #include "./cub3d.h"
 
-void num_check_p2(t_struct_num *snum)
-{
-	if (snum->ltr == 'R')
-		(snum->error) = -2;
-	else if (snum->ltr == 'F')
-		(snum->error) = -3;
-	else if (snum->ltr == 'C')
-		(snum->error) = -4;
-	else
-		(snum->error) = -17;
-}
-
-int	num_check(t_struct_num *snum, char *line, int *start)
-{
-	while ((line[snum->i] < '0') || (line[snum->i] > '9'))
-	{
-		if ((snum->error) != -18 && (line[snum->i] == ' '
-		|| (line[snum->i] == ',' && line[(snum->i) + 1] != ',')
-		|| line[snum->i] == 'R' || line[snum->i] == 'F'
-		|| line[snum->i] == 'C'))
-		{
-			if (line[snum->i] == 'R' || line[snum->i] == 'F'
-			|| line[snum->i] == 'C')
-				snum->ltr = line[snum->i];
-			if (snum->check > 2 && snum->ltr == 'R')
-				(snum->error) = -2;
-			(snum->i)++;
-		}
-		else
-		{
-			num_check_p2(snum);
-			break ;
-		}
-	}
-	*start = snum->i;
-	while (((line)[snum->i] >= '0') && ((line)[snum->i] <= '9'))
-		(snum->i)++;
-	return (snum->error);
-}
-
 void	ft_error_c3d(int error)
 {
 	printf("error = %d\n", error);
@@ -90,6 +50,79 @@ void	ft_error_c3d(int error)
 	printf("LEMAO");
 	exit(1);
 }
+void num_check_p2(t_struct_num *snum)
+{
+	if (snum->ltr == 'R')
+		(snum->error) = -2;
+	else if (snum->ltr == 'F')
+		(snum->error) = -3;
+	else if (snum->ltr == 'C')
+		(snum->error) = -4;
+	else
+		(snum->error) = -17;
+}
+
+void	ft_check_if_numcorrect(t_struct_num *snum, char *line)
+{
+	int tempi;
+
+	tempi = 0;
+	while ((snum->ltr == 'R' && line[tempi] != '\0') )
+	{
+		if (line[tempi] == ',')
+		{
+			snum->error == -2;
+			//if (snum->error != 0)
+				ft_error_c3d(snum->error);
+		}
+		tempi++;
+	}
+	tempi = snum->st;
+	while (((snum->ltr == 'F' || snum->ltr == 'C') && line[tempi] != '\0') )
+	{
+		if (ft_isspace(line[tempi]) == 1)
+		{
+			if (snum->ltr == 'F')
+				snum->error == -3;
+			else
+				snum->error == -4;
+			//if (snum->error != 0)
+				ft_error_c3d(snum->error);
+		}
+		tempi++;
+	}
+	
+}
+
+void	num_check(t_struct_num *snum, char *line, int *start)
+{
+	while ((line[snum->i] < '0') || (line[snum->i] > '9'))
+	{
+		if ((snum->error) != -18 && (line[snum->i] == ' '
+		|| (line[snum->i] == ',' && line[snum->i + 1] != ',')
+		|| line[snum->i] == 'R' || line[snum->i] == 'F'
+		|| line[snum->i] == 'C'))
+		{
+			if (line[snum->i] == 'R' || line[snum->i] == 'F'
+			|| line[snum->i] == 'C')
+				snum->ltr = line[snum->i];
+			if (snum->check > 2 && snum->ltr == 'R')
+				(snum->error) = -2;
+			(snum->i)++;
+		}
+		else
+		{
+			num_check_p2(snum);
+			break ;
+		}
+	}
+	*start = snum->i;
+	while (((line)[snum->i] >= '0') && ((line)[snum->i] <= '9'))
+		(snum->i)++;
+	ft_check_if_numcorrect(snum, line);
+}
+
+
 
 int		ft_error_res(int num, int error) //error checker for correct resolution
 {
@@ -117,6 +150,7 @@ void	struct_num_init(t_struct_num *snum)
 	snum->ltr = 0;
 }
 
+
 void	struct_num(char *line, int *adr1, int *adr2, int *adr3)
 {
 	t_struct_num snum;
@@ -126,7 +160,7 @@ void	struct_num(char *line, int *adr1, int *adr2, int *adr3)
 	{
 		if (snum.check > 3)
 			snum.error = -18;	/*Error; for too many numbers, 3 the max yo*/
-		snum.error = num_check(&snum, line, &(snum.st));
+		num_check(&snum, line, &(snum.st));
 		if (snum.error != 0)
 			ft_error_c3d(snum.error);
 		snum.temp = malloc(((snum.i) - (snum.st)) * sizeof(char) + 1);
@@ -146,15 +180,27 @@ char	*struct_path(t_cub3d *cub, char **line)
 {
 	int		len;
 	char	*temp;
-	
+	int		tempi;
+
 	len = 0;
+	tempi = 0;
 	while ((*line)[(cub->i)] != '.' && (*line)[(cub->i)] != '/'
 	&& (*line)[(cub->i)] != '\0')
 		(cub->i)++;
-	if ((*line)[(cub->i) + 2] == '\0')
+	if ((*line)[(cub->i) + 2] == '\0' || (*line)[(cub->i) + 1] != '/')
 		cub->error = -10;
 	if (cub->error != 0)
 		ft_error_c3d(cub->error);
+	tempi = cub->i;
+	while((*line)[tempi] != '\0')
+	{
+		if (ft_isspace((*line)[tempi]) == 1)
+		{
+			cub->error = -10;
+			ft_error_c3d(cub->error);
+		}
+		tempi++;
+	}
 	len = ft_strlen(&(*line)[(cub->i)]);
 	temp = malloc((sizeof(char) * len) + 1);
 	temp[len] = '\0';
@@ -370,13 +416,13 @@ void	playerobjcheck(t_cub3d *cub, int ret)
 
 void	ft_floodfill(t_cub3d *cub, int y, int x, int maxy)
 {
-	int i = 0;
-	while (i < maxy)
-	{
-		printf("==%s\n",(cub->mapcopy)[i]);
-		i++;
-	}
-	printf("\n");
+	// int i = 0;
+	// while (i < maxy)
+	// {
+	// 	printf("==%s\n",(cub->mapcopy)[i]);
+	// 	i++;
+	// }
+	//printf("\n");
 	if (x == 0 || y == 0 || x == cub->maxstrlen || (y + 1) == maxy ||
 		cub->mapcopy[y][x + 1] == '\0' || cub->mapcopy[y][x] == '\0')
 	{
@@ -385,45 +431,21 @@ void	ft_floodfill(t_cub3d *cub, int y, int x, int maxy)
 	}
 	cub->mapcopy[y][x] = 'x';
 	if (cub->mapcopy[y - 1][x] != '1' && cub->mapcopy[y - 1][x] != 'x')
-	{
-		printf("\033[38;5;218mN\033[0m\n");
 		ft_floodfill(cub, y - 1, x, maxy);
-	}
 	if (cub->mapcopy[y - 1][x + 1] != '1' && cub->mapcopy[y - 1][x + 1] != 'x')
-	{
-		printf("\033[38;5;218mNE\033[0m\n");
 		ft_floodfill(cub, y - 1, x + 1, maxy);
-	}
 	if (cub->mapcopy[y][x + 1] != '1' && cub->mapcopy[y][x + 1] != 'x')
-	{
-		printf("\033[38;5;218mE\033[0m\n");
 		ft_floodfill(cub, y, x + 1, maxy);
-	}
 	if (cub->mapcopy[y + 1][x + 1] != '1' && cub->mapcopy[y + 1][x + 1] != 'x')
-	{
-		printf("\033[38;5;218mSE\033[0m\n");
 		ft_floodfill(cub, y + 1, x + 1, maxy);
-	}
 	if (cub->mapcopy[y + 1][x] != '1'&& cub->mapcopy[y + 1][x] != 'x')
-	{
-		printf("\033[38;5;218mS\033[0m\n");
 		ft_floodfill(cub, y + 1, x, maxy);
-	}
 	if (cub->mapcopy[y + 1][x - 1] != '1'&& cub->mapcopy[y + 1][x - 1] != 'x')
-	{
-		printf("\033[38;5;218mSW\033[0m\n");
 		ft_floodfill(cub, y + 1, x - 1, maxy);
-	}
 	if (cub->mapcopy[y][x - 1] != '1' && cub->mapcopy[y][x - 1] != 'x')
-	{
-		printf("\033[38;5;218mW\033[0m\n");
 		ft_floodfill(cub, y, x - 1, maxy);
-	}
 	if (cub->mapcopy[y - 1][x - 1] != '1' && cub->mapcopy[y - 1][x - 1] != 'x')
-	{
-		printf("\033[38;5;218mNW\033[0m\n");
 		ft_floodfill(cub, y - 1, x - 1, maxy);
-	}
 }
 
 void	mapvalidity(t_cub3d *cub, int ret)
@@ -475,8 +497,9 @@ void	cub3d(void)
 int		main(void)
 {
 	cub3d();
-	// while(1)		///newlines are fricked!!in map !!
+	// while(1)		
 	// ;
 	return (0);
 }
 
+/*I guess it works now the parcer but there's something wrong with the errors? See line 75 for example.*/
