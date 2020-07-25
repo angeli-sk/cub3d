@@ -503,3 +503,4 @@ int		main(void)
 }
 
 /*I guess it works now the parcer but there's something wrong with the errors? See line 75 for example.*/
+/*Also this is very uggo code, fix that...*/
