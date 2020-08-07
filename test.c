@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/04 14:57:29 by akramp        #+#    #+#                 */
-/*   Updated: 2020/07/23 18:36:26 by akramp        ########   odam.nl         */
+/*   Updated: 2020/08/07 22:34:01 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,36 +20,46 @@ void	ft_error_c3d(int error)
 {
 	printf("error = %d\n", error);
 	if (error == -1)
-		write(1, "ERROR;\tdunno what is fricked\n", 29);
+		write(1, "ERROR\ndunno what is fricked\n", 29);
 	if (error == -2)
-		write(1, "ERROR;\tR is fricked\n", 20);
+		write(1, "ERROR\nR is fricked\n", 20);
 	if (error == -3)
-		write(1, "ERROR;\tF is fricked\n", 20);
+		write(1, "ERROR\nF is fricked\n", 20);
 	if (error == -4)
-		write(1, "ERROR;\tC is fricked\n", 20);
+		write(1, "ERROR\nC is fricked\n", 20);
 	if (error == -5)
-		write(1, "ERROR;\tNO is fricked\n", 21);
+		write(1, "ERROR\nNO is fricked\n", 21);
 	if (error == -6)
-		write(1, "ERROR;\tSO is fricked\n", 21);
+		write(1, "ERROR\nSO is fricked\n", 21);
 	if (error == -7)
-		write(1, "ERROR;\tWE is fricked\n", 21);
+		write(1, "ERROR\nWE is fricked\n", 21);
 	if (error == -8)
-		write(1, "ERROR;\tEA is fricked\n", 21);
+		write(1, "ERROR\nEA is fricked\n", 21);
 	if (error == -9)
-		write(1, "ERROR;\tS is fricked\n", 20); //-11
+		write(1, "ERROR\nS is fricked\n", 20); //-11
 	if (error == -10)
-		write(1, "ERROR;\tPath is fricked\n", 23);
+		write(1, "ERROR\nPath is fricked\n", 23);
 	if (error == -11)
-		write(1, "ERROR;\tno gucci man\n", 21);
+		write(1, "ERROR\nno gucci man\n", 21);
 	if (error == -12)
-		write(1, "ERROR;\tThere's sum garbo man, clean it\n", 39);
+		write(1, "ERROR\nThere's sum garbo man, clean it\n", 39);
 	if (error == -13)
-		write(1, "ERROR;\tYour map is fricked\n", 27);
+		write(1, "ERROR\nYour map is fricked\n", 27);
+	if (error == -14)
+		write(1, "ERROR\nStuff in your map is incorrect\n", 27);
 	if (error == -17)
-		write(1, "ERROR;\t??? is fricked\n", 22);
+		write(1, "ERROR\n??? is fricked\n", 22);
 	printf("LEMAO");
 	exit(1);
 }
+
+// void	ft_error_c3d(char *s, int len)
+// {
+// 	write (1, "ERROR\n", 6);
+// 	write (1, s, len);
+//	write(1, "\n", 1);
+// }
+
 void num_check_p2(t_struct_num *snum)
 {
 	if (snum->ltr == 'R')
@@ -71,7 +81,7 @@ void	ft_check_if_numcorrect(t_struct_num *snum, char *line)
 	{
 		if (line[tempi] == ',')
 		{
-			snum->error == -2;
+			snum->error = -2;
 			//if (snum->error != 0)
 				ft_error_c3d(snum->error);
 		}
@@ -83,9 +93,9 @@ void	ft_check_if_numcorrect(t_struct_num *snum, char *line)
 		if (ft_isspace(line[tempi]) == 1)
 		{
 			if (snum->ltr == 'F')
-				snum->error == -3;
+				snum->error = -3;
 			else
-				snum->error == -4;
+				snum->error = -4;
 			//if (snum->error != 0)
 				ft_error_c3d(snum->error);
 		}
@@ -122,8 +132,6 @@ void	num_check(t_struct_num *snum, char *line, int *start)
 	ft_check_if_numcorrect(snum, line);
 }
 
-
-
 int		ft_error_res(int num, int error) //error checker for correct resolution
 {
 	if (num <= 0)
@@ -136,6 +144,9 @@ int		ft_error_res(int num, int error) //error checker for correct resolution
 
 int	strcut_num_loopcheck(int *adr, int error, char *temp)
 {
+	printf("adr|%i|\n", *adr);
+	if (*adr != -1)
+		error = -1;
 	*adr = ft_atoi(temp);
 	return (error);
 }
@@ -149,7 +160,6 @@ void	struct_num_init(t_struct_num *snum)
 	snum->temp = 0;
 	snum->ltr = 0;
 }
-
 
 void	struct_num(char *line, int *adr1, int *adr2, int *adr3)
 {
@@ -176,6 +186,27 @@ void	struct_num(char *line, int *adr1, int *adr2, int *adr3)
 	}
 }
 
+int		check_if_s_empty(t_cub3d *cub,  char *line)
+{
+	if (line[(cub->i)] == 'N' && line[(cub->i) + 1] == 'O'
+			&& cub->no != NULL)
+		return (-5);
+	else if (line[(cub->i)] == 'S' && line[(cub->i) + 1] == 'O'
+			&& cub->so != NULL)
+		return (-6);
+	else if (line[(cub->i)] == 'W' && line[(cub->i) + 1] == 'E'
+			&& cub->we != NULL)
+		return (-7);
+	else if (line[(cub->i)] == 'E' && line[(cub->i) + 1] == 'A'
+			&& cub->ea != NULL)
+		return (-8);
+	else if (line[(cub->i)] == 'S' && line[(cub->i) + 1] == ' '
+			&& cub->s != NULL)
+		return (-9);
+	else
+		return (0);
+}
+
 char	*struct_path(t_cub3d *cub, char **line)
 {
 	int		len;
@@ -184,21 +215,19 @@ char	*struct_path(t_cub3d *cub, char **line)
 
 	len = 0;
 	tempi = 0;
-	while ((*line)[(cub->i)] != '.' && (*line)[(cub->i)] != '/'
-	&& (*line)[(cub->i)] != '\0')
+	while ((*line)[(cub->i)] == ' ')
 		(cub->i)++;
-	if ((*line)[(cub->i) + 2] == '\0' || (*line)[(cub->i) + 1] != '/')
-		cub->error = -10;
+	cub->error = check_if_s_empty(cub, *line);
 	if (cub->error != 0)
 		ft_error_c3d(cub->error);
 	tempi = cub->i;
 	while((*line)[tempi] != '\0')
 	{
-		if (ft_isspace((*line)[tempi]) == 1)
-		{
-			cub->error = -10;
-			ft_error_c3d(cub->error);
-		}
+		// if (ft_isspace((*line)[tempi]) == 1)
+		// {
+		// 	cub->error = -10;
+		// 	ft_error_c3d(cub->error);
+		// }
 		tempi++;
 	}
 	len = ft_strlen(&(*line)[(cub->i)]);
@@ -216,8 +245,9 @@ int		read_map(t_cub3d *cub, char *line, int ret)
 	chk = 0;
 	if (cub->temp == 0)
 		chk = 1;
+	//printf("line = %s\n", line);
 	cub->temp = ft_strjoin_c3d(cub, cub->temp, line);
-	printf("LINE=[[%s]]\nTEMP=[%s]\n", line, cub->temp);
+	//printf("LINE=[[%s]]\nTEMP=[%s]\n", line, cub->temp);
 	if (chk == 1)
 	{
 		len = ft_strlen(cub->temp);
@@ -276,7 +306,7 @@ int	ft_checkmapplacement(t_cub3d *cub)
 
 int		parsing(char *line, t_cub3d *cub, int ret)
 {
-	printf("jumping|%d\n\tline=%s\n", cub->cb, line);
+	printf("line=|%s|\nline[(cub->i)]=|%c|\nbgmap=|%i|\n\n", line, line[(cub->i)], cub->beginmap);
 	if ((line[(cub->i)] == 'R' && line[(cub->i) + 1] == ' '))
 		struct_num(line, &cub->rx, &cub->ry, &cub->ry);
 	else if (line[(cub->i)] == 'N' && line[(cub->i) + 1] == 'O')
@@ -295,20 +325,28 @@ int		parsing(char *line, t_cub3d *cub, int ret)
 		struct_num(line, &cub->cr, &cub->cg, &cub->cb);
 	else if (line[(cub->i)] == '0' || line[(cub->i)] == '1')
 	{
-		cub->beginmap = 1;
+		if (cub->beginmap == 0)
+			cub->beginmap = 1;
 		if (ft_checkmapplacement(cub) == 0)
 			ret = read_map(cub, line, ret);
 	}
 	else if (line[(cub->i)] != '\0' && cub->beginmap == 0)
-	{
+	{//printf("LINE=[[%s]]\nTEMP=[%s]\n", line, cub->temp);
 		cub->error = -12;
 		ft_error_c3d(cub->error);
 	}
-	else if (line[0] == '\0' && cub->beginmap == 1)
+	else if (line[(cub->i)] == '\0' && cub->beginmap == 1)
 	{
+		cub->beginmap = 2;printf("BORIS\n");
+	}	
+	if (line[(cub->i)] != '\0' && cub->beginmap == 2)
+	{//printf("LINE=[[%s]]\nTEMP=[%s]\n", line, cub->temp);
 		cub->error = -13;
 		ft_error_c3d(cub->error);
 	}
+	if (cub->error != 0)
+		ft_error_c3d(cub->error);
+	//printf("line = %s\n", line);
 	return (ret);
 }
 
@@ -317,7 +355,8 @@ void	freevars(char *line, t_cub3d *cub, int ret)
 	int i;
 
 	i = 0;
-	free(line);
+	if (!(line))
+		free(line);
 	free(cub->no);
 	free(cub->so);
 	free(cub->we);
@@ -334,13 +373,13 @@ void	freevars(char *line, t_cub3d *cub, int ret)
 	free(cub->mapcopy);
 }
 
-int	readfile(char *line, t_cub3d *cub)
+int	readfile(char *line, t_cub3d *cub, char *path)
 {
 	int fd;
 	int retval;
 	int ret;
-
-	fd = open("map.cub", O_RDONLY);
+	
+	fd = open(path, O_RDONLY);
 	ret = 0;
 	line = NULL;
 	struct_init(cub);
@@ -349,6 +388,7 @@ int	readfile(char *line, t_cub3d *cub)
 	{
 		(cub->i) = 0;
 		retval = get_next_line(fd, &line);
+		//printf("line = %s\n", line);
 		while (line[cub->i] == ' ')
 			(cub->i)++;
 		ret = parsing(line, cub, ret);
@@ -362,7 +402,7 @@ int	readfile(char *line, t_cub3d *cub)
 	return (ret);
 }
 
-void	check_if_empty(t_cub3d *cub)
+void	check_if_empty_start(t_cub3d *cub)
 {
 	if ((cub->rx < 0 || cub->rx > cub->maxrx)
 	|| (cub->ry < 0 || cub->ry > cub->maxry))
@@ -396,10 +436,14 @@ void	playerobjcheck(t_cub3d *cub, int ret)
 	{
 		while (cub->mapcopy[y][x] != '\0')
 		{
-			if (cub->mapcopy[y][x] != 'N' && cub->mapcopy[y][x] != '2'
-			&& cub->mapcopy[y][x] != '1' && cub->mapcopy[y][x] != '0' && cub->mapcopy[y][x] != ' ')
-				cub->error = -13;
-			if (cub->mapcopy[y][x] == 'N')
+			if ((cub->mapcopy[y][x] != 'N' && cub->mapcopy[y][x] != 'S' &&
+				cub->mapcopy[y][x] != 'W'
+				&& cub->mapcopy[y][x] != 'E') && cub->mapcopy[y][x] != '2'
+				&& cub->mapcopy[y][x] != '1' && cub->mapcopy[y][x] != '0' &&
+				cub->mapcopy[y][x] != ' ')
+				cub->error = -14;
+			if (cub->mapcopy[y][x] == 'S' || cub->mapcopy[y][x] == 'W' ||
+				cub->mapcopy[y][x] == 'E' || cub->mapcopy[y][x] == 'N')
 			{
 				cub->players++;
 				cub->startx = x;
@@ -422,11 +466,11 @@ void	ft_floodfill(t_cub3d *cub, int y, int x, int maxy)
 	// 	printf("==%s\n",(cub->mapcopy)[i]);
 	// 	i++;
 	// }
-	//printf("\n");
+	// printf("\n");
 	if (x == 0 || y == 0 || x == cub->maxstrlen || (y + 1) == maxy ||
 		cub->mapcopy[y][x + 1] == '\0' || cub->mapcopy[y][x] == '\0')
 	{
-		cub->error = 0;
+		cub->error = -13;
 		return ;
 	}
 	cub->mapcopy[y][x] = 'x';
@@ -453,33 +497,35 @@ void	mapvalidity(t_cub3d *cub, int ret)
 	playerobjcheck(cub, ret);
 	if (cub->players == 1)
 		ft_floodfill(cub, cub->starty, cub->startx, ret);
+	else
+		cub->error = -13;
 	if (cub->error != 0)
 		ft_error_c3d(cub->error);
 }
 
 void	validity(t_cub3d *cub, int ret)
 {
-	check_if_empty(cub);
+	check_if_empty_start(cub);
 	if (cub->error != 0)
 		ft_error_c3d(cub->error);
 	mapvalidity(cub,  ret);
 }
 
-void	cub3d(void)
+void	cub3d(char **argv, int argc)
 {
 	char	*line;
 	t_cub3d cub;
 	int ret;
 
-	ret = readfile(line, &cub);
+	ret = readfile(line, &cub, argv[1]);//make error function for this too many args too litlle etc
 	
 	//printf("ret=%d\n", ret);
 	int i = 0;
-	while (i < ret)
-	{
-		printf("==%s\n",(cub.mapcopy)[i]);
-		i++;
-	}
+	// while (i < ret)
+	// {
+	// 	printf("==%s\n",(cub.mapcopy)[i]);
+	// 	i++;
+	// }
 	printf("lemao\n");
 	printf("RX=%d\nRY=%d\nNO=%s\nSO=%s\nWE=%s\nEA=%s\nS=%s\n", cub.rx, cub.ry, cub.no, cub.so, cub.we, cub.ea, cub.s);
 	printf("Fr=%i\nFg=%i\nFb=%i\nC=%i\nCg=%i\nCb=%i\n",cub.fr, cub.fg, cub.fb, cub.cr, cub.cg, cub.cb);
@@ -494,9 +540,9 @@ void	cub3d(void)
 	
 }
 
-int		main(void)
+int		main(int argc, char **argv)
 {
-	cub3d();
+	cub3d(argv, argc);
 	// while(1)		
 	// ;
 	return (0);

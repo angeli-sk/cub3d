@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/07 16:40:24 by akramp        #+#    #+#                 */
-/*   Updated: 2020/07/22 16:41:25 by akramp        ########   odam.nl         */
+/*   Updated: 2020/08/07 19:48:10 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include "./libft/libft.h"
 # include "./get_next_line/get_next_line.h"
 #include <stdio.h>
+
 
 typedef struct	s_cub3d
 {
@@ -72,7 +73,7 @@ typedef struct	s_mapinfo
 	char player;
 }				t_mapinfo;
 
-void cub3d(void);
+void cub3d(char **argv, int argc);
 
 /*libft*/
 char	*ft_strjoin_c3d(t_cub3d *cub, char const *s1, char const *s2);
