@@ -16,6 +16,14 @@
 # include "./get_next_line/get_next_line.h"
 #include <stdio.h>
 
+typedef enum	e_rror
+{
+	invalid_map = -1,
+	invalid_char = -2,
+	invalid_F = -3,
+	invalid_C = -4,
+	too_many_nums = -18
+}				t_rror;
 
 typedef struct	s_cub3d
 {
@@ -45,6 +53,20 @@ typedef struct	s_cub3d
 	int		objects;
 	int		startx;
 	int		starty;
+	int		max_y;
+	char	*line;
+	int		f;
+	int		c;
+	int		r;
+	int 	fd;
+	int		ret;
+	char	*free_temp;
+	int		num_st;
+	int		num_check;
+	char	*num_temp;
+	int		num_i;
+	char	num_ltr;
+	int		num_error;
 }				t_cub3d;
 
 typedef struct s_splitty

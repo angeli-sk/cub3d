@@ -22,7 +22,11 @@ FLAGSMLX =  -L. -lmlx -framework OpenGL -framework AppKit
 #✧･ﾟ: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ *✧･ﾟ:* SOURCES ✧*:･ﾟ✧: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ﾟ: *✧･ﾟ:#
 
 SRC = bleepbloop.c
+SRC2 =	test.c ./get_next_line/get_next_line.c \
+		./get_next_line/get_next_line_utils.c ft_strjoin_c3d.c \
+		ft_split_c3d.c ft_calloc_mlx.c ft_bzero_mlx.c ./libft/libft.a
 OBJ :=	${SRC:%.c=%.o}
+OBJ2 :=	${SRC2:%.c=%.o}
 
 #✧･ﾟ: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ *✧･ﾟ:* COLORS ✧*:･ﾟ✧: *✧･ﾟ:* ✧ *:･ﾟ✧*:･ﾟ✧✧･ﾟ: *✧･ﾟ:#
 
@@ -61,6 +65,8 @@ $(NAME):$(OBJ)
 	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
 	@$(CC) $(FLAGSMLX) $< -o $(NAME) -I mlxs
 
+parser:
+	$(CC) $(SRC2) $< -o ./a.out
 clean:
 	@echo "$(PINK)🦄	Cleaning ...$(WHITE)\n"
 	rm -f $(OBJ) $(OBJ_2) $(OBJ_B)
