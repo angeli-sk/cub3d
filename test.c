@@ -15,8 +15,10 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include "./cub3d.h"
+# include "./libft/libft.h"
+# include "./get_next_line/get_next_line.h"
 
-void	freemaps(t_cub3d *cub)
+void	freemaps(t_parse *cub) //free
 {
 	// int i;
 
@@ -35,7 +37,7 @@ void	freemaps(t_cub3d *cub)
 		free(cub->mapcopy);
 }
 
-void	freevars(t_cub3d *cub)
+void	freevars(t_parse *cub) //free
 {
 	if ((cub->line != 0))
 		free((cub->line));
@@ -53,14 +55,14 @@ void	freevars(t_cub3d *cub)
 		free(cub->temp);
 }
 
-void	ft_write_error(char *s, int len)
+void	ft_write_error(char *s, int len) //free error
 {
 	write (1, "ERROR\n", 6);
 	write (1, s, len);
 	write(1, "\n", 1);
 }
 
-void	ft_exit_c3d(t_cub3d *cub, char *s, int len)
+void	ft_exit_c3d(t_parse *cub, char *s, int len) // error
 {
 	write (1, "ERROR\n", 6);
 	write (1, s, len);
@@ -74,7 +76,7 @@ void	ft_exit_c3d(t_cub3d *cub, char *s, int len)
 
 
 
-void num_check_p2(t_struct_num *snum, t_cub3d *cub)
+void num_check_p2(t_struct_num *snum, t_parse *cub) //num parse
 {
 	if (snum->ltr == 'R')
 		ft_exit_c3d(cub, "R is fricked", 12);
@@ -86,7 +88,7 @@ void num_check_p2(t_struct_num *snum, t_cub3d *cub)
 		ft_exit_c3d(cub, "? is fricked", 12);
 }
 
-void	ft_check_if_numcorrect(t_struct_num *snum, t_cub3d *cub)
+void	ft_check_if_numcorrect(t_struct_num *snum, t_parse *cub) //num parse
 {
 	int tempi;
 
@@ -111,7 +113,7 @@ void	ft_check_if_numcorrect(t_struct_num *snum, t_cub3d *cub)
 	}
 }
 
-void	num_check(t_struct_num *snum, t_cub3d *cub)
+void	num_check(t_struct_num *snum, t_parse *cub) //num parse
 {
 	while (((cub->line)[snum->i] < '0') || ((cub->line)[snum->i] > '9'))
 	{
@@ -163,7 +165,7 @@ void	num_check(t_struct_num *snum, t_cub3d *cub)
 // 	return (error);
 // }
 
-void	struct_num_init(t_struct_num *snum)
+void	struct_num_init(t_struct_num *snum) //initialize
 {
 	snum->st = 0;
 	snum->check = 1;
@@ -173,7 +175,7 @@ void	struct_num_init(t_struct_num *snum)
 	snum->ltr = 0;
 }
 
-void	struct_num(t_cub3d *cub, int *adr1, int *adr2, int *adr3)
+void	struct_num(t_parse *cub, int *adr1, int *adr2, int *adr3) //num parse
 {
 	t_struct_num snum;
 
@@ -196,7 +198,7 @@ void	struct_num(t_cub3d *cub, int *adr1, int *adr2, int *adr3)
 	}
 }
 
-void		check_if_s_empty(t_cub3d *cub)
+void		check_if_s_empty(t_parse *cub) //parse
 {
 	if ((cub->line)[(cub->i)] == 'N' && (cub->line)[(cub->i) + 1] == 'O'
 			&& cub->no != 0)
@@ -217,7 +219,7 @@ void		check_if_s_empty(t_cub3d *cub)
 		return;
 }
 
-char	*struct_path(t_cub3d *cub)
+char	*struct_path(t_parse *cub) //path parse
 {
 	int		len;
 	char	*temp;
@@ -238,7 +240,7 @@ char	*struct_path(t_cub3d *cub)
 	return (temp);
 }
 
-void		read_map(t_cub3d *cub)
+void		read_map(t_parse *cub) //parse
 {
 	int chk;
 	int len;
@@ -259,7 +261,7 @@ void		read_map(t_cub3d *cub)
 	cub->max_y++;
 }
 
-void	struct_init(t_cub3d *cub)
+void	struct_init(t_parse *cub) //init
 {
 	cub->rx = -1;
 	cub->ry = -1;
@@ -295,7 +297,7 @@ void	struct_init(t_cub3d *cub)
 	cub->fd = 0;
 }
 
-int	ft_checkmapplacement(t_cub3d *cub)
+int	ft_checkmapplacement(t_parse *cub) //error
 {
 	if (cub->rx == -1 || cub->ry == -1 || cub->no == 0 || cub->so == 0
 	|| cub->we == 0 || cub->ea == 0 || cub->s == 0 || cub->fr == -1
@@ -308,7 +310,7 @@ int	ft_checkmapplacement(t_cub3d *cub)
 	return (0);
 }
 
-void		parsing(t_cub3d *cub, int ret)
+void		parsing(t_parse *cub, int ret) //parse
 {
 	if (((cub->line)[(cub->i)] == 'R' && (cub->line)[(cub->i) + 1] == ' '))
 		struct_num(cub, &cub->rx, &cub->ry, &cub->ry);
@@ -341,7 +343,7 @@ void		parsing(t_cub3d *cub, int ret)
 		cub->error = invalid_map;
 }
 
-void	readfile(t_cub3d *cub, char *path)
+void	readfile(t_parse *cub, char *path) // read
 {
 	int ret;
 	
@@ -369,7 +371,7 @@ void	readfile(t_cub3d *cub, char *path)
 	//close(fd);
 }
 
-void	check_if_empty_start(t_cub3d *cub)
+void	check_if_empty_start(t_parse *cub) //error
 {
 	if ((cub->rx < 0 || cub->rx > cub->maxrx)
 	|| (cub->ry < 0 || cub->ry > cub->maxry))
@@ -392,7 +394,7 @@ void	check_if_empty_start(t_cub3d *cub)
 		ft_exit_c3d(cub, "C is fricked", 12);
 }
 
-void	playerobjcheck(t_cub3d *cub)
+void	playerobjcheck(t_parse *cub) //map error
 {
 	int x;
 	int y;
@@ -425,7 +427,7 @@ void	playerobjcheck(t_cub3d *cub)
 	}
 }
 
-void	ft_floodfill(t_cub3d *cub, int y, int x)
+void	ft_floodfill(t_parse *cub, int y, int x) //map
 {
 	if (x == 0 || y == 0 || x == cub->maxstrlen || (y + 1) == cub->max_y ||
 		cub->mapcopy[y][x + 1] == '\0' || cub->mapcopy[y][x] == '\0')
@@ -452,7 +454,7 @@ void	ft_floodfill(t_cub3d *cub, int y, int x)
 		ft_floodfill(cub, y - 1, x - 1);
 }
 
-void	mapvalidity(t_cub3d *cub)
+void	mapvalidity(t_parse *cub) // map
 {
 	playerobjcheck(cub);
 	if (cub->players == 1)
@@ -461,15 +463,15 @@ void	mapvalidity(t_cub3d *cub)
 		ft_exit_c3d(cub, "Map is fricked", 14);
 }
 
-void	validity(t_cub3d *cub)
+void	validity(t_parse *cub)
 {
 	check_if_empty_start(cub);
 	mapvalidity(cub);
 }
 
-void	cub3d(char **argv, int argc)
+void	parser(char **argv, int argc) //cub
 {
-	t_cub3d cub;
+	t_parse cub;
 
 	if (argc < 2 || argc > 3)
 		ft_exit_c3d(&cub, "Not the right amount of arguments", 33);
@@ -498,7 +500,7 @@ void	cub3d(char **argv, int argc)
 
 int		main(int argc, char **argv)
 {
-	cub3d(argv, argc);
+	parser(argv, argc);
 	// while(1)		
 	// ;
 	return (0);

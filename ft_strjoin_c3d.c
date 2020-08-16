@@ -12,7 +12,7 @@
 
 #include "cub3d.h"
 #include <stdlib.h>
-#include <stdio.h>
+# include "./libft/libft.h"
 
 static char	*ft_fil(char *str, char const *s1, char const *s2)
 {
@@ -48,7 +48,7 @@ static char	*ft_check(char const *s1, char const *s2)
 	return (0);
 }
 
-char	*ft_strjoin_c3d(t_cub3d *cub, char const *s1, char const *s2)
+char	*ft_strjoin_c3d(t_parse *cub, char const *s1, char const *s2)
 {
 	int		s1_len;
 	int		s2_len;

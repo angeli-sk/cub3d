@@ -12,8 +12,6 @@
 
 #ifndef CUB3D_H
 # define CUB3D_H
-# include "./libft/libft.h"
-# include "./get_next_line/get_next_line.h"
 #include <stdio.h>
 
 typedef enum	e_rror
@@ -25,7 +23,55 @@ typedef enum	e_rror
 	too_many_nums = -18
 }				t_rror;
 
-typedef struct	s_cub3d
+
+typedef struct	s_data 
+{
+	void		*img;
+	char		*addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+}				t_data;
+
+typedef struct	s_vars
+{
+	void		*mlx;
+	void		*win;
+	int			x;
+	int			y;
+	int			xmax;
+	int			ymax;
+	int     img_width;
+	int     img_height;
+    //--------------------
+    double cameraX; //x-coordinate in camera space
+    double rayDirX;
+    double rayDirY;
+    int w;
+    int h;
+    double posX;
+    double posY; //x and y start position
+    double dirX;
+    double dirY; //initial direction vector ;fix that with s e w etc.
+    double planeX;
+    double planeY; //the 2d raycaster version of camera plane
+    int mapX;//which box of the map we're in
+    int mapY;
+    double sideDistX;//length of ray from current position to next x or y-side
+    double sideDistY;
+    double deltaDistX;//length of ray from one x or y-side to next x or y-side
+    double deltaDistY;
+    double perpWallDist;
+    int lineHeight;
+    int drawStart;
+    int drawEnd;
+    int stepX;//what direction to step in x or y-direction (either +1 or -1)
+    int stepY;
+	int hit; //was there a wall hit?
+    int side; //was a NS or a EW wall hit?
+}				t_vars;
+
+typedef struct	s_parse
 {
 	int		rx;
 	int		ry;
@@ -61,13 +107,15 @@ typedef struct	s_cub3d
 	int 	fd;
 	int		ret;
 	char	*free_temp;
+	char	*num_temp;
 	int		num_st;
 	int		num_check;
-	char	*num_temp;
 	int		num_i;
 	char	num_ltr;
 	int		num_error;
-}				t_cub3d;
+	t_data	img;
+	t_vars vars;
+}				t_parse;
 
 typedef struct s_splitty
 {
@@ -95,11 +143,56 @@ typedef struct	s_mapinfo
 	char player;
 }				t_mapinfo;
 
-void cub3d(char **argv, int argc);
+
 
 /*libft*/
-char	*ft_strjoin_c3d(t_cub3d *cub, char const *s1, char const *s2);
-char		**ft_split_c3d(t_cub3d *cub, char const *s, char c);
+char	*ft_strjoin_c3d(t_parse *cub, char const *s1, char const *s2);
+char		**ft_split_c3d(t_parse *cub, char const *s, char c);
 void	*ft_calloc_mlx(size_t count, size_t size);
 void	ft_bzero_mlx(void *s, size_t n);
+
+/*parse_cub3d*/
+void		read_map(t_parse *cub);
+int	ft_checkmapplacement(t_parse *cub);
+void		parsing(t_parse *cub, int ret);
+void	readfile(t_parse *cub, char *path);
+void	parser(t_parse *cub, char **argv, int argc);
+void	cub3d(int argc, char **argv);
+
+/*cub_num_parse*/
+void num_check_p2(t_parse *cub);
+void	ft_check_if_numcorrect(t_parse *cub);
+void	num_check(t_parse *cub);
+void	struct_num(t_parse *cub, int *adr1, int *adr2, int *adr3);
+
+/*cub_parse*/
+void		check_if_s_empty(t_parse *cub);
+char	*struct_path(t_parse *cub);
+
+/*cub_parse_exit*/
+void	freemaps(t_parse *cub);
+void	freevars(t_parse *cub);
+void	ft_write_error(char *s, int len);
+void	ft_exit_c3d(t_parse *cub, char *s, int len);
+
+/*cub_parse_init*/
+void	struct_num_init(t_parse *cub);
+void	struct_init(t_parse *cub);
+
+/*cub_parse_map*/
+void	check_if_empty_start(t_parse *cub);
+void	playerobjcheck(t_parse *cub);
+void	ft_floodfill(t_parse *cub, int y, int x);
+void	mapvalidity(t_parse *cub);
+void	validity(t_parse *cub);
+
+/*cub_mlx*/
+void	ft_putchar_fd(char c, int fd);
+void	ft_putnbr_fd(int n, int fd);
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+int		keys(int keycode, t_vars *vars);
+int	render_next_frame()	;
+int draw(t_vars *vars);
+void	ft_mlx(t_parse *cub, char **argv, int argc);
+
 #endif

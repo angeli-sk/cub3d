@@ -18,13 +18,27 @@ CC = gcc
 
 FLAGS = -Wall -Werror -Wextra
 FLAGSMLX =  -L. -lmlx -framework OpenGL -framework AppKit
+F_MLX_UBUNTU = -I/usr/include -Imlx_linux
+FLAGMLX_UBUNTU = -Lmlx_linux -lmlx -lXext -lX11 -lm -lz
 
 #✧･ﾟ: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ *✧･ﾟ:* SOURCES ✧*:･ﾟ✧: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ﾟ: *✧･ﾟ:#
 
 SRC = bleepbloop.c
-SRC2 =	test.c ./get_next_line/get_next_line.c \
-		./get_next_line/get_next_line_utils.c ft_strjoin_c3d.c \
-		ft_split_c3d.c ft_calloc_mlx.c ft_bzero_mlx.c ./libft/libft.a
+SRC2 =	parse_cub3d.c \
+		cub_num_parse.c \
+		cub_parse.c \
+		cub_parse_exit.c \
+		cub_parse_init.c \
+		cub_parse_map.c \
+		./get_next_line/get_next_line.c \
+		./get_next_line/get_next_line_utils.c \
+		ft_strjoin_c3d.c \
+		ft_split_c3d.c \
+		ft_calloc_mlx.c \
+		ft_bzero_mlx.c \
+		./libft/libft.a \
+		cub_mlx.c
+		
 OBJ :=	${SRC:%.c=%.o}
 OBJ2 :=	${SRC2:%.c=%.o}
 
@@ -47,8 +61,13 @@ RANDOM := $$((RANDOM % 10))
 
 all: $(NAME)
 
+#for apple
+#%.o: %.c
+#	@$(CC) $(FLAGS) $(FLAGSMLX) -Imlx -c $< -o $@
+
+#ubuntu
 %.o: %.c
-	@$(CC) $(FLAGS) -Imlx -c $< -o $@
+	$(CC) -I/usr/include -Imlx_linux -c $< -o $@
 
 $(NAME):$(OBJ)
 	@echo "\n$(X)$(Y)$(Z) ██████╗██╗   ██╗██████╗ ██████╗ ██████╗ ";
@@ -65,11 +84,11 @@ $(NAME):$(OBJ)
 	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
 	@$(CC) $(FLAGSMLX) $< -o $(NAME) -I mlxs
 
-parser:
-	$(CC) $(SRC2) $< -o ./a.out
+parser:$(OBJ2)
+	$(CC) -I/usr/include -Imlx_linux $^ -Lmlx_linux -lmlx -lXext -lX11 -lm -lz -o ./a.out
 clean:
 	@echo "$(PINK)🦄	Cleaning ...$(WHITE)\n"
-	rm -f $(OBJ) $(OBJ_2) $(OBJ_B)
+	rm -f $(OBJ) $(OBJ2)
 	rm -f ./*~ ./*#
 	@echo "\n$(PINK2)✨	Cleaning Done!$(WHITE)"
 

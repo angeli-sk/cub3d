@@ -12,6 +12,7 @@
 
 #include "cub3d.h"
 #include <stdlib.h>
+# include "./libft/libft.h"
 
 static char	**ft_free_split(char **split, int x)
 {
@@ -50,7 +51,7 @@ static char	**ft_write_string(char *s, t_splitty *spty, char **split, int max_y)
 	return (split);
 }
 
-static char	**ft_c_count(char *s, char **split, t_splitty *spty, t_cub3d *cub)
+static char	**ft_c_count(char *s, char **split, t_splitty *spty, t_parse *cub)
 {
 	int count;
 	int x;
@@ -99,7 +100,7 @@ static int	ft_string_count(char *s, char c, int y)
 	return (y);
 }
 
-char		**ft_split_c3d(t_cub3d *cub, char const *s, char c)
+char		**ft_split_c3d(t_parse *cub, char const *s, char c)
 {
 	t_splitty	spty;
 	char		*copy_s;
