@@ -300,7 +300,7 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 								&cub->img.line_length,&cub->img.endian);
 	cub->vars.y = 0;
     cub->vars.x = 0;
-	mlx_calc(cub);
+	//mlx_calc(cub);
 //         while (cub->vars.x < w)
 //         {
 // 			printf("VARSX=%d\n", cub->vars.x);
@@ -445,7 +445,8 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 	// 		cub->vars.xmax--;
 	//  	cub->vars.y++;
 	// }
-	//mlx_loop_hook(cub->vars.mlx, draw, &cub->vars.mlx);
+	mlx_loop_hook(cub->vars.mlx, render_next_frame, cub);
+	printf("\nlemao\n");
     mlx_put_image_to_window(cub->vars.mlx, cub->vars.win, cub->img.img, 0, 0);
 	mlx_loop(cub->vars.mlx);
 }
