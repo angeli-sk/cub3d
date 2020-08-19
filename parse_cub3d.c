@@ -37,7 +37,7 @@ int	ft_checkmapplacement(t_parse *cub) //error
 	return (0);
 }
 
-void		parsing(t_parse *cub, int ret) //parse
+void		parsing(t_parse *cub) //parse
 {
 	if (((cub->line)[(cub->i)] == 'R' && (cub->line)[(cub->i) + 1] == ' '))
 		struct_num(cub, &cub->rx, &cub->ry, &cub->ry);
@@ -85,7 +85,7 @@ void	readfile(t_parse *cub, char *path) // read
         cub->ret = ret;
 		while ((cub->line)[cub->i] == ' ')
 			(cub->i)++;
-		parsing(cub, cub->max_y);
+		parsing(cub);
 		if (ret == 1)
 		{
             free((cub->line));
@@ -134,6 +134,7 @@ void	cub3d(int argc, char **argv)
 	t_parse cub;
 	parser(&cub, argv, argc);
 	ft_mlx(&cub, argv, argc);
+	//mlx_loop_hook(cub.vars.mlx,	render_next_frame(cub), cub.vars.mlx);
 	freevars(&cub);
 	freemaps(&cub);
 }

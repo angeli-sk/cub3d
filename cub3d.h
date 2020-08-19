@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/07 16:40:24 by akramp        #+#    #+#                 */
-/*   Updated: 2020/08/07 19:48:10 by akramp        ########   odam.nl         */
+/*   Updated: 2020/08/19 14:30:36 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ void	ft_bzero_mlx(void *s, size_t n);
 /*parse_cub3d*/
 void		read_map(t_parse *cub);
 int	ft_checkmapplacement(t_parse *cub);
-void		parsing(t_parse *cub, int ret);
+void		parsing(t_parse *cub);
 void	readfile(t_parse *cub, char *path);
 void	parser(t_parse *cub, char **argv, int argc);
 void	cub3d(int argc, char **argv);
@@ -190,9 +190,10 @@ void	validity(t_parse *cub);
 void	ft_putchar_fd(char c, int fd);
 void	ft_putnbr_fd(int n, int fd);
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
-int		keys(int keycode, t_vars *vars);
-int	render_next_frame()	;
+int		keys(int keycode, t_parse *cub);
+int	render_next_frame(t_parse *cub);
 int draw(t_vars *vars);
 void	ft_mlx(t_parse *cub, char **argv, int argc);
+void	mlx_calc(t_parse *cub);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: akramp <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/05/06 13:52:49 by akramp        #+#    #+#                  #
-#    Updated: 2020/06/25 16:35:12 by akramp        ########   odam.nl          #
+#    Updated: 2020/08/19 10:21:02 by akramp        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,12 +62,12 @@ RANDOM := $$((RANDOM % 10))
 all: $(NAME)
 
 #for apple
-#%.o: %.c
-#	@$(CC) $(FLAGS) $(FLAGSMLX) -Imlx -c $< -o $@
+%.o: %.c
+	$(CC) -Imlx -c $< -o $@
 
 #ubuntu
-%.o: %.c
-	$(CC) -I/usr/include -Imlx_linux -c $< -o $@
+#%.o: %.c
+#	$(CC) -I/usr/include -Imlx_linux -c $< -o $@
 
 $(NAME):$(OBJ)
 	@echo "\n$(X)$(Y)$(Z) ██████╗██╗   ██╗██████╗ ██████╗ ██████╗ ";
@@ -84,8 +84,12 @@ $(NAME):$(OBJ)
 	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
 	@$(CC) $(FLAGSMLX) $< -o $(NAME) -I mlxs
 
-parser:$(OBJ2)
+ubuntu:$(OBJ2)
 	$(CC) -I/usr/include -Imlx_linux $^ -Lmlx_linux -lmlx -lXext -lX11 -lm -lz -o ./a.out
+
+apple:$(OBJ2)
+	$(CC) $(FLAGSMLX) $^ -o $(NAME) -I mlxs
+	
 clean:
 	@echo "$(PINK)🦄	Cleaning ...$(WHITE)\n"
 	rm -f $(OBJ) $(OBJ2)
