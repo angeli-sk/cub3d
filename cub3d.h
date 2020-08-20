@@ -20,7 +20,13 @@ typedef enum	e_rror
 	invalid_char = -2,
 	invalid_F = -3,
 	invalid_C = -4,
-	too_many_nums = -18
+	too_many_nums = -18,
+	up = 0,
+	left = 1,
+	right = 2,
+	down = 3,
+	turn_r = 4,
+	turn_l = 5
 }				t_rror;
 
 
@@ -69,6 +75,13 @@ typedef struct	s_vars
     int stepY;
 	int hit; //was there a wall hit?
     int side; //was a NS or a EW wall hit?
+	int colorwall;
+	int key;
+	double moveSpeed;
+	double rotSpeed;
+	double oldDirX;
+	double oldPlaneX;
+	int	walksies[6];
 }				t_vars;
 
 typedef struct	s_parse
