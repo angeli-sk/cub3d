@@ -16,7 +16,7 @@ CC = gcc
 
 #✧･ﾟ: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ *✧･ﾟ:*  FLAGS  ✧*:･ﾟ✧: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ﾟ: *✧･ﾟ:#
 
-FLAGS = -Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra -fsanitize=address -fno-omit-frame-pointer
 FLAGSMLX =  -L. -lmlx -framework OpenGL -framework AppKit
 F_MLX_UBUNTU = -I/usr/include -Imlx_linux
 FLAGMLX_UBUNTU = -Lmlx_linux -lmlx -lXext -lX11 -lm -lz
@@ -85,7 +85,7 @@ $(NAME):$(OBJ)
 	@$(CC) $(FLAGSMLX) $< -o $(NAME) -I mlxs
 
 ubuntu:$(OBJ2)
-	$(CC) -I/usr/include -Imlx_linux $^ -Lmlx_linux -lmlx -lXext -lX11 -lm -lz -o ./a.out
+	$(CC) $(FLAGS) -I/usr/include -Imlx_linux $^ -Lmlx_linux -lmlx -lXext -lX11 -lm -lz -o ./a.out
 
 apple:$(OBJ2)
 	$(CC) $(FLAGSMLX) $^ -o $(NAME) -I mlxs

@@ -107,6 +107,7 @@ int		keys(int keycode, t_parse *cub)
     cub->vars.rotSpeed = 0.05;
     cub->vars.oldDirX = 0;
     cub->vars.oldPlaneX = 0;
+    printf("walksies0=%d\n && lemaoX=%d\n && lemaoY=%d\n", cub->vars.walksies[up], ((int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)), ((int)(cub->vars.posY + cub->vars.dirY * cub->vars.moveSpeed)));
 	ft_putnbr_fd(keycode, 1);
 	write(1, "\n", 1);
 	if ((keycode == 65307 && LINUX == 1) || (keycode == 53 && APPLE == 1))
@@ -162,28 +163,60 @@ int		keys(int keycode, t_parse *cub)
 //0 a 13 w 2 d 1 s
 //ubuntu
 //a 97 w 119 d 100 s 115
+void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
+{
+    //int y;
+
+    cub->vars.y = 0;
+    //printf("!-drawstart=%d && drawend=%i && ry=%d !\n\n\n",cub->vars.drawStart, cub->vars.drawEnd, cub->ry);
+    while (cub->vars.y < drawStart)
+    {
+        my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, 0x27273a);
+        cub->vars.y++;
+    }
+	while (cub->vars.y < drawEnd)
+    {
+        my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, cub->vars.colorwall);//0xc7adfb
+        cub->vars.y++;
+    }
+	while (cub->vars.y < cub->ry)
+    {
+        my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, 0x97f36d);
+        cub->vars.y++;
+    }
+}
 
 int	render_next_frame(t_parse *cub)	
 {
-	mlx_calc(cub);
+	//mlx_calc(cub);
     //printf("hoi ik ben rotzooi :) ");
     //printf("je moeder\n");//mlx_hook(cub->vars.win, 2, 1L << 0, key_pressed, cub);
     //printf("efbuiegfu34gf20j3dwqedo2h3eihf3i4hf34h0hf34hg34hghihgihg");
     //printf("hoi ik ben kjuwb drie dee^C");
+    printf("walksies0=%d\n && lemaoX=%d\n && lemaoY=%d\n", cub->vars.walksies[up], ((int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)), ((int)(cub->vars.posY + cub->vars.dirY * cub->vars.moveSpeed)));
+    int y;
+    int x;
+    printf("posX=%f && posY=%f\n", cub->vars.posX, cub->vars.posY);
+    x = (int)(cub->vars.posX + (cub->vars.dirX * cub->vars.moveSpeed));
+    y = (int)(cub->vars.posY + (cub->vars.dirY * cub->vars.moveSpeed));
+    printf("maxstrlen=%d\n", cub->maxstrlen);
+
     if(cub->vars.walksies[up] == 1)
     {
-      if(cub->map[(int)(cub->vars.posY)][(int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)] != '1') 
+        printf("x=%d && y=%d && dirx=%f && movespeed=%f\n", x, y, cub->vars.dirX, cub->vars.moveSpeed);
+      if(cub->map[(int)(cub->vars.posY)][x] != '1' && x > 0 && x < cub->maxstrlen);
         {
             cub->vars.posX += cub->vars.dirX * cub->vars.moveSpeed; 
-        }
-      if(cub->map[(int)(cub->vars.posY + cub->vars.dirY * cub->vars.moveSpeed)][(int)(cub->vars.posX)] != '1')
+        }printf("lemmmmau\n");
+        //printf("BORIS2ND\n");
+      if(cub->map[y][(int)(cub->vars.posX)] != '1' && y > 0 && y < cub->max_y);
         cub->vars.posY += cub->vars.dirY * cub->vars.moveSpeed;
     }
     if(cub->vars.walksies[down] == 1)
     {
-        if(cub->map[(int)(cub->vars.posY)][(int)(cub->vars.posX - cub->vars.dirX * cub->vars.moveSpeed)] != '1') 
+        if(cub->map[(int)(cub->vars.posY)][(int)(cub->vars.posX - (cub->vars.dirX * cub->vars.moveSpeed))] != '1') 
          cub->vars.posX -= cub->vars.dirX * cub->vars.moveSpeed;
-         if(cub->map[(int)(cub->vars.posY - cub->vars.dirY * cub->vars.moveSpeed)][(int)(cub->vars.posX)] != '1') 
+         if(cub->map[(int)(cub->vars.posY - (cub->vars.dirY * cub->vars.moveSpeed))][(int)(cub->vars.posX)] != '1') 
          cub->vars.posY -= cub->vars.dirY * cub->vars.moveSpeed;
     }
     if(cub->vars.walksies[turn_r] == 1)
@@ -206,6 +239,11 @@ int	render_next_frame(t_parse *cub)
       cub->vars.planeX = cub->vars.planeX * cos(cub->vars.rotSpeed) - cub->vars.planeY * sin(cub->vars.rotSpeed);
       cub->vars.planeY = cub->vars.oldPlaneX * sin(cub->vars.rotSpeed) + cub->vars.planeY * cos(cub->vars.rotSpeed);
     }
+    // //ft_verLine(cub->vars.drawStart, cub->vars.drawEnd, cub);
+    // printf("walksies0=%d\n && lemaoX=%d\n && lemaoY=%d\n", cub->vars.walksies[up], ((int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)), ((int)(cub->vars.posY + cub->vars.dirY * cub->vars.moveSpeed)));
+    // printf("yoyo\n");
+    // exit(1);
+    mlx_calc(cub);
 	mlx_put_image_to_window(cub->vars.mlx, cub->vars.win, cub->img.img, 0, 0);
 	return (1);
 }
@@ -233,28 +271,7 @@ double  ft_abs(double n)
     return (n);
 }
 
-void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
-{
-    //int y;
 
-    cub->vars.y = 0;
-    //printf("!-drawstart=%d && drawend=%i && ry=%d !\n\n\n",cub->vars.drawStart, cub->vars.drawEnd, cub->ry);
-    while (cub->vars.y < drawStart)
-    {
-        my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, 0x27273a);
-        cub->vars.y++;
-    }
-	while (cub->vars.y < drawEnd)
-    {
-        my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, cub->vars.colorwall);//0xc7adfb
-        cub->vars.y++;
-    }
-	while (cub->vars.y < cub->ry)
-    {
-        my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, 0x97f36d);
-        cub->vars.y++;
-    }
-}
 
 void	mlx_calc(t_parse *cub)
 {
@@ -365,6 +382,10 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 	// t_data	img;
 	// t_vars	vars;
     //--------------------
+    cub->vars.moveSpeed = 0.2; //make define
+    cub->vars.rotSpeed = 0.05;
+    cub->vars.oldDirX = 0;
+    cub->vars.oldPlaneX = 0;
     cub->vars.colorwall = 255;
     cub->vars.cameraX = 0.0; //x-coordinate in camera space
     cub->vars.rayDirX = 0.0;
@@ -374,10 +395,10 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
     cub->vars.w = cub->rx;
     cub->vars.posX = (double)cub->startx + 0.5; //0.5
     cub->vars.posY = (double)cub->starty + 0.5;  //x and y start position
-    cub->vars.dirX = -1.0;
-    cub->vars.dirY = 0.0; //initial direction vector ;fix that with s e wetc.
-    cub->vars.planeX = 0.0;
-    cub->vars.planeY = -0.66; //the 2d raycaster version of camera plane
+    cub->vars.dirX = 0.0;
+    cub->vars.dirY = -1.0; //initial direction vector ;fix that with s e wetc.
+    cub->vars.planeX = -0.66;
+    cub->vars.planeY = 0; //the 2d raycaster version of camera plane
        //which box of the map we're in
     cub->vars.mapX = 0;
     cub->vars.mapY = 0;
@@ -559,6 +580,13 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 	// }
     //mlx_key_hook(cub->vars.win, keys, cub);
     //mlx_hook(cub->vars.win, 2, 1L << 0, keys, cub);
+    cub->vars.walksies[up] = 0;
+    cub->vars.walksies[down] = 0;
+    cub->vars.walksies[left] = 0;
+    cub->vars.walksies[right] = 0;
+    cub->vars.walksies[turn_r] = 0;
+    cub->vars.walksies[turn_l] = 0;
+
     mlx_hook(cub->vars.win, 2, 1L << 0, key_pressed, cub);
     mlx_hook(cub->vars.win, 3, 2L << 0, key_released, cub);
     //mlx_hook(cub->vars.win, 17, 0, destroy ,cub);
