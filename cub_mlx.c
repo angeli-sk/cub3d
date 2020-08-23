@@ -49,7 +49,11 @@ int   destroy(t_parse *cub)
 	exit(0);
     return (1);
 }
-
+//apple
+//123 left 126 up 124 right 125 down
+//0 a 13 w 2 d 1 s
+//ubuntu
+//a 97 w 119 d 100 s 115
 int     key_pressed(int keycode, t_parse *cub)
 {
     if ((keycode == 65307 && LINUX == 1) || (keycode == 53 && APPLE == 1))
@@ -65,13 +69,21 @@ int     key_pressed(int keycode, t_parse *cub)
     {
         cub->vars.walksies[down] = 1;
     }
-    if ((keycode == 2 && APPLE == 1) || (keycode == 97 && LINUX == 1))
+     if ((keycode == 123 && APPLE == 1) || (keycode == 65361 && LINUX == 1))
+    {
+        cub->vars.walksies[turn_l] = 1;
+    }
+     if ((keycode == 124 && APPLE == 1) || (keycode == 65363 && LINUX == 1))
     {
         cub->vars.walksies[turn_r] = 1;
     }
-    if ((keycode == 0 && APPLE == 1) ||(keycode == 100 && LINUX == 1))
+    if ((keycode == 2 && APPLE == 1) || (keycode == 100 && LINUX == 1))
     {
-        cub->vars.walksies[turn_l] = 1;
+        cub->vars.walksies[right] = 1;
+    }
+    if ((keycode == 0 && APPLE == 1) ||(keycode == 97 && LINUX == 1))
+    {
+        cub->vars.walksies[left] = 1;
     }
 	return(0);
 }
@@ -90,20 +102,28 @@ int     key_released(int keycode, t_parse *cub)
     {
         cub->vars.walksies[down] = 0;
     }
-    if ((keycode == 2 && APPLE == 1) || (keycode == 97 && LINUX == 1))
+     if ((keycode == 123 && APPLE == 1) || (keycode == 65361 && LINUX == 1))
+    {
+        cub->vars.walksies[turn_l] = 0;
+    }
+     if ((keycode == 124 && APPLE == 1) || (keycode == 65363 && LINUX == 1))
     {
         cub->vars.walksies[turn_r] = 0;
     }
-    if ((keycode == 0 && APPLE == 1) ||(keycode == 100 && LINUX == 1))
+    if ((keycode == 2 && APPLE == 1) || (keycode == 100 && LINUX == 1))
     {
-        cub->vars.walksies[turn_l] = 0;
+        cub->vars.walksies[right] = 0;
+    }
+    if ((keycode == 0 && APPLE == 1) ||(keycode == 97 && LINUX == 1))
+    {
+        cub->vars.walksies[left] = 0;
     }
 	return(0);
 }
 
 int		keys(int keycode, t_parse *cub)
 {
-	cub->vars.moveSpeed = 0.2;
+	cub->vars.moveSpeed = 0.0000001;
     cub->vars.rotSpeed = 0.05;
     cub->vars.oldDirX = 0;
     cub->vars.oldPlaneX = 0;
@@ -134,7 +154,7 @@ int		keys(int keycode, t_parse *cub)
         cub->vars.posY -= cub->vars.dirY * cub->vars.moveSpeed;
     }
     //rotate to the rleft
-    if ((keycode == 2 && APPLE == 1) || (keycode == 97 && LINUX == 1))
+    if ((keycode == 2 && APPLE == 1) || (keycode == 37 && LINUX == 1))
     {
       //both camera direction and camera plane must be rotated      
       cub->vars.oldDirX = cub->vars.dirX;
@@ -145,7 +165,7 @@ int		keys(int keycode, t_parse *cub)
       cub->vars.planeY = cub->vars.oldPlaneX * sin(-cub->vars.rotSpeed) + cub->vars.planeY * cos(-cub->vars.rotSpeed);
     }
     //rotate to the lright
-    if ((keycode == 0 && APPLE == 1) ||(keycode == 100 && LINUX == 1))
+    if ((keycode == 0 && APPLE == 1) ||(keycode == 39 && LINUX == 1))
     {
       //both camera direction and camera plane must be rotatedWil jij jouw onderzoeksskills inzetten om ons en de wereld te vertellen wat de effecten zijn van private financieringsvormen op (private) scholing en de ontwikkelingskansen van kwetsbare studenten? Laat van je horen via de link in de comments!
       cub->vars.oldDirX = cub->vars.dirX;
@@ -168,7 +188,7 @@ void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
     //int y;
 
     cub->vars.y = 0;
-    //printf("!-drawstart=%d && drawend=%i && ry=%d !\n\n\n",cub->vars.drawStart, cub->vars.drawEnd, cub->ry);
+    // printf("5verline!-drawstart=%d && drawend=%i && ry=%d !\n\n\n",cub->vars.drawStart, cub->vars.drawEnd, cub->ry);
     while (cub->vars.y < drawStart)
     {
         my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, 0x27273a);
@@ -185,6 +205,15 @@ void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
         cub->vars.y++;
     }
 }
+int    ft_checkposition(t_parse *cub, int x, int y)
+{
+    if ((x > 0 && x < cub->maxstrlen) || (y > 0 && y < cub->max_y) 
+        || (cub->vars.posX > 0 && cub->vars.posX < cub->maxstrlen) 
+        || (cub->vars.posY > 0 && cub->vars.posY < cub->max_y))
+        return (1);
+    else   
+        return (0);
+}
 
 int	render_next_frame(t_parse *cub)	
 {
@@ -193,31 +222,53 @@ int	render_next_frame(t_parse *cub)
     //printf("je moeder\n");//mlx_hook(cub->vars.win, 2, 1L << 0, key_pressed, cub);
     //printf("efbuiegfu34gf20j3dwqedo2h3eihf3i4hf34h0hf34hg34hghihgihg");
     //printf("hoi ik ben kjuwb drie dee^C");
-    printf("walksies0=%d\n && lemaoX=%d\n && lemaoY=%d\n", cub->vars.walksies[up], ((int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)), ((int)(cub->vars.posY + cub->vars.dirY * cub->vars.moveSpeed)));
-    int y;
-    int x;
-    printf("posX=%f && posY=%f\n", cub->vars.posX, cub->vars.posY);
-    x = (int)(cub->vars.posX + (cub->vars.dirX * cub->vars.moveSpeed));
-    y = (int)(cub->vars.posY + (cub->vars.dirY * cub->vars.moveSpeed));
-    printf("maxstrlen=%d\n", cub->maxstrlen);
-
+    // printf("walksies0=%d\n && lemaoX=%d\n && lemaoY=%d\n", cub->vars.walksies[up], ((int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)), ((int)(cub->vars.posY + cub->vars.dirY * cub->vars.moveSpeed)));
+    int y_up;
+    int y_down;
+    int y_left;
+    int y_right;
+    int x_up;
+    int x_down;
+    int x_left;
+    int x_right;
+    // printf("posX=%f && posY=%f\n", cub->vars.posX, cub->vars.posY);
+    x_up = (int)(cub->vars.posX + (cub->vars.dirX * cub->vars.moveSpeed));
+    y_up = (int)(cub->vars.posY + (cub->vars.dirY * cub->vars.moveSpeed));
+    x_down = (int)(cub->vars.posX - (cub->vars.dirX * cub->vars.moveSpeed));
+    y_down = (int)(cub->vars.posY - (cub->vars.dirY * cub->vars.moveSpeed));
+    x_left = (int)(cub->vars.posX - (cub->vars.dirY * cub->vars.moveSpeed));
+    y_left = (int)(cub->vars.posY + (cub->vars.dirX * cub->vars.moveSpeed));
+    x_right = (int)(cub->vars.posX + (cub->vars.dirY * cub->vars.moveSpeed));
+    y_right = (int)(cub->vars.posY - (cub->vars.dirX * cub->vars.moveSpeed));
+    // printf("maxstrlen=%d\n", cub->maxstrlen);
+    // printf("x=%d && y=%d && dirx=%f && movespeed=%f && chposx=%d && chposy=%d\n", x_up, y_up, cub->vars.dirX, cub->vars.moveSpeed, ft_checkposition(cub, x_up, x_down), ft_checkposition(cub, y_up, y_down) );
     if(cub->vars.walksies[up] == 1)
     {
-        printf("x=%d && y=%d && dirx=%f && movespeed=%f\n", x, y, cub->vars.dirX, cub->vars.moveSpeed);
-      if(cub->map[(int)(cub->vars.posY)][x] != '1' && x > 0 && x < cub->maxstrlen);
-        {
-            cub->vars.posX += cub->vars.dirX * cub->vars.moveSpeed; 
-        }printf("lemmmmau\n");
-        //printf("BORIS2ND\n");
-      if(cub->map[y][(int)(cub->vars.posX)] != '1' && y > 0 && y < cub->max_y);
+      if(cub->map[(int)(cub->vars.posY)][x_up] != '1' && ft_checkposition(cub, x_up, y_up) == 1)
+            cub->vars.posX += cub->vars.dirX * cub->vars.moveSpeed;        
+      if(cub->map[y_up][(int)(cub->vars.posX)] != '1' && ft_checkposition(cub, x_up, y_up) == 1)
         cub->vars.posY += cub->vars.dirY * cub->vars.moveSpeed;
     }
     if(cub->vars.walksies[down] == 1)
     {
-        if(cub->map[(int)(cub->vars.posY)][(int)(cub->vars.posX - (cub->vars.dirX * cub->vars.moveSpeed))] != '1') 
+        if(cub->map[(int)(cub->vars.posY)][x_down] != '1' && ft_checkposition(cub, x_down, y_down) == 1) 
          cub->vars.posX -= cub->vars.dirX * cub->vars.moveSpeed;
-         if(cub->map[(int)(cub->vars.posY - (cub->vars.dirY * cub->vars.moveSpeed))][(int)(cub->vars.posX)] != '1') 
+         if(cub->map[y_down][(int)(cub->vars.posX)] != '1' && ft_checkposition(cub, x_down, y_down) == 1) 
          cub->vars.posY -= cub->vars.dirY * cub->vars.moveSpeed;
+    }
+    if(cub->vars.walksies[right] == 1)
+    {
+        if(cub->map[(int)(cub->vars.posY)][x_right] != '1' && ft_checkposition(cub, x_right, y_right) == 1)
+            cub->vars.posX += cub->vars.dirY * cub->vars.moveSpeed;     
+        if(cub->map[y_right][(int)(cub->vars.posX)] != '1' && ft_checkposition(cub, x_right, y_right) == 1)
+             cub->vars.posY -= cub->vars.dirX * cub->vars.moveSpeed;
+    }
+    if(cub->vars.walksies[left] == 1)
+    {
+        if(cub->map[(int)(cub->vars.posY)][x_left] != '1' && ft_checkposition(cub, x_left, y_left) == 1) 
+            cub->vars.posX -= cub->vars.dirY * cub->vars.moveSpeed;
+        if(cub->map[y_left][(int)(cub->vars.posX)] != '1' && ft_checkposition(cub, x_left, y_left) == 1) 
+            cub->vars.posY += cub->vars.dirX * cub->vars.moveSpeed;
     }
     if(cub->vars.walksies[turn_r] == 1)
     {
@@ -240,7 +291,7 @@ int	render_next_frame(t_parse *cub)
       cub->vars.planeY = cub->vars.oldPlaneX * sin(cub->vars.rotSpeed) + cub->vars.planeY * cos(cub->vars.rotSpeed);
     }
     // //ft_verLine(cub->vars.drawStart, cub->vars.drawEnd, cub);
-    // printf("walksies0=%d\n && lemaoX=%d\n && lemaoY=%d\n", cub->vars.walksies[up], ((int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)), ((int)(cub->vars.posY + cub->vars.dirY * cub->vars.moveSpeed)));
+   // printf("walksies0=%d\n && lemaoX=%d\n && lemaoY=%d\n", cub->vars.walksies[up], ((int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)), ((int)(cub->vars.posY + cub->vars.dirY * cub->vars.moveSpeed)));
     // printf("yoyo\n");
     // exit(1);
     mlx_calc(cub);
@@ -297,7 +348,7 @@ void	mlx_calc(t_parse *cub)
 			// 	return;
 			cub->vars.deltaDistX = (cub->vars.rayDirY == 0) ? 0 : ((cub->vars.rayDirX == 0) ? 1 : fabs(1 / cub->vars.rayDirX));
       		cub->vars.deltaDistY = (cub->vars.rayDirX == 0) ? 0 : ((cub->vars.rayDirY == 0) ? 1 : fabs(1 / cub->vars.rayDirY));
-            //printf("deltadisx=%f&&deltadisy=%f\n", cub->vars.deltaDistX, cub->vars.deltaDistY);
+            // printf("1deltadisx=%f&&deltadisy=%f\n", cub->vars.deltaDistX, cub->vars.deltaDistY);
             //how groot het eerst vakje/stapje is
             if (cub->vars.rayDirX < 0)
             {
@@ -319,7 +370,7 @@ void	mlx_calc(t_parse *cub)
                 cub->vars.stepY = 1;
                 cub->vars.sideDistY = (cub->vars.mapY + 1.0 - cub->vars.posY) * cub->vars.deltaDistY;
             }
-			 //printf("cub->vars.rayDirX= %f &&cub->vars.rayDirY= %f \nmpax= %d &&may= %d \nposX= %f &&posY= %f \nstepx= %d &&stepy= %d\n", cub->vars.rayDirX, cub->vars.rayDirY, cub->vars.mapX, cub->vars.mapY, cub->vars.posX, cub->vars.posY, cub->vars.stepX, cub->vars.stepY);
+			//  printf("2cub->vars.rayDirX= %f &&cub->vars.rayDirY= %f \nmpax= %d &&may= %d \nposX= %f &&posY= %f \nstepx= %d &&stepy= %d\n", cub->vars.rayDirX, cub->vars.rayDirY, cub->vars.mapX, cub->vars.mapY, cub->vars.posX, cub->vars.posY, cub->vars.stepX, cub->vars.stepY);
             cub->vars.hit = 0;
 			while (cub->vars.hit == 0)
             {
@@ -341,7 +392,7 @@ void	mlx_calc(t_parse *cub)
                     cub->vars.hit = 1;
             }
             //Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
-            //printf("qqqqcub->vars.rayDirX= %f &&cub->vars.rayDirY= %f \nmapx= %d &&mapy= %d \nposX= %f &&posY= %f \nstepx= %d &&stepy= %d\n", cub->vars.rayDirX, cub->vars.rayDirY, cub->vars.mapX, cub->vars.mapY, cub->vars.posX, cub->vars.posY, cub->vars.stepX, cub->vars.stepY);
+            // printf("3qqqqcub->vars.rayDirX= %f &&cub->vars.rayDirY= %f \nmapx= %d &&mapy= %d \nposX= %f &&posY= %f \nstepx= %d &&stepy= %d\n", cub->vars.rayDirX, cub->vars.rayDirY, cub->vars.mapX, cub->vars.mapY, cub->vars.posX, cub->vars.posY, cub->vars.stepX, cub->vars.stepY);
 			//exit(0);
             if (cub->vars.side == 0) 
                 cub->vars.perpWallDist = (cub->vars.mapX - cub->vars.posX + (1 - cub->vars.stepX) / 2) / cub->vars.rayDirX;
@@ -360,7 +411,7 @@ void	mlx_calc(t_parse *cub)
             //calculate lowest and highest pixel to fill in current stripe
             //printf("!-lineheight=%d-!\n", cub->vars.lineHeight);
             cub->vars.drawStart = (-cub->vars.lineHeight / 2) + (cub->vars.h / 2);
-            //printf("!-drawstart0=%d-!\n", cub->vars.drawStart);
+            // printf("4!-drawstart0=%d-!\n", cub->vars.drawStart);
             if(cub->vars.drawStart < 0)
                 cub->vars.drawStart = 0;
 
@@ -433,153 +484,6 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 								&cub->img.line_length,&cub->img.endian);
 	cub->vars.y = 0;
     cub->vars.x = 0;
-	//mlx_calc(cub);
-//         while (cub->vars.x < w)
-//         {
-// 			//printf("VARSX=%d\n", cub->vars.x);
-// 			//printf("posx=%f && posy=%f && startx= %d && starty= %d\n", posX, posY, cub->startx, cub->starty);
-// 			//calculate ray position and direction
-//             cameraX = 2 * cub->vars.x / (double)w - 1; //x-coordinate in camera space
-//             //printf("camerax=%f\nplaneX=%f\n",cameraX, planeX);
-//             rayDirX = dirX + planeX * cameraX;
-//             rayDirY = dirY + planeY * cameraX;
-// 	        // cub->vars.y = 0;
-// 	        // cub->vars.x = 0;
-//             mapX = (int)posX;
-//             mapY = (int)posY;
-// 			//printf("raydirx=%f&&raydiry=%f\n", rayDirX, rayDirY);
-//             // deltaDistX = fabs(1 / rayDirX);
-//             // deltaDistY = fabs(1 / rayDirY);
-// 			// if (rayDirX == 0 || rayDirY == 0)
-// 			// 	return;
-// 			deltaDistX = (rayDirY == 0) ? 0 : ((rayDirX == 0) ? 1 : fabs(1 / rayDirX));
-//       		deltaDistY = (rayDirX == 0) ? 0 : ((rayDirY == 0) ? 1 : fabs(1 / rayDirY));
-//             //printf("deltadisx=%f&&deltadisy=%f\n", deltaDistX, deltaDistY);
-//             //how groot het eerst vakje/stapje is
-//             if (rayDirX < 0)
-//             {
-//                 stepX = -1;
-//                 sideDistX = (posX - mapX) * deltaDistX;
-//             }
-//             else
-//             {
-//                 stepX = 1;
-//                 sideDistX = (mapX + 1.0 - posX) * deltaDistX;
-//             }
-//             if (rayDirY < 0)
-//             {
-//                 stepY = -1;
-//                 sideDistY = (posY - mapY) * deltaDistY;
-//             }
-//             else
-//             {
-//                 stepY = 1;
-//                 sideDistY = (mapY + 1.0 - posY) * deltaDistY;
-//             }
-// 			 //printf("rayDirX= %f &&rayDirY= %f \nmpax= %d &&may= %d \nposX= %f &&posY= %f \nstepx= %d &&stepy= %d\n", rayDirX, rayDirY, mapX, mapY, posX, posY, stepX, stepY);
-//             hit = 0;
-// 			while (hit == 0)
-//             {
-//             //jump to next map square, OR in x-direction, OR in y-direction
-//                 if (sideDistX < sideDistY)
-//                 {
-//                     sideDistX += deltaDistX;
-//                     mapX += stepX;
-//                     side = 0;
-//                 }
-//                 else
-//                 {
-//                     sideDistY += deltaDistY;
-//                     mapY += stepY;
-//                     side = 1;
-//                 }
-//             //Check if ray has hit a wall
-//                 if (cub->map[mapY][mapX] == '1') 
-//                     hit = 1;
-//             }
-//             //Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
-//             //printf("qqqqrayDirX= %f &&rayDirY= %f \nmapx= %d &&mapy= %d \nposX= %f &&posY= %f \nstepx= %d &&stepy= %d\n", rayDirX, rayDirY, mapX, mapY, posX, posY, stepX, stepY);
-// 			//exit(0);
-//             if (side == 0) 
-//                 perpWallDist = (mapX - posX + (1 - stepX) / 2) / rayDirX;
-//             else
-// 			{
-// 				//printf("BORISSSSSSSSSSS\n");
-// ;				perpWallDist = (mapY - posY + (1 - stepY) / 2) / rayDirY;
-// 			}           
-//             // if (perpWallDist <= 0)
-// 			// 	perpWallDist = 0.01;
-
-//             //Calculate height of line to draw on screen
-//             //printf("!-perpWallDist=%f-!\n", perpWallDist);
-//             lineHeight = (int)(h / perpWallDist);
-
-//             //calculate lowest and highest pixel to fill in current stripe
-//             //printf("!-lineheight=%d-!\n", lineHeight);
-//             drawStart = (-lineHeight / 2) + (h / 2);
-//             //printf("!-drawstart0=%d-!\n", drawStart);
-//             if(drawStart < 0)
-//                 drawStart = 0;
-
-//             drawEnd = (lineHeight / 2) + (h / 2);
-//             if(drawEnd >= h)
-//                 drawEnd = h - 1;
-//            //draw the pixels of the stripe as a vertical line
-//             ft_verLine(drawStart, drawEnd, cub);
-            
-//             cub->vars.x++;
-//         }
-
-
-    // while (cub->vars.y < 1080)
-	// {
-	// 	cub->vars.x = 0;
-	// 	while (cub->vars.x < 1920)
-	// 	{
-	// 		my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, 0x27273a);
-	// 		cub->vars.x++;
-	// 	}
-	// 	cub->vars.y++;
-	// }
-	
-	// cub->vars.y = 200;
-	// while (cub->vars.y < 700)
-	// {
-	// 	cub->vars.x = 500;
-	// 	while (cub->vars.x < 1000)
-	// 	{
-	// 		my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, 0xf8c275);
-	// 		cub->vars.x++;
-	// 	}
-	// 	cub->vars.y++;
-	// }
-	// cub->vars.y = 400;
-	// while (cub->vars.y < 600)
-	// {
-	// 	cub->vars.x = 800;
-	// 	while (cub->vars.x < 1000)
-	// 	{
-	// 		my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, 0xc7adfb);
-	// 		cub->vars.x++;
-	// 	}
-	// 	cub->vars.y++;
-	// }
-	// cub->vars.y = 300;
-	// cub->vars.xmax = 1000;
-	// while (cub->vars.y < 600)
-	// {
-	// 	cub->vars.x = 500;
-	// 	while (cub->vars.x < cub->vars.xmax)
-	// 	{
-	// 		my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, 0x97f36d);
-	// 		cub->vars.x++;
-	// 	}
-	// 	if(cub->vars.xmax > 0)
-	// 		cub->vars.xmax--;
-	//  	cub->vars.y++;
-	// }
-    //mlx_key_hook(cub->vars.win, keys, cub);
-    //mlx_hook(cub->vars.win, 2, 1L << 0, keys, cub);
     cub->vars.walksies[up] = 0;
     cub->vars.walksies[down] = 0;
     cub->vars.walksies[left] = 0;
@@ -587,6 +491,7 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
     cub->vars.walksies[turn_r] = 0;
     cub->vars.walksies[turn_l] = 0;
 
+    //mlx_key_hook(cub->vars.win, keys, &cub->vars);
     mlx_hook(cub->vars.win, 2, 1L << 0, key_pressed, cub);
     mlx_hook(cub->vars.win, 3, 2L << 0, key_released, cub);
     //mlx_hook(cub->vars.win, 17, 0, destroy ,cub);
@@ -595,3 +500,11 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
     //mlx_put_image_to_window(cub->vars.mlx, cub->vars.win, cub->img.img, 0, 0);
 	mlx_loop(cub->vars.mlx);
 }
+
+//fix s w e stuff with dirx etc
+//bounds of map, no wall walking pls
+//move left right
+//make it norm
+//sprite
+//textures
+//bitmap
