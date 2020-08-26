@@ -62,7 +62,7 @@ int     key_pressed(int keycode, t_parse *cub)
 	}//printf("posX=%f && posY =%f dirX=%f && dirY=%f\n", cub->vars.posX, cub->vars.posY, cub->vars.dirX, cub->vars.dirY);
 	//move forward if no wall in front of you
     if ((keycode == 13 && APPLE == 1) || (keycode == 119 && LINUX == 1))
-    {printf("check1\n");
+    {//printf("check1\n");
         cub->vars.walksies[up] = 1;
     }
     if ((keycode == 1 && APPLE == 1) || (keycode == 115 && LINUX == 1))
@@ -95,7 +95,7 @@ int     key_released(int keycode, t_parse *cub)
 	}//printf("posX=%f && posY =%f dirX=%f && dirY=%f\n", cub->vars.posX, cub->vars.posY, cub->vars.dirX, cub->vars.dirY);
 	//move forward if no wall in front of you
     if ((keycode == 13 && APPLE == 1) || (keycode == 119 && LINUX == 1))
-    {printf("check2\n");
+    {//printf("check2\n");
         cub->vars.walksies[up] = 0;
     }
     if ((keycode == 1 && APPLE == 1) || (keycode == 115 && LINUX == 1))
@@ -123,7 +123,7 @@ int     key_released(int keycode, t_parse *cub)
 
 int		keys(int keycode, t_parse *cub)
 {
-	cub->vars.moveSpeed = 0.0000001;
+	cub->vars.moveSpeed = 0.05;
     cub->vars.rotSpeed = 0.05;
     cub->vars.oldDirX = 0;
     cub->vars.oldPlaneX = 0;
@@ -183,28 +183,92 @@ int		keys(int keycode, t_parse *cub)
 //0 a 13 w 2 d 1 s
 //ubuntu
 //a 97 w 119 d 100 s 115
+// void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
+// {
+//     //int y;
+
+//     cub->vars.y = 0;
+//     // printf("5verline!-drawstart=%d && drawend=%i && ry=%d !\n\n\n",cub->vars.drawStart, cub->vars.drawEnd, cub->ry);
+//     while (cub->vars.y < drawStart)
+//     {
+//         my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, 0x27273a);
+//         cub->vars.y++;
+//     }
+// 	while (cub->vars.y < drawEnd)
+//     {
+//         my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, cub->vars.colorwall);//0xc7adfb
+//         cub->vars.y++;
+//     }
+// 	while (cub->vars.y < cub->ry)
+//     {
+//         my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, 0x97f36d);
+//         cub->vars.y++;
+//     }
+// }
+
 void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
 {
     //int y;
+     cub->vars.y = 0;
+     char *test;
+     unsigned int color;
 
-    cub->vars.y = 0;
-    // printf("5verline!-drawstart=%d && drawend=%i && ry=%d !\n\n\n",cub->vars.drawStart, cub->vars.drawEnd, cub->ry);
     while (cub->vars.y < drawStart)
     {
         my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, 0x27273a);
         cub->vars.y++;
     }
-	while (cub->vars.y < drawEnd)
-    {
-        my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, cub->vars.colorwall);//0xc7adfb
+      //calculate value of wallX
+      if (cub->vars.side == 0)
+        cub->vars.wallX = cub->vars.posY + cub->vars.perpWallDist * cub->vars.rayDirY;
+      else
+        cub->vars.wallX = cub->vars.posX + cub->vars.perpWallDist * cub->vars.rayDirX;
+      cub->vars.wallX -= floor((cub->vars.wallX));
+
+      //x coordinate on the texture
+      cub->vars.texX = (int)(cub->vars.wallX * (double)(cub->tex[0].x));//change 0 to variable
+      if(cub->vars.side == 0 && cub->vars.rayDirX > 0) 
+        cub->vars.texX = cub->tex[0].x - cub->vars.texX - 1;
+      if(cub->vars.side == 1 && cub->vars.rayDirY < 0) 
+        cub->vars.texX = cub->tex[0].x - cub->vars.texX - 1;
+
+           // How much to increase the texture coordinate per screen pixel
+      cub->vars.step = 1.0 * cub->tex[0].y / cub->vars.lineHeight;
+      // Starting texture coordinate
+      cub->vars.texPos = (cub->vars.drawStart - cub->vars.h / 2 + cub->vars.lineHeight / 2) * cub->vars.step;
+      cub->vars.y = drawStart;
+      while(cub->vars.y <= drawEnd)
+      {
+        // Cast the texture coordinate to integer, and mask with (cub->tex[0].y - 1) in case of overflow
+        cub->vars.texY = (int)cub->vars.texPos & (cub->tex[0].y - 1);
+        cub->vars.texPos += cub->vars.step;
+
+        // printf("texx=%f & texy=%f\n", cub->vars.texX, cub->vars.texY);
+        // printf("step = %f, texPos = %f\n", cub->vars.step, cub->vars.texPos);
+       // printf("x=%d & y=%d\n", cub->tex[0].x, cub->tex[0].y);
+        color = *(unsigned int *)(cub->tex[0].addr + (cub->tex[0].line_length * (int)cub->vars.texY + (int)cub->vars.texX \
+            * (cub->tex[0].bits_per_pixel / 8)));
+        //color = *((unsigned int *) test);
+       // printf("color:%u\n", color);
+        // printf("x: %d, y: %d, color: %u\n", cub->vars.x, cub->vars.y, color);
+        my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, color);
         cub->vars.y++;
-    }
+      }
+    //   cub->vars.y = 0;
+   // printf("5verline!-drawstart=%d && drawend=%i && ry=%d !\n\n\n",cub->vars.drawStart, cub->vars.drawEnd, cub->ry);
+   
+	// while (cub->vars.y < drawEnd)
+    // {
+    //     my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, cub->vars.colorwall);//0xc7adfb
+    //     cub->vars.y++;
+    // }
 	while (cub->vars.y < cub->ry)
     {
         my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, 0x97f36d);
         cub->vars.y++;
     }
 }
+
 int    ft_checkposition(t_parse *cub, int x, int y)
 {
     if ((x > 0 && x < cub->maxstrlen) || (y > 0 && y < cub->max_y) 
@@ -291,7 +355,7 @@ int	render_next_frame(t_parse *cub)
       cub->vars.planeY = cub->vars.oldPlaneX * sin(cub->vars.rotSpeed) + cub->vars.planeY * cos(cub->vars.rotSpeed);
     }
     // //ft_verLine(cub->vars.drawStart, cub->vars.drawEnd, cub);
-   // printf("walksies0=%d\n && lemaoX=%d\n && lemaoY=%d\n", cub->vars.walksies[up], ((int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)), ((int)(cub->vars.posY + cub->vars.dirY * cub->vars.moveSpeed)));
+    // printf("walksies0=%d\n && lemaoX=%d\n && lemaoY=%d\n", cub->vars.walksies[up], ((int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)), ((int)(cub->vars.posY + cub->vars.dirY * cub->vars.moveSpeed)));
     // printf("yoyo\n");
     // exit(1);
     mlx_calc(cub);
@@ -321,8 +385,6 @@ double  ft_abs(double n)
         n = n * -1;
     return (n);
 }
-
-
 
 void	mlx_calc(t_parse *cub)
 {
@@ -433,7 +495,7 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 	// t_data	img;
 	// t_vars	vars;
     //--------------------
-    cub->vars.moveSpeed = 0.2; //make define
+    cub->vars.moveSpeed = 0.07; //make define
     cub->vars.rotSpeed = 0.05;
     cub->vars.oldDirX = 0;
     cub->vars.oldPlaneX = 0;
@@ -446,10 +508,36 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
     cub->vars.w = cub->rx;
     cub->vars.posX = (double)cub->startx + 0.5; //0.5
     cub->vars.posY = (double)cub->starty + 0.5;  //x and y start position
-    cub->vars.dirX = 0.0;
-    cub->vars.dirY = -1.0; //initial direction vector ;fix that with s e wetc.
-    cub->vars.planeX = -0.66;
-    cub->vars.planeY = 0; //the 2d raycaster version of camera plane
+    printf("ltr=%c\n", cub->ltr);
+    if (cub->ltr == 'S')
+    {
+        cub->vars.dirX = 0.0;
+        cub->vars.dirY = -1.0; //initial direction vector ;fix that with s e wetc.
+        cub->vars.planeX = -0.66;
+        cub->vars.planeY = 0; //the 2d raycaster version of camera plane
+    }
+    if (cub->ltr == 'W')
+    {
+        cub->vars.dirX = -1.0;
+        cub->vars.dirY = 0.0; //initial direction vector ;fix that with s e wetc.
+        cub->vars.planeX = 0;
+        cub->vars.planeY = 0.66; //the 2d raycaster version of camera plane
+    }
+    if (cub->ltr == 'N')
+    {
+        cub->vars.dirX = 0.0;
+        cub->vars.dirY = 1.0; //initial direction vector ;fix that with s e wetc.
+        cub->vars.planeX = 0.66;
+        cub->vars.planeY = 0; //the 2d raycaster version of camera plane
+    }
+    if (cub->ltr == 'E')
+    {
+        cub->vars.dirX = 1.0;
+        cub->vars.dirY = 0.0; //initial direction vector ;fix that with s e wetc.
+        cub->vars.planeX = 0;
+        cub->vars.planeY = -0.66; //the 2d raycaster version of camera plane
+    }
+    
        //which box of the map we're in
     cub->vars.mapX = 0;
     cub->vars.mapY = 0;
@@ -491,6 +579,28 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
     cub->vars.walksies[turn_r] = 0;
     cub->vars.walksies[turn_l] = 0;
 
+
+    //open(cub->fd, O_RDONLY);
+    cub->tex[0].img = mlx_png_file_to_image(cub->vars.mlx, cub->no, &cub->tex[0].x, &cub->tex[0].y);
+    //close(cub->fd);
+    cub->tex[0].addr = mlx_get_data_addr(cub->tex[0].img, &cub->tex[0].bits_per_pixel, &cub->tex[0].line_length, &cub->tex[0].endian);
+      //open(cub->fd, O_RDONLY);
+    cub->tex[1].img = mlx_png_file_to_image(cub->vars.mlx, cub->so, &cub->tex[1].x, &cub->tex[1].y);
+    //close(cub->fd);
+    cub->tex[1].addr = mlx_get_data_addr(cub->tex[1].img, &cub->tex[1].bits_per_pixel, &cub->tex[1].line_length, &cub->tex[1].endian);
+      //open(cub->fd, O_RDONLY);
+    cub->tex[2].img = mlx_png_file_to_image(cub->vars.mlx, cub->we, &cub->tex[2].x, &cub->tex[2].y);
+    //close(cub->fd);
+    cub->tex[2].addr = mlx_get_data_addr(cub->tex[2].img, &cub->tex[2].bits_per_pixel, &cub->tex[2].line_length, &cub->tex[2].endian);
+      //open(cub->fd, O_RDONLY);
+    cub->tex[3].img = mlx_png_file_to_image(cub->vars.mlx, cub->ea, &cub->tex[3].x, &cub->tex[3].y);
+    //close(cub->fd);
+    cub->tex[3].addr = mlx_get_data_addr(cub->tex[3].img, &cub->tex[3].bits_per_pixel, &cub->tex[3].line_length, &cub->tex[3].endian);
+      //open(cub->fd, O_RDONLY);
+    cub->tex[4].img = mlx_png_file_to_image(cub->vars.mlx, cub->s, &cub->tex[4].x, &cub->tex[4].y);
+    //close(cub->fd);
+    cub->tex[4].addr = mlx_get_data_addr(cub->tex[4].img, &cub->tex[4].bits_per_pixel, &cub->tex[4].line_length, &cub->tex[4].endian);
+
     //mlx_key_hook(cub->vars.win, keys, &cub->vars);
     mlx_hook(cub->vars.win, 2, 1L << 0, key_pressed, cub);
     mlx_hook(cub->vars.win, 3, 2L << 0, key_released, cub);
@@ -501,10 +611,11 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 	mlx_loop(cub->vars.mlx);
 }
 
-//fix s w e stuff with dirx etc
-//bounds of map, no wall walking pls
-//move left right
+//fix s w e stuff with dirx etc         V
+//bounds of map, no wall walking pls    V
+//move left right                       V
 //make it norm
 //sprite
 //textures
 //bitmap
+//window resizing
