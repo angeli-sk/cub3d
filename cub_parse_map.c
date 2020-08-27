@@ -1,4 +1,6 @@
 #include "./cub3d.h"
+#include "./libft/libft.h"
+#include "stdlib.h"
 
 void	check_if_empty_start(t_parse *cub) //error
 {
@@ -44,6 +46,7 @@ void	playerobjcheck(t_parse *cub) //map error
 				cub->mapcopy[y][x] == 'E' || cub->mapcopy[y][x] == 'N')
 			{
 				cub->players++;
+				cub->ltr = cub->mapcopy[y][x];
 				cub->startx = x;
 				cub->starty = y;
 			}
@@ -83,9 +86,40 @@ void	ft_floodfill(t_parse *cub, int y, int x) //map
 		ft_floodfill(cub, y - 1, x - 1);
 }
 
+void	obj_array_fill(t_parse *cub)
+{
+	int x;
+	int y;
+	int i;
+
+	x = 0;
+	y = 0;
+	i = 0;
+	cub->arr = malloc(sizeof(t_array) * cub->objects + 1);
+	if (cub->arr == 0)
+		ft_exit_c3d(cub, "Malloc failed, u suck\n", 22);
+	while (y < cub->max_y)
+	{
+		while (cub->mapcopy[y][x] != '\0')
+		{
+			if (cub->mapcopy[y][x] == '2')
+			{
+				ft_bzero(&cub->arr[i], sizeof(t_array));
+				cub->arr[i].x = x;
+				cub->arr[i].y = y;
+				i++;
+			}
+			x++;
+		}
+		x = 0;
+		y++;
+	}
+}
+
 void	mapvalidity(t_parse *cub) // map
 {
 	playerobjcheck(cub);
+	obj_array_fill(cub); //to know location of obj
 	if (cub->players == 1)
 		ft_floodfill(cub, cub->starty, cub->startx);
 	else
@@ -96,4 +130,7 @@ void	validity(t_parse *cub)
 {
 	check_if_empty_start(cub);
 	mapvalidity(cub);
+	for (int i = 0; i < cub->objects; i++)
+		printf("|%d| x = %d && y = %d \n", i, cub->arr[i].x, cub->arr[i].y);
+	
 }

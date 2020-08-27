@@ -32,6 +32,7 @@ char	*struct_path(t_parse *cub) //path parse
 
 	len = 0;
 	tempi = 0;
+	(cub->i) = (cub->i) + 2;
 	while ((cub->line)[(cub->i)] == ' ')
 		(cub->i)++;
 	check_if_s_empty(cub);
@@ -40,6 +41,8 @@ char	*struct_path(t_parse *cub) //path parse
 		tempi++;
 	len = ft_strlen(&(cub->line)[(cub->i)]);
 	temp = malloc((sizeof(char) * len) + 1);
+	if (temp == 0)
+		ft_exit_c3d(cub, "Malloc failed, u suck\n", 22);
 	temp[len] = '\0';
 	ft_strlcpy(temp, &((cub->line)[(cub->i)]), len + 1);
 	return (temp);

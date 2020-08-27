@@ -90,6 +90,8 @@ void	struct_num(t_parse *cub, int *adr1, int *adr2, int *adr3) //num parse
 			cub->num_error = too_many_nums; //check if this still works with 2 and 3 nums
 		num_check(cub);
 		cub->num_temp = malloc(((cub->num_i) - (cub->num_st)) * sizeof(char) + 1);
+		if (cub->num_temp == 0)
+			ft_exit_c3d(cub, "Malloc failed, u suck\n", 22);
 		ft_strlcpy(cub->num_temp, &(cub->line)[cub->num_st], ((cub->num_i) - (cub->num_st)) + 1);
 		if (cub->num_check == 1)
 			*adr1 = ft_atoi(cub->num_temp);

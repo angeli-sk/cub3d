@@ -40,6 +40,8 @@ void	struct_num(char **line, int *adr1, int *adr2, int *adr3)
 	{
 		num_check(&i, line, &start);
 		temp = malloc((i - start) * sizeof(char) + 1);
+		if (temp == 0)
+			ft_exit_c3d(cub, "Malloc failed, u suck\n", 22);
 		ft_strlcpy(temp, &(*line)[start], (i - start) + 1);
 		if (check == 1)
 			*adr1 = ft_atoi(temp);
@@ -58,10 +60,15 @@ char	*struct_path(t_cub3d *cub, int i, char **line)
 	int		len;
 	char	*temp;
 
-	while ((*line)[i] != '.')
+	i = i + 2;
+	
+	while ((*line)[i] == ' ')
 		i++;
+	printf("|lol|%s|\n", &(*line)[i]);
 	len = ft_strlen(&(*line)[i]);
 	temp = malloc((sizeof(char) * len) + 1);
+	if (temp == 0)
+		ft_exit_c3d(cub, "Malloc failed, u suck\n", 22);
 	temp[len] = '\0';
 	ft_strlcpy(temp, &(*line)[i], len);
 	return (temp);

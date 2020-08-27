@@ -14,6 +14,17 @@ void	struct_num_init(t_parse *cub) //initialize
 void	struct_init(t_parse *cub) //init
 {
 	ft_bzero(cub, sizeof(t_parse));
+	ft_bzero(&cub->img, sizeof(t_parse));
+	ft_bzero(&cub->vars, sizeof(t_parse));
+	ft_bzero(&cub->arr, sizeof(t_parse));
+	
+	int i;
+	i = 0;
+	while(i < 5)
+	{
+		ft_bzero(&cub->tex[i], sizeof(t_parse));
+		i++;
+	}
 	cub->rx = -1;
 	cub->ry = -1;
 	// cub->no = 0;
@@ -53,4 +64,5 @@ void	struct_init(t_parse *cub) //init
 // 	cub->num_error = 0;
 // 	cub->num_temp = NULL;
 // 	cub->num_ltr = 0;
+	cub->ltr = 0;
 }

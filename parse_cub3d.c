@@ -131,12 +131,17 @@ void	parser(t_parse *cub, char **argv, int argc) //cub
 
 void	cub3d(int argc, char **argv)
 {
-	t_parse cub;
-	parser(&cub, argv, argc);
-	ft_mlx(&cub, argv, argc);
+	t_parse *cub;
+
+	cub = malloc(sizeof(t_parse));
+	//cub = ft_calloc(1, sizeof(t_parse));
+	if (cub == 0)
+		ft_exit_c3d(cub, "Malloc failed, u suck\n", 22);	
+	parser(cub, argv, argc);
+	ft_mlx(cub, argv, argc);
 	//mlx_loop_hook(cub.vars.mlx,	render_next_frame(cub), cub.vars.mlx);
-	freevars(&cub);
-	freemaps(&cub);
+	freevars(cub);
+	freemaps(cub);
 }
 
 int		main(int argc, char **argv)
