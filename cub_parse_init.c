@@ -17,7 +17,7 @@ void	struct_init(t_parse *cub) //init
 	ft_bzero(&cub->img, sizeof(t_parse));
 	ft_bzero(&cub->vars, sizeof(t_parse));
 	ft_bzero(&cub->arr, sizeof(t_parse));
-	
+	ft_bzero(&cub->sprite, sizeof(t_jonas));
 	int i;
 	i = 0;
 	while(i < 5)

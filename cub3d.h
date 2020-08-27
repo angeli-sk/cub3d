@@ -87,12 +87,32 @@ typedef struct	s_vars
 	double texY;
 	double step;
 	double texPos;
+	double *ZBuffer;
+	
 }				t_vars;
+
+typedef struct s_jonas //sprites
+{
+	double spriteX;
+	double spriteY;
+	double invDet;
+	double transformX;
+	double transformY;
+	int spriteScreenX;
+	int spriteHeight;
+	int spriteWidth;
+	int drawStartY;
+	int	drawStartX;
+	int drawEndY;
+	int drawEndX;
+	int stripe;
+	int d; //daniel
+}				t_jonas;
 
 typedef struct s_array
 {
-	int x;
-	int y;
+	int x;//int
+	int y;//int
 	void *img; //img die mlx return van de sprite
 	char *addr;
 	double distance;
@@ -147,6 +167,8 @@ typedef struct	s_parse
 	t_data	img;
 	t_vars vars;
 	t_array *arr;
+	t_jonas sprite;
+	int		*spriteOrder;
 	t_array tex[5];
 }				t_parse;
 
@@ -228,5 +250,6 @@ int	render_next_frame(t_parse *cub);
 int draw(t_vars *vars);
 void	ft_mlx(t_parse *cub, char **argv, int argc);
 void	mlx_calc(t_parse *cub);
+void 	mlx_sprite(t_parse *cub);
 
 #endif

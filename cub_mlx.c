@@ -359,6 +359,7 @@ int	render_next_frame(t_parse *cub)
     // printf("yoyo\n");
     // exit(1);
     mlx_calc(cub);
+    mlx_sprite(cub);
 	mlx_put_image_to_window(cub->vars.mlx, cub->vars.win, cub->img.img, 0, 0);
 	return (1);
 }
@@ -386,108 +387,206 @@ double  ft_abs(double n)
     return (n);
 }
 
+// void    ft_sort(t_parse *cub)
+// {
+//     int i;
+//     char *adr;
+//     i = 0;
+//     while(i < cub->vars.objects - 1)
+//     {
+//         if (cub->arr[i].distance < cub->arr[i + 1].distance)
+//         {
+//             adr = &cub->arr[i + 1];
+//             cub->arr[i + 1] = cub->arr[i];
+//             cub->arr[i] = adr;
+//         }
+//         i++;
+//     }
+// }
+
+void mlx_sprite(t_parse *cub)
+{
+    int i;
+    unsigned int color;
+    i = 0;
+    color = 0;
+    //cub->vars.x = 0;
+    //cub->vars.y = 0;
+    while (i < cub->objects)
+    {
+      //translate sprite position to relative to camerasprite
+      cub->sprite.spriteX = cub->arr[i].x -  cub->vars.posX; //cub->spriteOrder[i]
+      cub->sprite.spriteY = cub->arr[i].y - cub->vars.posY;
+
+      //transform sprite with the inverse camera matrix
+      // [ planeX   dirX ] -1                                       [ dirY      -dirX ]
+      // [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
+      // [ planeY   dirY ]                                          [ -planeY  planeX ]
+
+      cub->sprite.invDet = 1.0 / (cub->vars.planeX * cub->vars.dirY - cub->vars.dirX * cub->vars.planeY); //required for correct matrix multiplication
+
+      cub->sprite.transformX = cub->sprite.invDet * (cub->vars.dirY * cub->sprite.spriteX - cub->vars.dirX * cub->sprite.spriteY);
+      cub->sprite.transformY = cub->sprite.invDet * (-cub->vars.planeY * cub->sprite.spriteX + cub->vars.planeX * cub->sprite.spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
+
+      cub->sprite.spriteScreenX = (int)((cub->vars.w / 2) * (1 + cub->sprite.transformX / cub->sprite.transformY));
+      //calculate height of the sprite on screen
+      cub->sprite.spriteHeight = fabs((int)(cub->vars.h / (cub->sprite.transformY))); //using "transformY" instead of the real distance prevents fisheye
+      //calculate lowest and highest pixel to fill in current stripe
+      cub->sprite.drawStartY = -cub->sprite.spriteHeight / 2 + cub->vars.h / 2;//vMoveScreen
+      if(cub->sprite.drawStartY < 0) 
+        cub->sprite.drawStartY = 0;
+      cub->sprite.drawEndY = cub->sprite.spriteHeight / 2 + cub->vars.h / 2;
+      if(cub->sprite.drawEndY >= cub->vars.h) 
+        cub->sprite.drawEndY = cub->vars.h - 1;
+
+      //calculate width of the sprite
+      cub->sprite.spriteWidth = fabs((int)(cub->vars.h / (cub->sprite.transformY)));
+      cub->sprite.drawStartX = -(cub->sprite.spriteWidth) / 2 + cub->sprite.spriteScreenX;
+      if(cub->sprite.drawStartX < 0) 
+        cub->sprite.drawStartX = 0;
+      cub->sprite.drawEndX = cub->sprite.spriteWidth / 2 + cub->sprite.spriteScreenX;
+      if(cub->sprite.drawEndX >= cub->vars.w) 
+        cub->sprite.drawEndX = cub->vars.w - 1;
+    
+        cub->sprite.stripe = cub->sprite.drawStartX;
+       // printf("stripe: %i | drawend: %i\n", cub->sprite.stripe, cub->sprite.drawEndX);
+      //loop through every vertical stripe of the sprite on screen
+      while (cub->sprite.stripe < cub->sprite.drawEndX)
+      {//printf("stripe:%d\n",cub->sprite.stripe);
+        cub->vars.texX = (int)(256 * (cub->sprite.stripe - (-cub->sprite.spriteWidth / 2 + cub->sprite.spriteScreenX)) * cub->tex[4].x / cub->sprite.spriteWidth) / 256; //texwidth
+        //the conditions in the if are:
+        //1) it's in front of camera plane so you don't see things behind you
+        //2) it's on the screen (left)
+        //3) it's on the screen (right)
+        //4) ZBuffer, with perpendicular distance
+        if(cub->sprite.transformY > 0 && cub->sprite.stripe > 0 && cub->sprite.stripe < cub->vars.w && cub->sprite.transformY < cub->vars.ZBuffer[cub->sprite.stripe])//perpendicular distance is usedstripe > 0 && cub->sprite.stripe < cub->vars.w && cub->sprite.transformY < ZBuffer[stripe])
+           cub->vars.y = cub->sprite.drawStartY;
+           while (cub->vars.y < cub->sprite.drawEndY)  //for every pixel of the current stripe
+            {
+                cub->sprite.d = (cub->vars.y) * 256 - cub->vars.h * 128 + cub->sprite.spriteHeight * 128; //256 and 128 factors to avoid floats
+                cub->vars.texY = ((cub->sprite.d * cub->tex[4].x) / cub->sprite.spriteHeight) / 256; //texwidth
+                // color = texture[sprite[spriteOrder[i]].texture][texWidth * texY + texX]; //get current color from the texture
+                // if((color & 0x00FFFFFF) != 0) buffer[y][stripe] = color; //paint pixel if it isn't black, black is the invisible color
+               color = *(unsigned int *)(cub->tex[4].addr + (cub->tex[4].line_length * (int)cub->vars.texY + (int)cub->vars.texX \
+                * (cub->tex[4].bits_per_pixel / 8)));
+                printf("color:%d\n", color);
+                if(color > 0)
+                    my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, color);
+                cub->vars.y++;
+            }
+        cub->sprite.stripe++;
+      }
+    }
+}
+
 void	mlx_calc(t_parse *cub)
 {
+    // int i;
+    // i = 0;
     cub->vars.x = 0;
 	while (cub->vars.x < cub->vars.w)
+    {
+        cub->vars.colorwall = 13086203;
+        //printf("VARSX=%d\n", cub->vars.x);
+        //printf("posx=%f && posy=%f && startx= %d && starty= %d\n", cub->vars.posX, cub->vars.posY, cub->startx, cub->starty);
+        //calculate ray position and direction
+        cub->vars.cameraX = 2 * cub->vars.x / (double)cub->vars.w - 1; //x-coordinate in camera space
+        //printf("cub->vars.camerax=%f\nplaneX=%f\n",cub->vars.cameraX, cub->vars.planeX);
+        cub->vars.rayDirX = cub->vars.dirX + cub->vars.planeX * cub->vars.cameraX;
+        cub->vars.rayDirY = cub->vars.dirY + cub->vars.planeY * cub->vars.cameraX;
+        // cub->vars.y = 0;
+        // cub->vars.x = 0;
+        cub->vars.mapX = (int)cub->vars.posX;
+        cub->vars.mapY = (int)cub->vars.posY;
+        //printf("cub->vars.raydirx=%f&&cub->vars.raydiry=%f\n", cub->vars.rayDirX, cub->vars.rayDirY);
+        // deltaDistX = fabs(1 / cub->vars.rayDirX);
+        // deltaDistY = fabs(1 / cub->vars.rayDirY);
+        // if (cub->vars.rayDirX == 0 || cub->vars.rayDirY == 0)
+        // 	return;
+        cub->vars.deltaDistX = (cub->vars.rayDirY == 0) ? 0 : ((cub->vars.rayDirX == 0) ? 1 : fabs(1 / cub->vars.rayDirX));
+        cub->vars.deltaDistY = (cub->vars.rayDirX == 0) ? 0 : ((cub->vars.rayDirY == 0) ? 1 : fabs(1 / cub->vars.rayDirY));
+        // printf("1deltadisx=%f&&deltadisy=%f\n", cub->vars.deltaDistX, cub->vars.deltaDistY);
+        //how groot het eerst vakje/stapje is
+        if (cub->vars.rayDirX < 0)
         {
-            cub->vars.colorwall = 13086203;
-			//printf("VARSX=%d\n", cub->vars.x);
-			//printf("posx=%f && posy=%f && startx= %d && starty= %d\n", cub->vars.posX, cub->vars.posY, cub->startx, cub->starty);
-			//calculate ray position and direction
-            cub->vars.cameraX = 2 * cub->vars.x / (double)cub->vars.w - 1; //x-coordinate in camera space
-            //printf("cub->vars.camerax=%f\nplaneX=%f\n",cub->vars.cameraX, cub->vars.planeX);
-            cub->vars.rayDirX = cub->vars.dirX + cub->vars.planeX * cub->vars.cameraX;
-            cub->vars.rayDirY = cub->vars.dirY + cub->vars.planeY * cub->vars.cameraX;
-	        // cub->vars.y = 0;
-	        // cub->vars.x = 0;
-            cub->vars.mapX = (int)cub->vars.posX;
-            cub->vars.mapY = (int)cub->vars.posY;
-			//printf("cub->vars.raydirx=%f&&cub->vars.raydiry=%f\n", cub->vars.rayDirX, cub->vars.rayDirY);
-            // deltaDistX = fabs(1 / cub->vars.rayDirX);
-            // deltaDistY = fabs(1 / cub->vars.rayDirY);
-			// if (cub->vars.rayDirX == 0 || cub->vars.rayDirY == 0)
-			// 	return;
-			cub->vars.deltaDistX = (cub->vars.rayDirY == 0) ? 0 : ((cub->vars.rayDirX == 0) ? 1 : fabs(1 / cub->vars.rayDirX));
-      		cub->vars.deltaDistY = (cub->vars.rayDirX == 0) ? 0 : ((cub->vars.rayDirY == 0) ? 1 : fabs(1 / cub->vars.rayDirY));
-            // printf("1deltadisx=%f&&deltadisy=%f\n", cub->vars.deltaDistX, cub->vars.deltaDistY);
-            //how groot het eerst vakje/stapje is
-            if (cub->vars.rayDirX < 0)
-            {
-                cub->vars.stepX = -1;
-                cub->vars.sideDistX = (cub->vars.posX - cub->vars.mapX) * cub->vars.deltaDistX;
-            }
-            else
-            {
-                cub->vars.stepX = 1;
-                cub->vars.sideDistX = (cub->vars.mapX + 1.0 - cub->vars.posX) * cub->vars.deltaDistX;
-            }
-            if (cub->vars.rayDirY < 0)
-            {
-                cub->vars.stepY = -1;
-                cub->vars.sideDistY = (cub->vars.posY - cub->vars.mapY) * cub->vars.deltaDistY;
-            }
-            else
-            {
-                cub->vars.stepY = 1;
-                cub->vars.sideDistY = (cub->vars.mapY + 1.0 - cub->vars.posY) * cub->vars.deltaDistY;
-            }
-			//  printf("2cub->vars.rayDirX= %f &&cub->vars.rayDirY= %f \nmpax= %d &&may= %d \nposX= %f &&posY= %f \nstepx= %d &&stepy= %d\n", cub->vars.rayDirX, cub->vars.rayDirY, cub->vars.mapX, cub->vars.mapY, cub->vars.posX, cub->vars.posY, cub->vars.stepX, cub->vars.stepY);
-            cub->vars.hit = 0;
-			while (cub->vars.hit == 0)
-            {
-            //jump to next map square, OR in x-direction, OR in y-direction
-                if (cub->vars.sideDistX < cub->vars.sideDistY)
-                {
-                    cub->vars.sideDistX += cub->vars.deltaDistX;
-                    cub->vars.mapX += cub->vars.stepX;
-                    cub->vars.side = 0;
-                }
-                else
-                {
-                   cub->vars.sideDistY += cub->vars.deltaDistY;
-                    cub->vars.mapY += cub->vars.stepY;
-                    cub->vars.side = 1;
-                }
-            //Check if ray has hit a wall
-                if (cub->map[cub->vars.mapY][cub->vars.mapX] == '1') 
-                    cub->vars.hit = 1;
-            }
-            //Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
-            // printf("3qqqqcub->vars.rayDirX= %f &&cub->vars.rayDirY= %f \nmapx= %d &&mapy= %d \nposX= %f &&posY= %f \nstepx= %d &&stepy= %d\n", cub->vars.rayDirX, cub->vars.rayDirY, cub->vars.mapX, cub->vars.mapY, cub->vars.posX, cub->vars.posY, cub->vars.stepX, cub->vars.stepY);
-			//exit(0);
-            if (cub->vars.side == 0) 
-                cub->vars.perpWallDist = (cub->vars.mapX - cub->vars.posX + (1 - cub->vars.stepX) / 2) / cub->vars.rayDirX;
-            else
-			{
-				//printf("BORISSSSSSSSSSS\n");
-;				cub->vars.perpWallDist = (cub->vars.mapY - cub->vars.posY + (1 - cub->vars.stepY) / 2) / cub->vars.rayDirY;
-			}           
-            // if (perpWallDist <= 0)
-			// 	perpWallDist = 0.01;
-
-            //Calculate height of line to draw on screen
-            //printf("!-perpWallDist=%f-!\n", cub->vars.perpWallDist);
-            cub->vars.lineHeight = (int)(cub->vars.h / cub->vars.perpWallDist);
-
-            //calculate lowest and highest pixel to fill in current stripe
-            //printf("!-lineheight=%d-!\n", cub->vars.lineHeight);
-            cub->vars.drawStart = (-cub->vars.lineHeight / 2) + (cub->vars.h / 2);
-            // printf("4!-drawstart0=%d-!\n", cub->vars.drawStart);
-            if(cub->vars.drawStart < 0)
-                cub->vars.drawStart = 0;
-
-            cub->vars.drawEnd = (cub->vars.lineHeight / 2) + (cub->vars.h / 2);
-            if(cub->vars.drawEnd >= cub->vars.h)
-                cub->vars.drawEnd = cub->vars.h - 1;
-             //give x and y sides different brightness
-            if(cub->vars.side == 1) 
-                cub->vars.colorwall = cub->vars.colorwall / 2;
-           //draw the pixels of the stripe as a vertical line
-            ft_verLine(cub->vars.drawStart, cub->vars.drawEnd, cub);
-            
-            cub->vars.x++;
+            cub->vars.stepX = -1;
+            cub->vars.sideDistX = (cub->vars.posX - cub->vars.mapX) * cub->vars.deltaDistX;
         }
+        else
+        {
+            cub->vars.stepX = 1;
+            cub->vars.sideDistX = (cub->vars.mapX + 1.0 - cub->vars.posX) * cub->vars.deltaDistX;
+        }
+        if (cub->vars.rayDirY < 0)
+        {
+            cub->vars.stepY = -1;
+            cub->vars.sideDistY = (cub->vars.posY - cub->vars.mapY) * cub->vars.deltaDistY;
+        }
+        else
+        {
+            cub->vars.stepY = 1;
+            cub->vars.sideDistY = (cub->vars.mapY + 1.0 - cub->vars.posY) * cub->vars.deltaDistY;
+        }
+        //  printf("2cub->vars.rayDirX= %f &&cub->vars.rayDirY= %f \nmpax= %d &&may= %d \nposX= %f &&posY= %f \nstepx= %d &&stepy= %d\n", cub->vars.rayDirX, cub->vars.rayDirY, cub->vars.mapX, cub->vars.mapY, cub->vars.posX, cub->vars.posY, cub->vars.stepX, cub->vars.stepY);
+        cub->vars.hit = 0;
+        while (cub->vars.hit == 0)
+        {
+        //jump to next map square, OR in x-direction, OR in y-direction
+            if (cub->vars.sideDistX < cub->vars.sideDistY)
+            {
+                cub->vars.sideDistX += cub->vars.deltaDistX;
+                cub->vars.mapX += cub->vars.stepX;
+                cub->vars.side = 0;
+            }
+            else
+            {
+                cub->vars.sideDistY += cub->vars.deltaDistY;
+                cub->vars.mapY += cub->vars.stepY;
+                cub->vars.side = 1;
+            }
+        //Check if ray has hit a wall
+            if (cub->map[cub->vars.mapY][cub->vars.mapX] == '1') 
+                cub->vars.hit = 1;
+        }
+        //Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
+        // printf("3qqqqcub->vars.rayDirX= %f &&cub->vars.rayDirY= %f \nmapx= %d &&mapy= %d \nposX= %f &&posY= %f \nstepx= %d &&stepy= %d\n", cub->vars.rayDirX, cub->vars.rayDirY, cub->vars.mapX, cub->vars.mapY, cub->vars.posX, cub->vars.posY, cub->vars.stepX, cub->vars.stepY);
+        //exit(0);
+        if (cub->vars.side == 0) 
+            cub->vars.perpWallDist = (cub->vars.mapX - cub->vars.posX + (1 - cub->vars.stepX) / 2) / cub->vars.rayDirX;
+        else
+        {
+            //printf("BORISSSSSSSSSSS\n");
+;				cub->vars.perpWallDist = (cub->vars.mapY - cub->vars.posY + (1 - cub->vars.stepY) / 2) / cub->vars.rayDirY;
+        }           
+        // if (perpWallDist <= 0)
+        // 	perpWallDist = 0.01;
+
+        //Calculate height of line to draw on screen
+        //printf("!-perpWallDist=%f-!\n", cub->vars.perpWallDist);
+        cub->vars.lineHeight = (int)(cub->vars.h / cub->vars.perpWallDist);
+
+        //calculate lowest and highest pixel to fill in current stripe
+        //printf("!-lineheight=%d-!\n", cub->vars.lineHeight);
+        cub->vars.drawStart = (-cub->vars.lineHeight / 2) + (cub->vars.h / 2);
+        // printf("4!-drawstart0=%d-!\n", cub->vars.drawStart);
+        if(cub->vars.drawStart < 0)
+            cub->vars.drawStart = 0;
+
+        cub->vars.drawEnd = (cub->vars.lineHeight / 2) + (cub->vars.h / 2);
+        if(cub->vars.drawEnd >= cub->vars.h)
+            cub->vars.drawEnd = cub->vars.h - 1;
+            //give x and y sides different brightness
+        if(cub->vars.side == 1) 
+            cub->vars.colorwall = cub->vars.colorwall / 2;
+        //draw the pixels of the stripe as a vertical line
+
+
+
+        ft_verLine(cub->vars.drawStart, cub->vars.drawEnd, cub);
+        cub->vars.ZBuffer[cub->vars.x] = cub->vars.perpWallDist; //perpendicular distance is used
+       // printf("zbuffer:%f\n", cub->vars.ZBuffer[cub->vars.x]);
+        cub->vars.x++;
+    }
 }
 
 void	ft_mlx(t_parse *cub, char **argv, int argc)
@@ -508,6 +607,8 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
     cub->vars.w = cub->rx;
     cub->vars.posX = (double)cub->startx + 0.5; //0.5
     cub->vars.posY = (double)cub->starty + 0.5;  //x and y start position
+
+    cub->vars.ZBuffer = malloc(sizeof(double) * cub->rx);
     printf("ltr=%c\n", cub->ltr);
     if (cub->ltr == 'S')
     {
