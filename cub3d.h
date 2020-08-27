@@ -82,7 +82,24 @@ typedef struct	s_vars
 	double oldDirX;
 	double oldPlaneX;
 	int	walksies[6];
+	double wallX;
+	double texX;
+	double texY;
+	double step;
+	double texPos;
 }				t_vars;
+
+typedef struct s_array
+{
+	int x;
+	int y;
+	void *img; //img die mlx return van de sprite
+	char *addr;
+	double distance;
+	int bits_per_pixel;
+	int line_length;
+	int endian;
+}				t_array;
 
 typedef struct	s_parse
 {
@@ -126,8 +143,11 @@ typedef struct	s_parse
 	int		num_i;
 	char	num_ltr;
 	int		num_error;
+	char	ltr;
 	t_data	img;
 	t_vars vars;
+	t_array *arr;
+	t_array tex[5];
 }				t_parse;
 
 typedef struct s_splitty
