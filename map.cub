@@ -1,16 +1,16 @@
 R 1920 1080
-NO ./path_to_the_north_texture
-SO ./path_to_the_south_texture
-WE ./path_to_the_west_texture
-EA ./path_to_the_east_texture
-S ./path_to_the_sprite_texture
+NO ./images/star.png
+SO ./images/star.png
+WE ./images/star.png
+EA ./images/star.png
+S ./images/star.png
 F 220,100,0
 C 225,30,255
 
         1111111111111111111111111
-        1000000000110000000000001
+        1200000000110000000000001
         1011000001110000002000001
-        1001000000000000N00000001
+        1001000000000000W00000001
 111111111011000001110000000000001
 100000000011000001110111111111111
 11110111111111011100000010001
