@@ -2,7 +2,7 @@
 #define LINUX 0
 #define APPLE 0
 #ifdef __linux__
-#undef LINUX 
+#undef LINUX
 # define LINUX 1
 #else
 #undef APPLE
@@ -137,9 +137,9 @@ int		keys(int keycode, t_parse *cub)
 	//move forward if no wall in front of you
     if ((keycode == 13 && APPLE == 1) || (keycode == 119 && LINUX == 1))
     {
-      if(cub->map[(int)(cub->vars.posY)][(int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)] != '1') 
+      if(cub->map[(int)(cub->vars.posY)][(int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)] != '1')
         {
-            cub->vars.posX += cub->vars.dirX * cub->vars.moveSpeed; 
+            cub->vars.posX += cub->vars.dirX * cub->vars.moveSpeed;
         }//printf("lemmmmau\n");
         //printf("BORIS2ND\n");
       if(cub->map[(int)(cub->vars.posY + cub->vars.dirY * cub->vars.moveSpeed)][(int)(cub->vars.posX)] != '1')
@@ -148,15 +148,15 @@ int		keys(int keycode, t_parse *cub)
     //move backwards if no wall behind you
     if ((keycode == 1 && APPLE == 1) || (keycode == 115 && LINUX == 1))
     {
-      if(cub->map[(int)(cub->vars.posY)][(int)(cub->vars.posX - cub->vars.dirX * cub->vars.moveSpeed)] != '1') 
+      if(cub->map[(int)(cub->vars.posY)][(int)(cub->vars.posX - cub->vars.dirX * cub->vars.moveSpeed)] != '1')
         cub->vars.posX -= cub->vars.dirX * cub->vars.moveSpeed;
-      if(cub->map[(int)(cub->vars.posY - cub->vars.dirY * cub->vars.moveSpeed)][(int)(cub->vars.posX)] != '1') 
+      if(cub->map[(int)(cub->vars.posY - cub->vars.dirY * cub->vars.moveSpeed)][(int)(cub->vars.posX)] != '1')
         cub->vars.posY -= cub->vars.dirY * cub->vars.moveSpeed;
     }
     //rotate to the rleft
     if ((keycode == 2 && APPLE == 1) || (keycode == 37 && LINUX == 1))
     {
-      //both camera direction and camera plane must be rotated      
+      //both camera direction and camera plane must be rotated
       cub->vars.oldDirX = cub->vars.dirX;
       cub->vars.dirX = cub->vars.dirX * cos(-cub->vars.rotSpeed) - cub->vars.dirY * sin(-cub->vars.rotSpeed);
       cub->vars.dirY = cub->vars.oldDirX * sin(-cub->vars.rotSpeed) + cub->vars.dirY * cos(-cub->vars.rotSpeed);
@@ -210,9 +210,11 @@ void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
 {
     //int y;
      cub->vars.y = 0;
+	 int  tex;
      char *test;
      unsigned int color;
 
+	tex = 0;
     while (cub->vars.y < drawStart)
     {
         my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, 0x27273a);
@@ -227,9 +229,9 @@ void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
 
       //x coordinate on the texture
       cub->vars.texX = (int)(cub->vars.wallX * (double)(cub->tex[0].x));//change 0 to variable
-      if(cub->vars.side == 0 && cub->vars.rayDirX > 0) 
+      if(cub->vars.side == 0 && cub->vars.rayDirX > 0)
         cub->vars.texX = cub->tex[0].x - cub->vars.texX - 1;
-      if(cub->vars.side == 1 && cub->vars.rayDirY < 0) 
+      if(cub->vars.side == 1 && cub->vars.rayDirY < 0)
         cub->vars.texX = cub->tex[0].x - cub->vars.texX - 1;
 
            // How much to increase the texture coordinate per screen pixel
@@ -246,8 +248,16 @@ void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
         // printf("texx=%f & texy=%f\n", cub->vars.texX, cub->vars.texY);
         // printf("step = %f, texPos = %f\n", cub->vars.step, cub->vars.texPos);
        // printf("x=%d & y=%d\n", cub->tex[0].x, cub->tex[0].y);
-        color = *(unsigned int *)(cub->tex[0].addr + (cub->tex[0].line_length * (int)cub->vars.texY + (int)cub->vars.texX \
-            * (cub->tex[0].bits_per_pixel / 8)));
+	   	if (cub->vars.side == 1 && cub->vars.rayDirY > 0)
+	   		tex = 0;
+		if (cub->vars.side == 1 && cub->vars.rayDirY < 0)
+			tex = 1;
+		if (cub->vars.side == 0 && cub->vars.rayDirX > 0)
+			tex = 2;
+		if (cub->vars.side == 0 && cub->vars.rayDirX < 0)
+			tex = 3;
+        color = *(unsigned int *)(cub->tex[tex].addr + (cub->tex[tex].line_length * (int)cub->vars.texY + (int)cub->vars.texX \
+            * (cub->tex[tex].bits_per_pixel / 8)));
         //color = *((unsigned int *) test);
        // printf("color:%u\n", color);
         // printf("x: %d, y: %d, color: %u\n", cub->vars.x, cub->vars.y, color);
@@ -256,7 +266,7 @@ void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
       }
     //   cub->vars.y = 0;
    // printf("5verline!-drawstart=%d && drawend=%i && ry=%d !\n\n\n",cub->vars.drawStart, cub->vars.drawEnd, cub->ry);
-   
+
 	// while (cub->vars.y < drawEnd)
     // {
     //     my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, cub->vars.colorwall);//0xc7adfb
@@ -271,15 +281,15 @@ void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
 
 int    ft_checkposition(t_parse *cub, int x, int y)
 {
-    if ((x > 0 && x < cub->maxstrlen) || (y > 0 && y < cub->max_y) 
-        || (cub->vars.posX > 0 && cub->vars.posX < cub->maxstrlen) 
+    if ((x > 0 && x < cub->maxstrlen) || (y > 0 && y < cub->max_y)
+        || (cub->vars.posX > 0 && cub->vars.posX < cub->maxstrlen)
         || (cub->vars.posY > 0 && cub->vars.posY < cub->max_y))
         return (1);
-    else   
+    else
         return (0);
 }
 
-int	render_next_frame(t_parse *cub)	
+int	render_next_frame(t_parse *cub)
 {
 	cub->img.img = mlx_new_image(cub->vars.mlx, 1920, 1080);
 	cub->img.addr = mlx_get_data_addr(cub->img.img, &cub->img.bits_per_pixel,
@@ -312,34 +322,34 @@ int	render_next_frame(t_parse *cub)
     if(cub->vars.walksies[up] == 1)
     {
       if(cub->map[(int)(cub->vars.posY)][x_up] != '1' && ft_checkposition(cub, x_up, y_up) == 1)
-            cub->vars.posX += cub->vars.dirX * cub->vars.moveSpeed;        
+            cub->vars.posX += cub->vars.dirX * cub->vars.moveSpeed;
       if(cub->map[y_up][(int)(cub->vars.posX)] != '1' && ft_checkposition(cub, x_up, y_up) == 1)
         cub->vars.posY += cub->vars.dirY * cub->vars.moveSpeed;
     }
     if(cub->vars.walksies[down] == 1)
     {
-        if(cub->map[(int)(cub->vars.posY)][x_down] != '1' && ft_checkposition(cub, x_down, y_down) == 1) 
+        if(cub->map[(int)(cub->vars.posY)][x_down] != '1' && ft_checkposition(cub, x_down, y_down) == 1)
          cub->vars.posX -= cub->vars.dirX * cub->vars.moveSpeed;
-         if(cub->map[y_down][(int)(cub->vars.posX)] != '1' && ft_checkposition(cub, x_down, y_down) == 1) 
+         if(cub->map[y_down][(int)(cub->vars.posX)] != '1' && ft_checkposition(cub, x_down, y_down) == 1)
          cub->vars.posY -= cub->vars.dirY * cub->vars.moveSpeed;
     }
     if(cub->vars.walksies[right] == 1)
     {
         if(cub->map[(int)(cub->vars.posY)][x_right] != '1' && ft_checkposition(cub, x_right, y_right) == 1)
-            cub->vars.posX += cub->vars.dirY * cub->vars.moveSpeed;     
+            cub->vars.posX += cub->vars.dirY * cub->vars.moveSpeed;
         if(cub->map[y_right][(int)(cub->vars.posX)] != '1' && ft_checkposition(cub, x_right, y_right) == 1)
              cub->vars.posY -= cub->vars.dirX * cub->vars.moveSpeed;
     }
     if(cub->vars.walksies[left] == 1)
     {
-        if(cub->map[(int)(cub->vars.posY)][x_left] != '1' && ft_checkposition(cub, x_left, y_left) == 1) 
+        if(cub->map[(int)(cub->vars.posY)][x_left] != '1' && ft_checkposition(cub, x_left, y_left) == 1)
             cub->vars.posX -= cub->vars.dirY * cub->vars.moveSpeed;
-        if(cub->map[y_left][(int)(cub->vars.posX)] != '1' && ft_checkposition(cub, x_left, y_left) == 1) 
+        if(cub->map[y_left][(int)(cub->vars.posX)] != '1' && ft_checkposition(cub, x_left, y_left) == 1)
             cub->vars.posY += cub->vars.dirX * cub->vars.moveSpeed;
     }
     if(cub->vars.walksies[turn_r] == 1)
     {
-        //both camera direction and camera plane must be rotated      
+        //both camera direction and camera plane must be rotated
       cub->vars.oldDirX = cub->vars.dirX;
       cub->vars.dirX = cub->vars.dirX * cos(-cub->vars.rotSpeed) - cub->vars.dirY * sin(-cub->vars.rotSpeed);
       cub->vars.dirY = cub->vars.oldDirX * sin(-cub->vars.rotSpeed) + cub->vars.dirY * cos(-cub->vars.rotSpeed);
@@ -369,38 +379,47 @@ int	render_next_frame(t_parse *cub)
 	return (1);
 }
 
-int draw(t_vars *vars)
-{
-	int     img_width;
-    int		img_height;
-
-	img_width = 1920;//1600
-	img_height = 1080;//800
-	t_data img;
-	img.img = mlx_new_image(vars->mlx, 1920, 1080);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
-								&img.line_length,&img.endian);
-	img.img = mlx_xpm_file_to_image(vars->mlx, "./yolanda.xpm", &img_width, &img_height);
-	mlx_put_image_to_window(vars->mlx, vars->win, img.img, 0, 0);
-	return (1);
-}
-
-// void    ft_sort(t_parse *cub)
+// int draw(t_vars *vars)
 // {
-//     int i;
-//     char *adr;
-//     i = 0;
-//     while(i < cub->vars.objects - 1)
-//     {
-//         if (cub->arr[i].distance < cub->arr[i + 1].distance)
-//         {
-//             adr = &cub->arr[i + 1];
-//             cub->arr[i + 1] = cub->arr[i];
-//             cub->arr[i] = adr;
-//         }
-//         i++;
-//     }
+// 	int     img_width;
+//     int		img_height;
+
+// 	img_width = 1920;//1600
+// 	img_height = 1080;//800
+// 	t_data img;
+// 	img.img = mlx_new_image(vars->mlx, 1920, 1080);
+// 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
+// 								&img.line_length,&img.endian);
+// 	img.img = mlx_xpm_file_to_image(vars->mlx, "./yolanda.xpm", &img_width, &img_height);
+// 	mlx_put_image_to_window(vars->mlx, vars->win, img.img, 0, 0);
+// 	return (1);
 // }
+
+void    ft_sort(t_parse *cub)
+{
+    int i;
+	int temp;
+	double tempp;
+
+    i = 0;
+	temp = 0;
+	tempp = 0.0;
+	//printf("distance=%f\n", cub->arr[0].distance);
+    while(i < cub->objects - 1)
+    {
+        if (cub->arr[cub->spriteOrder[i]].distance < cub->arr[i + 1].distance)
+        {
+			temp = cub->spriteOrder[i];
+			tempp = cub->arr[i].distance;
+			cub->spriteOrder[i] = cub->spriteOrder[i + 1];
+			cub->arr[i].distance = cub->arr[i + 1].distance;
+			cub->spriteOrder[i + 1] = temp;
+			cub->arr[i + 1].distance = tempp;
+			i = 0;
+        }
+        i++;
+    }
+}
 
 void mlx_sprite(t_parse *cub)
 {
@@ -411,12 +430,22 @@ void mlx_sprite(t_parse *cub)
     color = 0;
     //cub->vars.x = 0;
     //cub->vars.y = 0;
+	cub->spriteOrder = malloc(sizeof(int) * cub->objects); //free dis
+	while(i < cub->objects)
+    {
+      	cub->spriteOrder[i] = i;
+      	cub->arr[cub->spriteOrder[i]].distance = ((cub->vars.posX - cub->arr[cub->spriteOrder[i]].x) * (cub->vars.posX - cub->arr[cub->spriteOrder[i]].x) + (cub->vars.posY - cub->arr[cub->spriteOrder[i]].y) * (cub->vars.posY - cub->arr[cub->spriteOrder[i]].y)); //sqrt not taken, unneeded
+		i++;
+	}
+	ft_sort(cub);
+	i = 0;
     while (i < cub->objects)
     {
       //translate sprite position to relative to camerasprite
-      cub->sprite.spriteX = cub->arr[i].x -  cub->vars.posX; //cub->spriteOrder[i]
-      cub->sprite.spriteY = cub->arr[i].y - cub->vars.posY;
-
+      cub->sprite.spriteX = cub->arr[cub->spriteOrder[i]].x -  cub->vars.posX; //cub->spriteOrder[i]
+      cub->sprite.spriteY = cub->arr[cub->spriteOrder[i]].y - cub->vars.posY;
+	cub->sprite.spriteX += 0.5;
+	cub->sprite.spriteY += 0.5;
       //transform sprite with the inverse camera matrix
       // [ planeX   dirX ] -1                                       [ dirY      -dirX ]
       // [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
@@ -432,21 +461,21 @@ void mlx_sprite(t_parse *cub)
       cub->sprite.spriteHeight = abs((int)(cub->ry / (cub->sprite.transformY))); //using "transformY" instead of the real distance prevents fisheye
       //calculate lowest and highest pixel to fill in current stripe
       cub->sprite.drawStartY = -cub->sprite.spriteHeight / 2 + cub->ry / 2;//vMoveScreen
-      if(cub->sprite.drawStartY < 0) 
+      if(cub->sprite.drawStartY < 0)
         cub->sprite.drawStartY = 0;
       cub->sprite.drawEndY = cub->sprite.spriteHeight / 2 + cub->ry / 2;
-      if(cub->sprite.drawEndY >= cub->ry) 
+      if(cub->sprite.drawEndY >= cub->ry)
         cub->sprite.drawEndY = cub->ry - 1;
 
       //calculate width of the sprite
       cub->sprite.spriteWidth = abs((int)(cub->ry / (cub->sprite.transformY)));//(int)
       cub->sprite.drawStartX = -(cub->sprite.spriteWidth) / 2 + cub->sprite.spriteScreenX;
-      if(cub->sprite.drawStartX < 0) 
+      if(cub->sprite.drawStartX < 0)
         cub->sprite.drawStartX = 0;
       cub->sprite.drawEndX = cub->sprite.spriteWidth / 2 + cub->sprite.spriteScreenX;
       if(cub->sprite.drawEndX >= cub->rx)
         cub->sprite.drawEndX = cub->rx - 1;
-    
+
         cub->sprite.stripe = cub->sprite.drawStartX;
        // printf("stripe: %i | drawend: %i\n", cub->sprite.stripe, cub->sprite.drawEndX);
       //loop through every vertical stripe of the sprite on screen
@@ -460,21 +489,22 @@ void mlx_sprite(t_parse *cub)
         //4) ZBuffer, with perpendicular distance
         if(cub->sprite.transformY > 0 && cub->sprite.stripe > 0 && cub->sprite.stripe < cub->vars.w && cub->sprite.transformY < cub->vars.ZBuffer[cub->sprite.stripe])//perpendicular distance is usedstripe > 0 && cub->sprite.stripe < cub->vars.w && cub->sprite.transformY < ZBuffer[stripe])
         	cub->vars.y = cub->sprite.drawStartY;
-           while (cub->vars.y < cub->sprite.drawEndY)  //for every pixel of the current stripe
+        while (cub->vars.y < cub->sprite.drawEndY && cub->sprite.stripe > 0 && cub->sprite.stripe < cub->rx)  //for every pixel of the current stripe
             {
-                cub->sprite.d = (cub->vars.y) * 256 - cub->vars.x * 128 + cub->sprite.spriteHeight * 128; //256 and 128 factors to avoid floats
+                cub->vars.texX = (int)(256 * (cub->sprite.stripe - (-cub->sprite.spriteWidth / 2 + cub->sprite.spriteScreenX)) * cub->tex[4].x / cub->sprite.spriteWidth) / 256; //texwidth
+                cub->sprite.d = (cub->vars.y) * 256 - cub->ry * 128 + cub->sprite.spriteHeight * 128; //256 and 128 factors to avoid floats
                 cub->vars.texY = ((cub->sprite.d * cub->tex[4].x) / cub->sprite.spriteHeight) / 256; //texwidth
                 // color = texture[sprite[spriteOrder[i]].texture][texWidth * texY + texX]; //get current color from the texture
                 // if((color & 0x00FFFFFF) != 0) buffer[y][stripe] = color; //paint pixel if it isn't black, black is the invisible color
                color = *(unsigned int *)(cub->tex[4].addr + (cub->tex[4].line_length * (int)cub->vars.texY + (int)cub->vars.texX \
                 * (cub->tex[4].bits_per_pixel / 8)));
-                printf("color:%d\n", color);
                 if(color > 0)
-                    my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, color);
+                    my_mlx_pixel_put(&cub->img, cub->sprite.stripe, cub->vars.y, color);
                 cub->vars.y++;
             }
         cub->sprite.stripe++;
       }
+      i++;
     }
 }
 
@@ -544,19 +574,19 @@ void	mlx_calc(t_parse *cub)
                 cub->vars.side = 1;
             }
         //Check if ray has hit a wall
-            if (cub->map[cub->vars.mapY][cub->vars.mapX] == '1') 
+            if (cub->map[cub->vars.mapY][cub->vars.mapX] == '1')
                 cub->vars.hit = 1;
         }
         //Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
         // printf("3qqqqcub->vars.rayDirX= %f &&cub->vars.rayDirY= %f \nmapx= %d &&mapy= %d \nposX= %f &&posY= %f \nstepx= %d &&stepy= %d\n", cub->vars.rayDirX, cub->vars.rayDirY, cub->vars.mapX, cub->vars.mapY, cub->vars.posX, cub->vars.posY, cub->vars.stepX, cub->vars.stepY);
         //exit(0);
-        if (cub->vars.side == 0) 
+        if (cub->vars.side == 0)
             cub->vars.perpWallDist = (cub->vars.mapX - cub->vars.posX + (1 - cub->vars.stepX) / 2) / cub->vars.rayDirX;
         else
         {
             //printf("BORISSSSSSSSSSS\n");
 ;				cub->vars.perpWallDist = (cub->vars.mapY - cub->vars.posY + (1 - cub->vars.stepY) / 2) / cub->vars.rayDirY;
-        }           
+        }
         // if (perpWallDist <= 0)
         // 	perpWallDist = 0.01;
 
@@ -575,7 +605,7 @@ void	mlx_calc(t_parse *cub)
         if(cub->vars.drawEnd >= cub->vars.h)
             cub->vars.drawEnd = cub->vars.h - 1;
             //give x and y sides different brightness
-        if(cub->vars.side == 1) 
+        if(cub->vars.side == 1)
             cub->vars.colorwall = cub->vars.colorwall / 2;
         //draw the pixels of the stripe as a vertical line
 
@@ -612,7 +642,7 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
     if (cub->ltr == 'S')
     {
         cub->vars.dirX = 0.0;
-        cub->vars.dirY = -1.0; //initial direction vector ;fix that with s e wetc.
+        cub->vars.dirY = 1.0; //initial direction vector ;fix that with s e wetc.
         cub->vars.planeX = -0.66;
         cub->vars.planeY = 0; //the 2d raycaster version of camera plane
     }
@@ -621,12 +651,12 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
         cub->vars.dirX = -1.0;
         cub->vars.dirY = 0.0; //initial direction vector ;fix that with s e wetc.
         cub->vars.planeX = 0;
-        cub->vars.planeY = 0.66; //the 2d raycaster version of camera plane
+        cub->vars.planeY = -0.66; //the 2d raycaster version of camera plane
     }
     if (cub->ltr == 'N')
     {
         cub->vars.dirX = 0.0;
-        cub->vars.dirY = 1.0; //initial direction vector ;fix that with s e wetc.
+        cub->vars.dirY = -1.0; //initial direction vector ;fix that with s e wetc.
         cub->vars.planeX = 0.66;
         cub->vars.planeY = 0; //the 2d raycaster version of camera plane
     }
@@ -635,9 +665,9 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
         cub->vars.dirX = 1.0;
         cub->vars.dirY = 0.0; //initial direction vector ;fix that with s e wetc.
         cub->vars.planeX = 0;
-        cub->vars.planeY = -0.66; //the 2d raycaster version of camera plane
+        cub->vars.planeY = 0.66; //the 2d raycaster version of camera plane
     }
-    
+
        //which box of the map we're in
     cub->vars.mapX = 0;
     cub->vars.mapY = 0;
@@ -664,7 +694,7 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 
 	// img_width = 1000;
 	// img_height = 1000;
-	
+
 	cub->vars.mlx = mlx_init();
 	cub->vars.win = mlx_new_window(cub->vars.mlx, 1920, 1080, "🄲🅄🄱3🄳"); //fix window bitch
 	// s
