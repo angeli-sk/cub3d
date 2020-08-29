@@ -281,6 +281,9 @@ int    ft_checkposition(t_parse *cub, int x, int y)
 
 int	render_next_frame(t_parse *cub)	
 {
+	cub->img.img = mlx_new_image(cub->vars.mlx, 1920, 1080);
+	cub->img.addr = mlx_get_data_addr(cub->img.img, &cub->img.bits_per_pixel,
+								&cub->img.line_length,&cub->img.endian);
 	//mlx_calc(cub);
     //printf("hoi ik ben rotzooi :) ");
     //printf("je moeder\n");//mlx_hook(cub->vars.win, 2, 1L << 0, key_pressed, cub);
@@ -360,7 +363,9 @@ int	render_next_frame(t_parse *cub)
     // exit(1);
     mlx_calc(cub);
     mlx_sprite(cub);
+	mlx_do_sync(cub->vars.mlx);
 	mlx_put_image_to_window(cub->vars.mlx, cub->vars.win, cub->img.img, 0, 0);
+	mlx_destroy_image(cub->vars.mlx, cub->img.img);
 	return (1);
 }
 
@@ -378,13 +383,6 @@ int draw(t_vars *vars)
 	img.img = mlx_xpm_file_to_image(vars->mlx, "./yolanda.xpm", &img_width, &img_height);
 	mlx_put_image_to_window(vars->mlx, vars->win, img.img, 0, 0);
 	return (1);
-}
-
-double  ft_abs(double n)
-{
-    if (n < 0)
-        n = n * -1;
-    return (n);
 }
 
 // void    ft_sort(t_parse *cub)
@@ -406,6 +404,7 @@ double  ft_abs(double n)
 
 void mlx_sprite(t_parse *cub)
 {
+		//ft_bzero(&cub->sprite, sizeof(t_jonas));
     int i;
     unsigned int color;
     i = 0;
@@ -428,25 +427,25 @@ void mlx_sprite(t_parse *cub)
       cub->sprite.transformX = cub->sprite.invDet * (cub->vars.dirY * cub->sprite.spriteX - cub->vars.dirX * cub->sprite.spriteY);
       cub->sprite.transformY = cub->sprite.invDet * (-cub->vars.planeY * cub->sprite.spriteX + cub->vars.planeX * cub->sprite.spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
 
-      cub->sprite.spriteScreenX = (int)((cub->vars.w / 2) * (1 + cub->sprite.transformX / cub->sprite.transformY));
+      cub->sprite.spriteScreenX = (int)((cub->rx / 2) * (1 + cub->sprite.transformX / cub->sprite.transformY));
       //calculate height of the sprite on screen
-      cub->sprite.spriteHeight = fabs((int)(cub->vars.h / (cub->sprite.transformY))); //using "transformY" instead of the real distance prevents fisheye
+      cub->sprite.spriteHeight = abs((int)(cub->ry / (cub->sprite.transformY))); //using "transformY" instead of the real distance prevents fisheye
       //calculate lowest and highest pixel to fill in current stripe
-      cub->sprite.drawStartY = -cub->sprite.spriteHeight / 2 + cub->vars.h / 2;//vMoveScreen
+      cub->sprite.drawStartY = -cub->sprite.spriteHeight / 2 + cub->ry / 2;//vMoveScreen
       if(cub->sprite.drawStartY < 0) 
         cub->sprite.drawStartY = 0;
-      cub->sprite.drawEndY = cub->sprite.spriteHeight / 2 + cub->vars.h / 2;
-      if(cub->sprite.drawEndY >= cub->vars.h) 
-        cub->sprite.drawEndY = cub->vars.h - 1;
+      cub->sprite.drawEndY = cub->sprite.spriteHeight / 2 + cub->ry / 2;
+      if(cub->sprite.drawEndY >= cub->ry) 
+        cub->sprite.drawEndY = cub->ry - 1;
 
       //calculate width of the sprite
-      cub->sprite.spriteWidth = fabs((int)(cub->vars.h / (cub->sprite.transformY)));
+      cub->sprite.spriteWidth = abs((int)(cub->ry / (cub->sprite.transformY)));//(int)
       cub->sprite.drawStartX = -(cub->sprite.spriteWidth) / 2 + cub->sprite.spriteScreenX;
       if(cub->sprite.drawStartX < 0) 
         cub->sprite.drawStartX = 0;
       cub->sprite.drawEndX = cub->sprite.spriteWidth / 2 + cub->sprite.spriteScreenX;
-      if(cub->sprite.drawEndX >= cub->vars.w) 
-        cub->sprite.drawEndX = cub->vars.w - 1;
+      if(cub->sprite.drawEndX >= cub->rx)
+        cub->sprite.drawEndX = cub->rx - 1;
     
         cub->sprite.stripe = cub->sprite.drawStartX;
        // printf("stripe: %i | drawend: %i\n", cub->sprite.stripe, cub->sprite.drawEndX);
@@ -460,10 +459,10 @@ void mlx_sprite(t_parse *cub)
         //3) it's on the screen (right)
         //4) ZBuffer, with perpendicular distance
         if(cub->sprite.transformY > 0 && cub->sprite.stripe > 0 && cub->sprite.stripe < cub->vars.w && cub->sprite.transformY < cub->vars.ZBuffer[cub->sprite.stripe])//perpendicular distance is usedstripe > 0 && cub->sprite.stripe < cub->vars.w && cub->sprite.transformY < ZBuffer[stripe])
-           cub->vars.y = cub->sprite.drawStartY;
+        	cub->vars.y = cub->sprite.drawStartY;
            while (cub->vars.y < cub->sprite.drawEndY)  //for every pixel of the current stripe
             {
-                cub->sprite.d = (cub->vars.y) * 256 - cub->vars.h * 128 + cub->sprite.spriteHeight * 128; //256 and 128 factors to avoid floats
+                cub->sprite.d = (cub->vars.y) * 256 - cub->vars.x * 128 + cub->sprite.spriteHeight * 128; //256 and 128 factors to avoid floats
                 cub->vars.texY = ((cub->sprite.d * cub->tex[4].x) / cub->sprite.spriteHeight) / 256; //texwidth
                 // color = texture[sprite[spriteOrder[i]].texture][texWidth * texY + texX]; //get current color from the texture
                 // if((color & 0x00FFFFFF) != 0) buffer[y][stripe] = color; //paint pixel if it isn't black, black is the invisible color
@@ -594,7 +593,7 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 	// t_data	img;
 	// t_vars	vars;
     //--------------------
-    cub->vars.moveSpeed = 0.07; //make define
+    cub->vars.moveSpeed = 0.15; //make define
     cub->vars.rotSpeed = 0.05;
     cub->vars.oldDirX = 0;
     cub->vars.oldPlaneX = 0;
@@ -650,7 +649,7 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
        //length of ray from one x or y-side to next x or y-side
       cub->vars.deltaDistX = 0.0;
       cub->vars.deltaDistY = 0.0;
-      cub->vars.perpWallDist;
+      //cub->vars.perpWallDist;
 
     cub->vars.lineHeight = 0;
     cub->vars.drawStart = 0;
@@ -668,9 +667,7 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 	
 	cub->vars.mlx = mlx_init();
 	cub->vars.win = mlx_new_window(cub->vars.mlx, 1920, 1080, "🄲🅄🄱3🄳"); //fix window bitch
-	cub->img.img = mlx_new_image(cub->vars.mlx, 1920, 1080);
-	cub->img.addr = mlx_get_data_addr(cub->img.img, &cub->img.bits_per_pixel,
-								&cub->img.line_length,&cub->img.endian);
+	// s
 	cub->vars.y = 0;
     cub->vars.x = 0;
     cub->vars.walksies[up] = 0;
