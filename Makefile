@@ -6,7 +6,7 @@
 #    By: akramp <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/05/06 13:52:49 by akramp        #+#    #+#                  #
-#    Updated: 2020/08/29 12:38:54 by akramp        ########   odam.nl          #
+#    Updated: 2020/08/30 19:59:50 by akramp        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ LIBFT = libft/libft.a
 #✧･ﾟ: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ *✧･ﾟ:*  FLAGS  ✧*:･ﾟ✧: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ﾟ: *✧･ﾟ:#
 
 FLAGS = -Wall -Werror -Wextra -fsanitize=address -fno-omit-frame-pointer
-FLAGSMLX =  -L. -lmlx -framework OpenGL -framework AppKit
+FLAGSMLX =  -L. -lmlx -framework OpenGL -framework AppKit -g
 F_MLX_UBUNTU = -I/usr/include -Imlx_linux
 FLAGMLX_UBUNTU = -Lmlx_linux -lmlx -lXext -lX11 -lm -lz
 
@@ -38,7 +38,8 @@ SRC2 =	parse_cub3d.c \
 		ft_calloc_mlx.c \
 		ft_bzero_mlx.c \
 		./libft/libft.a \
-		cub_mlx.c
+		cub_mlx.c \
+		bitmappers.c
 		
 OBJ :=	${SRC:%.c=%.o}
 OBJ2 :=	${SRC2:%.c=%.o}
@@ -64,7 +65,7 @@ all: $(NAME)
 
 #for apple
 %.o: %.c
-	$(CC) -Imlx -c $< -o $@
+	$(CC) -g -fsanitize=address -fno-omit-frame-pointer -Imlx -c $< -o $@
 
 #ubuntu
 #%.o: %.c
@@ -118,7 +119,7 @@ apple: $(LIBFT) $(OBJ2)
 	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
 	@echo "\n$(PINK2)\t🦄 ℂ𝕠𝕞𝕡𝕚𝕝𝕒𝕥𝕚𝕠𝕟 ℂ𝕠𝕞𝕡𝕝𝕖𝕥𝕖\n$(PINK) $(WHITE)"
 	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
-	$(CC) $(FLAGSMLX) $^ -o $(NAME) -I mlxs
+	$(CC) $(FLAGSMLX) -fsanitize=address -fno-omit-frame-pointer $^ -o $(NAME) -I mlxs
 	
 clean:
 	@echo "$(PINK)🦄	Cleaning ...$(WHITE)\n"

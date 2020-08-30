@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/07 16:40:24 by akramp        #+#    #+#                 */
-/*   Updated: 2020/08/19 14:30:36 by akramp        ########   odam.nl         */
+/*   Updated: 2020/08/30 20:33:12 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,7 @@ typedef struct	s_parse
 	char	num_ltr;
 	int		num_error;
 	char	ltr;
+	int		save;
 	t_data	img;
 	t_vars vars;
 	t_array *arr;
@@ -252,4 +253,5 @@ void	ft_mlx(t_parse *cub, char **argv, int argc);
 void	mlx_calc(t_parse *cub);
 void 	mlx_sprite(t_parse *cub);
 
+void	bitmap(t_parse *cub);
 #endif

@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2019/11/06 18:51:57 by akramp        #+#    #+#                 */
-/*   Updated: 2020/07/09 16:12:24 by akramp        ########   odam.nl         */
+/*   Updated: 2020/08/30 18:57:19 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,18 @@ static char	*ft_fil(char *str, char const *s1, char const *s2)
 
 	i = 0;
 	n = 0;
-	while (s1[i] != '\0')
+	while (s1 != 0 && s1[i] != '\0')
 	{
 		str[i] = s1[i];
 		i++;
 	}
-	while (s2[n] != '\0')
+	while (s2 != 0 && s2[n] != '\0')
 	{
 		str[i] = s2[n];
 		n++;
 		i++;
 	}
+	//printf("i=%d\n", i);
 	str[i] = '\n';
 	str[i + 1] = '\0';
 	return (str);
@@ -54,12 +55,15 @@ char	*ft_strjoin_c3d(t_parse *cub, char const *s1, char const *s2)
 	int		s2_len;
 	char	*str;
 
-	if ((s1 == 0 && s2 == 0) || s1 == 0 || s2 == 0)
-		return (ft_check(s1, s2));
-	s1_len = ft_strlen(s1);
-	s2_len = ft_strlen(s2);
+	// if ((s1 == 0 && s2 == 0) || s1 == 0 || s2 == 0)
+	// 	return (ft_check(s1, s2));
+	printf("test\n");
+	s1_len = (s1 != NULL) ? ft_strlen(s1) : 0;
+	s2_len = (s2 != NULL) ? ft_strlen(s2) : 0;
+	printf("str=%d\n", (s1_len + s2_len) + 2);
 	if (s2_len > cub->maxstrlen)
 		cub->maxstrlen = s2_len;
+	
 	str = (char *)malloc(sizeof(char) * (s1_len + s2_len) + 2);
 	if (str == 0)
 	{

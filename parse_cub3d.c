@@ -12,15 +12,18 @@ void		read_map(t_parse *cub) //parse
 	if (cub->temp == 0)
 		chk = 1;
 	//printf("line = %s\n", line);
+	printf("strjoin\n");
 	cub->temp = ft_strjoin_c3d(cub, cub->temp, cub->line);
+	printf("temp=%s\n", cub->temp);
 	//printf("LINE=[[%s]]\nTEMP=[%s]\n", line, cub->temp);
-	if (chk == 1)
-	{
-		len = ft_strlen(cub->temp);
-		cub->maxstrlen = len;
-		cub->temp[len] = '\n';
-		cub->temp[len + 1] = '\0';
-	}
+	// if (chk == 1)
+	// {
+	// 	len = ft_strlen(cub->temp);
+	// 	printf("len=%d\n", len);
+	// 	cub->maxstrlen = len;
+	// 	cub->temp[len - 1] = '\n';
+	// 	cub->temp[len] = '\0';
+	// }
 	cub->max_y++;
 }
 
@@ -137,9 +140,20 @@ void	cub3d(int argc, char **argv)
 	//cub = ft_calloc(1, sizeof(t_parse));
 	if (cub == 0)
 		ft_exit_c3d(cub, "Malloc failed, u suck\n", 22);	
+	cub->save = 0;
 	parser(cub, argv, argc);
+	// cub->vars.ZBuffer = malloc(sizeof(double) * cub->rx);
+	// cub->spriteOrder = malloc(sizeof(int) * cub->objects);
+	if (argc == 3 && !(ft_strncmp(argv[2], "--save", 6)))
+	{printf("jonas\n");
+		cub->save = 1;
+	}
 	ft_mlx(cub, argv, argc);
 	//mlx_loop_hook(cub.vars.mlx,	render_next_frame(cub), cub.vars.mlx);
+	//if (cub->vars.ZBuffer)
+	// 	free(cub->vars.ZBuffer);
+	// if (cub->spriteOrder)
+	// 	free(cub->spriteOrder);
 	freevars(cub);
 	freemaps(cub);
 }

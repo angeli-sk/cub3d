@@ -215,6 +215,14 @@ void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
      unsigned int color;
 
 	tex = 0;
+		if (cub->vars.side == 1 && cub->vars.rayDirY > 0)
+	   		tex = 0;
+		if (cub->vars.side == 1 && cub->vars.rayDirY < 0)
+			tex = 1;
+		if (cub->vars.side == 0 && cub->vars.rayDirX > 0)
+			tex = 2;
+		if (cub->vars.side == 0 && cub->vars.rayDirX < 0)
+			tex = 3;
     while (cub->vars.y < drawStart)
     {
         my_mlx_pixel_put(&cub->img, cub->vars.x, cub->vars.y, 0x27273a);
@@ -228,34 +236,28 @@ void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
       cub->vars.wallX -= floor((cub->vars.wallX));
 
       //x coordinate on the texture
-      cub->vars.texX = (int)(cub->vars.wallX * (double)(cub->tex[0].x));//change 0 to variable
+      cub->vars.texX = (int)(cub->vars.wallX * (double)(cub->tex[tex].x));//change 0 to variable
       if(cub->vars.side == 0 && cub->vars.rayDirX > 0)
-        cub->vars.texX = cub->tex[0].x - cub->vars.texX - 1;
+        cub->vars.texX = cub->tex[tex].x - cub->vars.texX - 1;
       if(cub->vars.side == 1 && cub->vars.rayDirY < 0)
-        cub->vars.texX = cub->tex[0].x - cub->vars.texX - 1;
+        cub->vars.texX = cub->tex[tex].x - cub->vars.texX - 1;
 
            // How much to increase the texture coordinate per screen pixel
-      cub->vars.step = 1.0 * cub->tex[0].y / cub->vars.lineHeight;
+      cub->vars.step = 1.0 * cub->tex[tex].y / cub->vars.lineHeight;
       // Starting texture coordinate
       cub->vars.texPos = (cub->vars.drawStart - cub->vars.h / 2 + cub->vars.lineHeight / 2) * cub->vars.step;
       cub->vars.y = drawStart;
+	   cub->vars.texX = cub->tex[tex].x - cub->vars.texX - 1;
       while(cub->vars.y <= drawEnd)
       {
-        // Cast the texture coordinate to integer, and mask with (cub->tex[0].y - 1) in case of overflow
-        cub->vars.texY = (int)cub->vars.texPos & (cub->tex[0].y - 1);
+        // Cast the texture coordinate to integer, and mask with (cub->tex[tex].y - 1) in case of overflow
+        cub->vars.texY = (int)cub->vars.texPos & (cub->tex[tex].y - 1);
         cub->vars.texPos += cub->vars.step;
 
         // printf("texx=%f & texy=%f\n", cub->vars.texX, cub->vars.texY);
         // printf("step = %f, texPos = %f\n", cub->vars.step, cub->vars.texPos);
        // printf("x=%d & y=%d\n", cub->tex[0].x, cub->tex[0].y);
-	   	if (cub->vars.side == 1 && cub->vars.rayDirY > 0)
-	   		tex = 0;
-		if (cub->vars.side == 1 && cub->vars.rayDirY < 0)
-			tex = 1;
-		if (cub->vars.side == 0 && cub->vars.rayDirX > 0)
-			tex = 2;
-		if (cub->vars.side == 0 && cub->vars.rayDirX < 0)
-			tex = 3;
+	  
         color = *(unsigned int *)(cub->tex[tex].addr + (cub->tex[tex].line_length * (int)cub->vars.texY + (int)cub->vars.texX \
             * (cub->tex[tex].bits_per_pixel / 8)));
         //color = *((unsigned int *) test);
@@ -291,7 +293,7 @@ int    ft_checkposition(t_parse *cub, int x, int y)
 
 int	render_next_frame(t_parse *cub)
 {
-	cub->img.img = mlx_new_image(cub->vars.mlx, 1920, 1080);
+	cub->img.img = mlx_new_image(cub->vars.mlx, cub->rx, cub->ry);
 	cub->img.addr = mlx_get_data_addr(cub->img.img, &cub->img.bits_per_pixel,
 								&cub->img.line_length,&cub->img.endian);
 	//mlx_calc(cub);
@@ -333,21 +335,21 @@ int	render_next_frame(t_parse *cub)
          if(cub->map[y_down][(int)(cub->vars.posX)] != '1' && ft_checkposition(cub, x_down, y_down) == 1)
          cub->vars.posY -= cub->vars.dirY * cub->vars.moveSpeed;
     }
-    if(cub->vars.walksies[right] == 1)
+    if(cub->vars.walksies[left] == 1)
     {
         if(cub->map[(int)(cub->vars.posY)][x_right] != '1' && ft_checkposition(cub, x_right, y_right) == 1)
             cub->vars.posX += cub->vars.dirY * cub->vars.moveSpeed;
         if(cub->map[y_right][(int)(cub->vars.posX)] != '1' && ft_checkposition(cub, x_right, y_right) == 1)
              cub->vars.posY -= cub->vars.dirX * cub->vars.moveSpeed;
     }
-    if(cub->vars.walksies[left] == 1)
+    if(cub->vars.walksies[right] == 1)
     {
         if(cub->map[(int)(cub->vars.posY)][x_left] != '1' && ft_checkposition(cub, x_left, y_left) == 1)
             cub->vars.posX -= cub->vars.dirY * cub->vars.moveSpeed;
         if(cub->map[y_left][(int)(cub->vars.posX)] != '1' && ft_checkposition(cub, x_left, y_left) == 1)
             cub->vars.posY += cub->vars.dirX * cub->vars.moveSpeed;
     }
-    if(cub->vars.walksies[turn_r] == 1)
+    if(cub->vars.walksies[turn_l] == 1)
     {
         //both camera direction and camera plane must be rotated
       cub->vars.oldDirX = cub->vars.dirX;
@@ -357,7 +359,7 @@ int	render_next_frame(t_parse *cub)
       cub->vars.planeX = cub->vars.planeX * cos(-cub->vars.rotSpeed) - cub->vars.planeY * sin(-cub->vars.rotSpeed);
       cub->vars.planeY = cub->vars.oldPlaneX * sin(-cub->vars.rotSpeed) + cub->vars.planeY * cos(-cub->vars.rotSpeed);
     }
-    if(cub->vars.walksies[turn_l] == 1)
+    if(cub->vars.walksies[turn_r] == 1)
     {
     //both camera direction and camera plane must be rotatedWil jij jouw onderzoeksskills inzetten om ons en de wereld te vertellen wat de effecten zijn van private financieringsvormen op (private) scholing en de ontwikkelingskansen van kwetsbare studenten? Laat van je horen via de link in de comments!
       cub->vars.oldDirX = cub->vars.dirX;
@@ -373,7 +375,7 @@ int	render_next_frame(t_parse *cub)
     // exit(1);
     mlx_calc(cub);
     mlx_sprite(cub);
-	mlx_do_sync(cub->vars.mlx);
+	//mlx_do_sync(cub->vars.mlx);
 	mlx_put_image_to_window(cub->vars.mlx, cub->vars.win, cub->img.img, 0, 0);
 	mlx_destroy_image(cub->vars.mlx, cub->img.img);
 	return (1);
@@ -404,11 +406,15 @@ void    ft_sort(t_parse *cub)
     i = 0;
 	temp = 0;
 	tempp = 0.0;
-	//printf("distance=%f\n", cub->arr[0].distance);
-    while(i < cub->objects - 1)
-    {
-        if (cub->arr[cub->spriteOrder[i]].distance < cub->arr[i + 1].distance)
+	//printf("i = %d\ncubobj = %d\n", i, cub->objects - 1);
+	
+    while(i + 1 < cub->objects)
+    {//printf("i = %d\ncubobj = %d\ndis = %fd\ndis+1 = %f\n", i, cub->objects - 1,cub->arr[cub->spriteOrder[i]].distance, cub->arr[i + 1].distance);
+	//usleep (150000);
+	//printf("distance=%f && \n", cub->arr[i].distance);
+        if (cub->arr[i].distance < cub->arr[i + 1].distance)
         {
+			//printf("2=====i = %d\ncubobj = %d\n", i, cub->objects - 1);
 			temp = cub->spriteOrder[i];
 			tempp = cub->arr[i].distance;
 			cub->spriteOrder[i] = cub->spriteOrder[i + 1];
@@ -417,7 +423,9 @@ void    ft_sort(t_parse *cub)
 			cub->arr[i + 1].distance = tempp;
 			i = 0;
         }
-        i++;
+		else
+			i++;
+		
     }
 }
 
@@ -430,11 +438,12 @@ void mlx_sprite(t_parse *cub)
     color = 0;
     //cub->vars.x = 0;
     //cub->vars.y = 0;
-	cub->spriteOrder = malloc(sizeof(int) * cub->objects); //free dis
+	
 	while(i < cub->objects)
     {
       	cub->spriteOrder[i] = i;
-      	cub->arr[cub->spriteOrder[i]].distance = ((cub->vars.posX - cub->arr[cub->spriteOrder[i]].x) * (cub->vars.posX - cub->arr[cub->spriteOrder[i]].x) + (cub->vars.posY - cub->arr[cub->spriteOrder[i]].y) * (cub->vars.posY - cub->arr[cub->spriteOrder[i]].y)); //sqrt not taken, unneeded
+      	cub->arr[cub->spriteOrder[i]].distance = ((cub->vars.posX - cub->arr[cub->spriteOrder[i]].x) * (cub->vars.posX - cub->arr[cub->spriteOrder[i]].x) \
+		  + (cub->vars.posY - cub->arr[cub->spriteOrder[i]].y) * (cub->vars.posY - cub->arr[cub->spriteOrder[i]].y)); //sqrt not taken, unneeded
 		i++;
 	}
 	ft_sort(cub);
@@ -638,7 +647,8 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
     cub->vars.posY = (double)cub->starty + 0.5;  //x and y start position
 
     cub->vars.ZBuffer = malloc(sizeof(double) * cub->rx);
-    printf("ltr=%c\n", cub->ltr);
+	cub->spriteOrder = malloc(sizeof(int) * cub->objects);
+    printf("ltr=%c\nzbuf=%p\nspriteor=%p\n", cub->ltr, cub->vars.ZBuffer, cub->spriteOrder);
     if (cub->ltr == 'S')
     {
         cub->vars.dirX = 0.0;
@@ -696,7 +706,8 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 	// img_height = 1000;
 
 	cub->vars.mlx = mlx_init();
-	cub->vars.win = mlx_new_window(cub->vars.mlx, 1920, 1080, "🄲🅄🄱3🄳"); //fix window bitch
+	if (cub->save == 0)
+		cub->vars.win = mlx_new_window(cub->vars.mlx, cub->rx, cub->ry, "🄲🅄🄱3🄳"); //fix window bitch
 	// s
 	cub->vars.y = 0;
     cub->vars.x = 0;
@@ -730,6 +741,10 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
     cub->tex[4].addr = mlx_get_data_addr(cub->tex[4].img, &cub->tex[4].bits_per_pixel, &cub->tex[4].line_length, &cub->tex[4].endian);
 
     //mlx_key_hook(cub->vars.win, keys, &cub->vars);
+	if (cub->save == 1)
+	{
+		bitmap(cub);
+	}
     mlx_hook(cub->vars.win, 2, 1L << 0, key_pressed, cub);
     mlx_hook(cub->vars.win, 3, 2L << 0, key_released, cub);
     //mlx_hook(cub->vars.win, 17, 0, destroy ,cub);
@@ -737,6 +752,10 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 	//printf("\nlemao\n");
     //mlx_put_image_to_window(cub->vars.mlx, cub->vars.win, cub->img.img, 0, 0);
 	mlx_loop(cub->vars.mlx);
+	if (cub->vars.ZBuffer)
+		free(cub->vars.ZBuffer);
+	if (cub->spriteOrder)
+	free(cub->spriteOrder);
 }
 
 //fix s w e stuff with dirx etc         V
