@@ -4,8 +4,7 @@
 
 void	check_if_empty_start(t_parse *cub) //error
 {
-	if ((cub->rx < 0 || cub->rx > cub->maxrx)
-	|| (cub->ry < 0 || cub->ry > cub->maxry))
+	if (cub->rx < 0 || cub->ry < 0)
 		ft_exit_c3d(cub, "R is fricked", 12);
 	if (cub->no == 0)
 		ft_exit_c3d(cub, "NO is fricked", 13);

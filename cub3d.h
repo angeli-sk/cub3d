@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/07 16:40:24 by akramp        #+#    #+#                 */
-/*   Updated: 2020/08/30 20:33:12 by akramp        ########   odam.nl         */
+/*   Updated: 2020/08/31 20:23:22 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,7 @@ typedef struct	s_parse
 	int		num_error;
 	char	ltr;
 	int		save;
+	int 	loop;
 	t_data	img;
 	t_vars vars;
 	t_array *arr;

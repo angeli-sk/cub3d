@@ -15,15 +15,13 @@ void	bitmap(t_parse *cub)
 	int y;
 	int x;
 
-	y = cub->ry;
+	y = cub->ry - 1;
 	x = 0;
 	//cub->vars.mlx = mlx_init();
 	cub->img.img = mlx_new_image(cub->vars.mlx, cub->rx, cub->ry);
 	cub->img.addr = mlx_get_data_addr(cub->img.img, &cub->img.bits_per_pixel,
 								&cub->img.line_length,&cub->img.endian);
 	mlx_calc(cub);
-
-    
 	mlx_sprite(cub);
 	
 	
@@ -34,7 +32,9 @@ void	bitmap(t_parse *cub)
 	fd = open("screenshot.bmp", O_RDWR | O_CREAT, 0777); //check
 	header[0] = 'B';
 	header[1] = 'M';
-	padding = (cub->rx * 3) % 4;
+	padding = 4 - ((cub->rx * 3) % 4);
+	if (padding == 4)
+		padding = 0;
 	header[2] = ((cub->rx * (cub->ry + padding) * 3) + 54);
 	//if(padding != 0)
 	header[6] = 0;

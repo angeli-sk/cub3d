@@ -121,63 +121,63 @@ int     key_released(int keycode, t_parse *cub)
 	return(0);
 }
 
-int		keys(int keycode, t_parse *cub)
-{
-	cub->vars.moveSpeed = 0.05;
-    cub->vars.rotSpeed = 0.05;
-    cub->vars.oldDirX = 0;
-    cub->vars.oldPlaneX = 0;
-    printf("walksies0=%d\n && lemaoX=%d\n && lemaoY=%d\n", cub->vars.walksies[up], ((int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)), ((int)(cub->vars.posY + cub->vars.dirY * cub->vars.moveSpeed)));
-	ft_putnbr_fd(keycode, 1);
-	write(1, "\n", 1);
-	if ((keycode == 65307 && LINUX == 1) || (keycode == 53 && APPLE == 1))
-    {							//for linux
-		destroy(cub);
-	}//printf("posX=%f && posY =%f dirX=%f && dirY=%f\n", cub->vars.posX, cub->vars.posY, cub->vars.dirX, cub->vars.dirY);
-	//move forward if no wall in front of you
-    if ((keycode == 13 && APPLE == 1) || (keycode == 119 && LINUX == 1))
-    {
-      if(cub->map[(int)(cub->vars.posY)][(int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)] != '1')
-        {
-            cub->vars.posX += cub->vars.dirX * cub->vars.moveSpeed;
-        }//printf("lemmmmau\n");
-        //printf("BORIS2ND\n");
-      if(cub->map[(int)(cub->vars.posY + cub->vars.dirY * cub->vars.moveSpeed)][(int)(cub->vars.posX)] != '1')
-        cub->vars.posY += cub->vars.dirY * cub->vars.moveSpeed;
-    }
-    //move backwards if no wall behind you
-    if ((keycode == 1 && APPLE == 1) || (keycode == 115 && LINUX == 1))
-    {
-      if(cub->map[(int)(cub->vars.posY)][(int)(cub->vars.posX - cub->vars.dirX * cub->vars.moveSpeed)] != '1')
-        cub->vars.posX -= cub->vars.dirX * cub->vars.moveSpeed;
-      if(cub->map[(int)(cub->vars.posY - cub->vars.dirY * cub->vars.moveSpeed)][(int)(cub->vars.posX)] != '1')
-        cub->vars.posY -= cub->vars.dirY * cub->vars.moveSpeed;
-    }
-    //rotate to the rleft
-    if ((keycode == 2 && APPLE == 1) || (keycode == 37 && LINUX == 1))
-    {
-      //both camera direction and camera plane must be rotated
-      cub->vars.oldDirX = cub->vars.dirX;
-      cub->vars.dirX = cub->vars.dirX * cos(-cub->vars.rotSpeed) - cub->vars.dirY * sin(-cub->vars.rotSpeed);
-      cub->vars.dirY = cub->vars.oldDirX * sin(-cub->vars.rotSpeed) + cub->vars.dirY * cos(-cub->vars.rotSpeed);
-      cub->vars.oldPlaneX = cub->vars.planeX;
-      cub->vars.planeX = cub->vars.planeX * cos(-cub->vars.rotSpeed) - cub->vars.planeY * sin(-cub->vars.rotSpeed);
-      cub->vars.planeY = cub->vars.oldPlaneX * sin(-cub->vars.rotSpeed) + cub->vars.planeY * cos(-cub->vars.rotSpeed);
-    }
-    //rotate to the lright
-    if ((keycode == 0 && APPLE == 1) ||(keycode == 39 && LINUX == 1))
-    {
-      //both camera direction and camera plane must be rotatedWil jij jouw onderzoeksskills inzetten om ons en de wereld te vertellen wat de effecten zijn van private financieringsvormen op (private) scholing en de ontwikkelingskansen van kwetsbare studenten? Laat van je horen via de link in de comments!
-      cub->vars.oldDirX = cub->vars.dirX;
-      cub->vars.dirX = cub->vars.dirX * cos(cub->vars.rotSpeed) - cub->vars.dirY * sin(cub->vars.rotSpeed);
-      cub->vars.dirY = cub->vars.oldDirX * sin(cub->vars.rotSpeed) + cub->vars.dirY * cos(cub->vars.rotSpeed);
-      cub->vars.oldPlaneX = cub->vars.planeX;
-      cub->vars.planeX = cub->vars.planeX * cos(cub->vars.rotSpeed) - cub->vars.planeY * sin(cub->vars.rotSpeed);
-      cub->vars.planeY = cub->vars.oldPlaneX * sin(cub->vars.rotSpeed) + cub->vars.planeY * cos(cub->vars.rotSpeed);
-    }
+// int		keys(int keycode, t_parse *cub)
+// {
+// 	cub->vars.moveSpeed = 0.05;
+//     cub->vars.rotSpeed = 0.05;
+//     cub->vars.oldDirX = 0;
+//     cub->vars.oldPlaneX = 0;
+//     printf("walksies0=%d\n && lemaoX=%d\n && lemaoY=%d\n", cub->vars.walksies[up], ((int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)), ((int)(cub->vars.posY + cub->vars.dirY * cub->vars.moveSpeed)));
+// 	ft_putnbr_fd(keycode, 1);
+// 	write(1, "\n", 1);
+// 	if ((keycode == 65307 && LINUX == 1) || (keycode == 53 && APPLE == 1))
+//     {							//for linux
+// 		destroy(cub);
+// 	}//printf("posX=%f && posY =%f dirX=%f && dirY=%f\n", cub->vars.posX, cub->vars.posY, cub->vars.dirX, cub->vars.dirY);
+// 	//move forward if no wall in front of you
+//     if ((keycode == 13 && APPLE == 1) || (keycode == 119 && LINUX == 1))
+//     {
+//       if(cub->map[(int)(cub->vars.posY)][(int)(cub->vars.posX + cub->vars.dirX * cub->vars.moveSpeed)] != '1')
+//         {
+//             cub->vars.posX += cub->vars.dirX * cub->vars.moveSpeed;
+//         }//printf("lemmmmau\n");
+//         //printf("BORIS2ND\n");
+//       if(cub->map[(int)(cub->vars.posY + cub->vars.dirY * cub->vars.moveSpeed)][(int)(cub->vars.posX)] != '1')
+//         cub->vars.posY += cub->vars.dirY * cub->vars.moveSpeed;
+//     }
+//     //move backwards if no wall behind you
+//     if ((keycode == 1 && APPLE == 1) || (keycode == 115 && LINUX == 1))
+//     {
+//       if(cub->map[(int)(cub->vars.posY)][(int)(cub->vars.posX - cub->vars.dirX * cub->vars.moveSpeed)] != '1')
+//         cub->vars.posX -= cub->vars.dirX * cub->vars.moveSpeed;
+//       if(cub->map[(int)(cub->vars.posY - cub->vars.dirY * cub->vars.moveSpeed)][(int)(cub->vars.posX)] != '1')
+//         cub->vars.posY -= cub->vars.dirY * cub->vars.moveSpeed;
+//     }
+//     //rotate to the rleft
+//     if ((keycode == 2 && APPLE == 1) || (keycode == 37 && LINUX == 1))
+//     {
+//       //both camera direction and camera plane must be rotated
+//       cub->vars.oldDirX = cub->vars.dirX;
+//       cub->vars.dirX = cub->vars.dirX * cos(-cub->vars.rotSpeed) - cub->vars.dirY * sin(-cub->vars.rotSpeed);
+//       cub->vars.dirY = cub->vars.oldDirX * sin(-cub->vars.rotSpeed) + cub->vars.dirY * cos(-cub->vars.rotSpeed);
+//       cub->vars.oldPlaneX = cub->vars.planeX;
+//       cub->vars.planeX = cub->vars.planeX * cos(-cub->vars.rotSpeed) - cub->vars.planeY * sin(-cub->vars.rotSpeed);
+//       cub->vars.planeY = cub->vars.oldPlaneX * sin(-cub->vars.rotSpeed) + cub->vars.planeY * cos(-cub->vars.rotSpeed);
+//     }
+//     //rotate to the lright
+//     if ((keycode == 0 && APPLE == 1) ||(keycode == 39 && LINUX == 1))
+//     {
+//       //both camera direction and camera plane must be rotatedWil jij jouw onderzoeksskills inzetten om ons en de wereld te vertellen wat de effecten zijn van private financieringsvormen op (private) scholing en de ontwikkelingskansen van kwetsbare studenten? Laat van je horen via de link in de comments!
+//       cub->vars.oldDirX = cub->vars.dirX;
+//       cub->vars.dirX = cub->vars.dirX * cos(cub->vars.rotSpeed) - cub->vars.dirY * sin(cub->vars.rotSpeed);
+//       cub->vars.dirY = cub->vars.oldDirX * sin(cub->vars.rotSpeed) + cub->vars.dirY * cos(cub->vars.rotSpeed);
+//       cub->vars.oldPlaneX = cub->vars.planeX;
+//       cub->vars.planeX = cub->vars.planeX * cos(cub->vars.rotSpeed) - cub->vars.planeY * sin(cub->vars.rotSpeed);
+//       cub->vars.planeY = cub->vars.oldPlaneX * sin(cub->vars.rotSpeed) + cub->vars.planeY * cos(cub->vars.rotSpeed);
+//     }
 
-	return(0);
-}
+// 	return(0);
+// }
 //apple
 //123 left 126 up 124 right 125 down
 //0 a 13 w 2 d 1 s
@@ -248,7 +248,7 @@ void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
       cub->vars.texPos = (cub->vars.drawStart - cub->vars.h / 2 + cub->vars.lineHeight / 2) * cub->vars.step;
       cub->vars.y = drawStart;
 	   cub->vars.texX = cub->tex[tex].x - cub->vars.texX - 1;
-      while(cub->vars.y <= drawEnd)
+      while(cub->vars.y < drawEnd)
       {
         // Cast the texture coordinate to integer, and mask with (cub->tex[tex].y - 1) in case of overflow
         cub->vars.texY = (int)cub->vars.texPos & (cub->tex[tex].y - 1);
@@ -257,9 +257,18 @@ void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
         // printf("texx=%f & texy=%f\n", cub->vars.texX, cub->vars.texY);
         // printf("step = %f, texPos = %f\n", cub->vars.step, cub->vars.texPos);
        // printf("x=%d & y=%d\n", cub->tex[0].x, cub->tex[0].y);
-	  
-        color = *(unsigned int *)(cub->tex[tex].addr + (cub->tex[tex].line_length * (int)cub->vars.texY + (int)cub->vars.texX \
+	  	//printf("addr=%p & line_length=%i & txY = %i & txX = %i bpp = %i\n ", cub->tex[tex].addr, cub->tex[tex].line_length, (int)cub->vars.texY, (int)cub->vars.texX, cub->tex[tex].bits_per_pixel);
+	 	// if (cub->tex[tex].x > cub->rx || cub->tex[tex].y > cub->ry)
+	  	// 	 cub->vars.texY = ((int)cub->vars.texPos) & (cub->tex[tex].line_length - 1) * 4;
+		// else			
+		// 	cub->vars.texY = ((int)cub->vars.texPos) & ((cub->tex[tex].line_length) - 1);
+		if (cub->vars.texY >= 0 && cub->vars.texX >= 0)
+            color = *(unsigned int *)(cub->tex[tex].addr + ((cub->tex[tex].line_length * (int)cub->vars.texY) + (int)cub->vars.texX \
             * (cub->tex[tex].bits_per_pixel / 8)));
+		else
+			color = 0;
+		if (color < 0)
+			color = 0;
         //color = *((unsigned int *) test);
        // printf("color:%u\n", color);
         // printf("x: %d, y: %d, color: %u\n", cub->vars.x, cub->vars.y, color);
@@ -293,6 +302,9 @@ int    ft_checkposition(t_parse *cub, int x, int y)
 
 int	render_next_frame(t_parse *cub)
 {
+	if (cub->vars.walksies[up] == 0 && cub->vars.walksies[left] == 0 && cub->vars.walksies[down] == 0 \
+		&& cub->vars.walksies[right] == 0 && cub->vars.walksies[turn_l] == 0 && cub->vars.walksies[turn_r] == 0 && cub->loop == 1)
+		return (1);
 	cub->img.img = mlx_new_image(cub->vars.mlx, cub->rx, cub->ry);
 	cub->img.addr = mlx_get_data_addr(cub->img.img, &cub->img.bits_per_pixel,
 								&cub->img.line_length,&cub->img.endian);
@@ -378,6 +390,7 @@ int	render_next_frame(t_parse *cub)
 	//mlx_do_sync(cub->vars.mlx);
 	mlx_put_image_to_window(cub->vars.mlx, cub->vars.win, cub->img.img, 0, 0);
 	mlx_destroy_image(cub->vars.mlx, cub->img.img);
+	cub->loop = 1;
 	return (1);
 }
 
@@ -505,7 +518,7 @@ void mlx_sprite(t_parse *cub)
                 cub->vars.texY = ((cub->sprite.d * cub->tex[4].x) / cub->sprite.spriteHeight) / 256; //texwidth
                 // color = texture[sprite[spriteOrder[i]].texture][texWidth * texY + texX]; //get current color from the texture
                 // if((color & 0x00FFFFFF) != 0) buffer[y][stripe] = color; //paint pixel if it isn't black, black is the invisible color
-               color = *(unsigned int *)(cub->tex[4].addr + (cub->tex[4].line_length * (int)cub->vars.texY + (int)cub->vars.texX \
+              	 color = *(unsigned int *)(cub->tex[4].addr + (cub->tex[4].line_length * (int)cub->vars.texY + (int)cub->vars.texX \
                 * (cub->tex[4].bits_per_pixel / 8)));
                 if(color > 0)
                     my_mlx_pixel_put(&cub->img, cub->sprite.stripe, cub->vars.y, color);
@@ -632,7 +645,7 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 	// t_data	img;
 	// t_vars	vars;
     //--------------------
-    cub->vars.moveSpeed = 0.15; //make define
+    cub->vars.moveSpeed = 0.05; //make define
     cub->vars.rotSpeed = 0.05;
     cub->vars.oldDirX = 0;
     cub->vars.oldPlaneX = 0;
@@ -645,7 +658,7 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
     cub->vars.w = cub->rx;
     cub->vars.posX = (double)cub->startx + 0.5; //0.5
     cub->vars.posY = (double)cub->starty + 0.5;  //x and y start position
-
+	//mlx_get_screen_size(cub->vars.mlx, &cub->maxrx, &cub->maxry);
     cub->vars.ZBuffer = malloc(sizeof(double) * cub->rx);
 	cub->spriteOrder = malloc(sizeof(int) * cub->objects);
     printf("ltr=%c\nzbuf=%p\nspriteor=%p\n", cub->ltr, cub->vars.ZBuffer, cub->spriteOrder);
@@ -747,6 +760,8 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 	}
     mlx_hook(cub->vars.win, 2, 1L << 0, key_pressed, cub);
     mlx_hook(cub->vars.win, 3, 2L << 0, key_released, cub);
+	mlx_hook(cub->vars.win, 17, 1L << 17, destroy, cub);
+
     //mlx_hook(cub->vars.win, 17, 0, destroy ,cub);
 	mlx_loop_hook(cub->vars.mlx, render_next_frame, cub);
 	//printf("\nlemao\n");
@@ -758,11 +773,6 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 	free(cub->spriteOrder);
 }
 
-//fix s w e stuff with dirx etc         V
-//bounds of map, no wall walking pls    V
-//move left right                       V
 //make it norm
-//sprite
-//textures
-//bitmap
-//window resizing
+//bmp image resizing
+//max int rx ry (kijk of het onder 0 komt)

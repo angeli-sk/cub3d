@@ -6,7 +6,7 @@
 #    By: akramp <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/05/06 13:52:49 by akramp        #+#    #+#                  #
-#    Updated: 2020/08/30 19:59:50 by akramp        ########   odam.nl          #
+#    Updated: 2020/08/31 20:04:47 by akramp        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -119,7 +119,7 @@ apple: $(LIBFT) $(OBJ2)
 	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
 	@echo "\n$(PINK2)\t🦄 ℂ𝕠𝕞𝕡𝕚𝕝𝕒𝕥𝕚𝕠𝕟 ℂ𝕠𝕞𝕡𝕝𝕖𝕥𝕖\n$(PINK) $(WHITE)"
 	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
-	$(CC) $(FLAGSMLX) -fsanitize=address -fno-omit-frame-pointer $^ -o $(NAME) -I mlxs
+	$(CC) $(FLAGSMLX) -fsanitize=address -fno-omit-frame-pointer $^ -o $(NAME) -I mlxs -O3
 	
 clean:
 	@echo "$(PINK)🦄	Cleaning ...$(WHITE)\n"
