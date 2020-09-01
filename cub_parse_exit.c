@@ -60,6 +60,8 @@ void	ft_exit_c3d(t_parse *cub, char *s, int len) // error
     //     if (cub->ret == 1)
 	// 		free((cub->line));
     // }
+	//printf("")
+	printf("maxrx=%d & maxry=%d\n", cub->maxrx, cub->maxry);
 	freevars(cub);
 	if (cub->beginmap != 0)
 		freemaps(cub);

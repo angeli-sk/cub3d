@@ -1,5 +1,6 @@
 #include "./cub3d.h"
 #include "./libft/libft.h"
+#include <mlx.h>
 
 void	struct_num_init(t_parse *cub) //initialize
 {
@@ -45,8 +46,9 @@ void	struct_init(t_parse *cub) //init
 	// cub->beginmap = 0;
 	cub->i = -1;
 	cub->maxstrlen = -1;
-	cub->maxrx = 1920;			//add function that actually calculates dis bish
-	cub->maxry = 1080;
+	cub->maxrx = 0;			//add function that actually calculates dis bish
+	cub->maxry = 0;	
+	mlx_get_screen_size(cub->vars.mlx, &cub->maxrx, &cub->maxry);
 	// cub->players = 0;
 	// cub->objects = 0;
 	// cub->startx = 0;

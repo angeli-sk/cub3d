@@ -142,12 +142,20 @@ void	cub3d(int argc, char **argv)
 		ft_exit_c3d(cub, "Malloc failed, u suck\n", 22);	
 	cub->save = 0;
 	parser(cub, argv, argc);
-	// cub->vars.ZBuffer = malloc(sizeof(double) * cub->rx);
-	// cub->spriteOrder = malloc(sizeof(int) * cub->objects);
 	if (argc == 3 && !(ft_strncmp(argv[2], "--save", 6)))
 	{printf("jonas\n");
 		cub->save = 1;
 	}
+	if (cub->rx > cub->maxrx && cub->save == 0)
+		cub->rx = cub->maxrx;
+	if (cub->ry > cub->maxry && cub->save == 0)
+		cub->ry = cub->maxry;
+	if (cub->save == 1 && cub->rx > 16384)
+		cub->rx = 16384;
+	if (cub->save == 1 && cub->ry > 16384)
+		cub->ry = 16384;
+	// cub->vars.ZBuffer = malloc(sizeof(double) * cub->rx);
+	// cub->spriteOrder = malloc(sizeof(int) * cub->objects);
 	ft_mlx(cub, argv, argc);
 	//mlx_loop_hook(cub.vars.mlx,	render_next_frame(cub), cub.vars.mlx);
 	//if (cub->vars.ZBuffer)

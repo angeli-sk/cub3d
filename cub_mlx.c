@@ -258,10 +258,10 @@ void    ft_verLine(int  drawStart, int   drawEnd, t_parse *cub)
         // printf("step = %f, texPos = %f\n", cub->vars.step, cub->vars.texPos);
        // printf("x=%d & y=%d\n", cub->tex[0].x, cub->tex[0].y);
 	  	//printf("addr=%p & line_length=%i & txY = %i & txX = %i bpp = %i\n ", cub->tex[tex].addr, cub->tex[tex].line_length, (int)cub->vars.texY, (int)cub->vars.texX, cub->tex[tex].bits_per_pixel);
-	 	// if (cub->tex[tex].x > cub->rx || cub->tex[tex].y > cub->ry)
-	  	// 	 cub->vars.texY = ((int)cub->vars.texPos) & (cub->tex[tex].line_length - 1) * 4;
-		// else			
-		// 	cub->vars.texY = ((int)cub->vars.texPos) & ((cub->tex[tex].line_length) - 1);
+	 	if (cub->tex[tex].x > cub->rx || cub->tex[tex].y > cub->ry)
+	  		 cub->vars.texY = ((int)cub->vars.texPos) & (cub->tex[tex].line_length - 1) * 4;
+		else			
+			cub->vars.texY = ((int)cub->vars.texPos) & ((cub->tex[tex].line_length) - 1);
 		if (cub->vars.texY >= 0 && cub->vars.texX >= 0)
             color = *(unsigned int *)(cub->tex[tex].addr + ((cub->tex[tex].line_length * (int)cub->vars.texY) + (int)cub->vars.texX \
             * (cub->tex[tex].bits_per_pixel / 8)));
@@ -501,7 +501,7 @@ void mlx_sprite(t_parse *cub)
         cub->sprite.stripe = cub->sprite.drawStartX;
        // printf("stripe: %i | drawend: %i\n", cub->sprite.stripe, cub->sprite.drawEndX);
       //loop through every vertical stripe of the sprite on screen
-      while (cub->sprite.stripe < cub->sprite.drawEndX)
+      while (cub->sprite.stripe <= cub->sprite.drawEndX)
       {//printf("stripe:%d\n",cub->sprite.stripe);
         cub->vars.texX = (int)(256 * (cub->sprite.stripe - (-cub->sprite.spriteWidth / 2 + cub->sprite.spriteScreenX)) * cub->tex[4].x / cub->sprite.spriteWidth) / 256; //texwidth
         //the conditions in the if are:
@@ -510,7 +510,7 @@ void mlx_sprite(t_parse *cub)
         //3) it's on the screen (right)
         //4) ZBuffer, with perpendicular distance
         if(cub->sprite.transformY > 0 && cub->sprite.stripe > 0 && cub->sprite.stripe < cub->vars.w && cub->sprite.transformY < cub->vars.ZBuffer[cub->sprite.stripe])//perpendicular distance is usedstripe > 0 && cub->sprite.stripe < cub->vars.w && cub->sprite.transformY < ZBuffer[stripe])
-        	cub->vars.y = cub->sprite.drawStartY;
+    		cub->vars.y = cub->sprite.drawStartY;
         while (cub->vars.y < cub->sprite.drawEndY && cub->sprite.stripe > 0 && cub->sprite.stripe < cub->rx)  //for every pixel of the current stripe
             {
                 cub->vars.texX = (int)(256 * (cub->sprite.stripe - (-cub->sprite.spriteWidth / 2 + cub->sprite.spriteScreenX)) * cub->tex[4].x / cub->sprite.spriteWidth) / 256; //texwidth
@@ -645,7 +645,7 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 	// t_data	img;
 	// t_vars	vars;
     //--------------------
-    cub->vars.moveSpeed = 0.05; //make define
+    cub->vars.moveSpeed = 0.1; //make define
     cub->vars.rotSpeed = 0.05;
     cub->vars.oldDirX = 0;
     cub->vars.oldPlaneX = 0;
@@ -776,3 +776,4 @@ void	ft_mlx(t_parse *cub, char **argv, int argc)
 //make it norm
 //bmp image resizing
 //max int rx ry (kijk of het onder 0 komt)
+//koelr$d 
