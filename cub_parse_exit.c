@@ -1,32 +1,36 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   cub_parse_exit.c                                   :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2020/09/02 22:42:36 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/02 22:43:57 by akramp        ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
-#include <stdlib.h>
 #include "./cub3d.h"
 #include "./get_next_line/get_next_line.h"
 
-void	freemaps(t_parse *cub) //free
+void	freemaps(t_parse *cub)
 {
-	// int i;
-
-	// i = 0;
 	while (cub->max_y >= 0 && (cub->map || cub->mapcopy))
 	{
-		//if (!(cub->map[i]))
-			free(cub->map[cub->max_y]);
-		//if (!(cub->mapcopy[i]))
-			free(cub->mapcopy[cub->max_y]);
+		free(cub->map[cub->max_y]);
+		free(cub->mapcopy[cub->max_y]);
 		cub->max_y--;
 	}
-	//if (!(cub->map))
-		free(cub->map);
-	//if (!(cub->mapcopy))
-		free(cub->mapcopy);
+	free(cub->map);
+	free(cub->mapcopy);
 }
 
-void	freevars(t_parse *cub) //free
+void	freevars(t_parse *cub)
 {
 	if (cub->line)
 		free((cub->line));
-    if (cub->num_temp)
+	if (cub->num_temp)
 		free((cub->num_temp));
 	if (cub->no)
 		free(cub->no);
@@ -39,29 +43,25 @@ void	freevars(t_parse *cub) //free
 	if (cub->s)
 		free(cub->s);
 	if (cub->temp)
-	    free((cub->temp));
+		free(cub->temp);
+	if (cub->vars.ZBuffer)
+		free(cub->vars.ZBuffer);
+	if (cub->spriteOrder)
+		free(cub->spriteOrder);
 }
 
-void	ft_write_error(char *s, int len) //free error
+void	ft_write_error(char *s, int len)
 {
-	write (1, "ERROR\n", 6);
-	write (1, s, len);
+	write(1, "ERROR\n", 6);
+	write(1, s, len);
 	write(1, "\n", 1);
 }
 
-void	ft_exit_c3d(t_parse *cub, char *s, int len) // error
+void	ft_exit_c3d(t_parse *cub, char *s, int len)
 {
-	write (1, "ERROR\n", 6);
-	write (1, s, len);
+	write(1, "ERROR\n", 6);
+	write(1, s, len);
 	write(1, "\n", 1);
-    // while(cub->ret != 0)
-    // {printf("test");
-    //     cub->ret = get_next_line(cub->fd, &(cub->line));
-    //     if (cub->ret == 1)
-	// 		free((cub->line));
-    // }
-	//printf("")
-	printf("maxrx=%d & maxry=%d\n", cub->maxrx, cub->maxry);
 	freevars(cub);
 	if (cub->beginmap != 0)
 		freemaps(cub);

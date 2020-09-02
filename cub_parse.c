@@ -1,9 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   cub_parse.c                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2020/09/02 22:40:21 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/02 22:42:23 by akramp        ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./cub3d.h"
-# include "./libft/libft.h"
-#include <stdlib.h>
 
-
-void		check_if_s_empty(t_parse *cub) //parse
+void	check_if_s_empty(t_parse *cub)
 {
 	if ((cub->line)[(cub->i)] == 'N' && (cub->line)[(cub->i) + 1] == 'O'
 			&& cub->no != 0)
@@ -21,10 +30,10 @@ void		check_if_s_empty(t_parse *cub) //parse
 			&& cub->s != 0)
 		ft_exit_c3d(cub, "S is fricked", 12);
 	else
-		return;
+		return ;
 }
 
-char	*struct_path(t_parse *cub) //path parse
+char	*struct_path(t_parse *cub)
 {
 	int		len;
 	char	*temp;
@@ -37,7 +46,7 @@ char	*struct_path(t_parse *cub) //path parse
 		(cub->i)++;
 	check_if_s_empty(cub);
 	tempi = cub->i;
-	while((cub->line)[tempi] != '\0')
+	while ((cub->line)[tempi] != '\0')
 		tempi++;
 	len = ft_strlen(&(cub->line)[(cub->i)]);
 	temp = malloc((sizeof(char) * len) + 1);

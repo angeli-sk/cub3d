@@ -1,9 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   parse_cub3d.c                                      :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2020/09/02 22:32:35 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/02 22:33:39 by akramp        ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./cub3d.h"
-#include "./libft/libft.h"
 #include "./get_next_line/get_next_line.h"
 #include <fcntl.h>
 
-void		read_map(t_parse *cub) //parse
+void		read_map(t_parse *cub)
 {
 	int chk;
 	int len;
@@ -11,23 +22,11 @@ void		read_map(t_parse *cub) //parse
 	chk = 0;
 	if (cub->temp == 0)
 		chk = 1;
-	//printf("line = %s\n", line);
-	printf("strjoin\n");
 	cub->temp = ft_strjoin_c3d(cub, cub->temp, cub->line);
-	printf("temp=%s\n", cub->temp);
-	//printf("LINE=[[%s]]\nTEMP=[%s]\n", line, cub->temp);
-	// if (chk == 1)
-	// {
-	// 	len = ft_strlen(cub->temp);
-	// 	printf("len=%d\n", len);
-	// 	cub->maxstrlen = len;
-	// 	cub->temp[len - 1] = '\n';
-	// 	cub->temp[len] = '\0';
-	// }
 	cub->max_y++;
 }
 
-int	ft_checkmapplacement(t_parse *cub) //error
+int	ft_checkmapplacement(t_parse *cub)
 {
 	if (cub->rx == -1 || cub->ry == -1 || cub->no == 0 || cub->so == 0
 	|| cub->we == 0 || cub->ea == 0 || cub->s == 0 || cub->fr == -1
@@ -40,7 +39,7 @@ int	ft_checkmapplacement(t_parse *cub) //error
 	return (0);
 }
 
-void		parsing(t_parse *cub) //parse
+void		parsing(t_parse *cub)
 {
 	if (((cub->line)[(cub->i)] == 'R' && (cub->line)[(cub->i) + 1] == ' '))
 		struct_num(cub, &cub->rx, &cub->ry, &cub->ry);
@@ -73,10 +72,10 @@ void		parsing(t_parse *cub) //parse
 		cub->error = invalid_map;
 }
 
-void	readfile(t_parse *cub, char *path) // read
+void	readfile(t_parse *cub, char *path)
 {
 	int ret;
-	
+
 	cub->fd = open(path, O_RDONLY);
 	if (cub->fd < 0)
 		ft_exit_c3d(cub, "Open failed; lemao defrick, how??", 33);
@@ -85,91 +84,29 @@ void	readfile(t_parse *cub, char *path) // read
 	{
 		(cub->i) = 0;
 		ret = get_next_line(cub->fd, &(cub->line));
-        cub->ret = ret;
+		cub->ret = ret;
 		while ((cub->line)[cub->i] == ' ')
 			(cub->i)++;
 		parsing(cub);
 		if (ret == 1)
 		{
-            free((cub->line));
-            cub->line = NULL;
-        }	
+			free((cub->line));
+			cub->line = NULL;
+		}
 	}
-	//free((cub->line));
-    //cub->line = NULL;
 	if (cub->error == invalid_map)
 		ft_exit_c3d(cub, "Your map is fricked", 19);
 	if (cub->error == invalid_char)
 		ft_exit_c3d(cub, "There's sum garbo man, clean it", 31);
 	cub->map = ft_split_c3d(cub, cub->temp, '\n');
 	cub->mapcopy = ft_split_c3d(cub, cub->temp, '\n');
-	//close(fd);
 }
 
-void	parser(t_parse *cub, char **argv, int argc) //cub
+void	parser(t_parse *cub, char **argv, int argc)
 {
 	if (argc < 2 || argc > 3)
 		ft_exit_c3d(cub, "Not the right amount of arguments", 33);
 	struct_init(cub);
-	readfile(cub, argv[1]);//make error function for this too many args too litlle etc
-	printf("lemao\n");
-	printf("RX=%d\nRY=%d\nNO=%s\nSO=%s\nWE=%s\nEA=%s\nS=%s\n", cub->rx, cub->ry, cub->no, cub->so, cub->we, cub->ea, cub->s);
-	printf("Fr=%i\nFg=%i\nFb=%i\nC=%i\nCg=%i\nCb=%i\n",cub->fr, cub->fg, cub->fb, cub->cr, cub->cg, cub->cb);
+	readfile(cub, argv[1]);
 	validity(cub);
-	int i = 0;
-	while (i < cub->max_y)
-	{
-		printf("==%s\n",(cub->mapcopy)[i]);
-		i++;
-	}
-	printf("\n");
-	i = 0;
-	while (i < cub->max_y)
-	{
-		printf("==%s\n",(cub->map)[i]);
-		i++;
-	}
-	
-}
-
-void	cub3d(int argc, char **argv)
-{
-	t_parse *cub;
-
-	cub = malloc(sizeof(t_parse));
-	//cub = ft_calloc(1, sizeof(t_parse));
-	if (cub == 0)
-		ft_exit_c3d(cub, "Malloc failed, u suck\n", 22);	
-	cub->save = 0;
-	parser(cub, argv, argc);
-	if (argc == 3 && !(ft_strncmp(argv[2], "--save", 6)))
-	{printf("jonas\n");
-		cub->save = 1;
-	}
-	if (cub->rx > cub->maxrx && cub->save == 0)
-		cub->rx = cub->maxrx;
-	if (cub->ry > cub->maxry && cub->save == 0)
-		cub->ry = cub->maxry;
-	if (cub->save == 1 && cub->rx > 16384)
-		cub->rx = 16384;
-	if (cub->save == 1 && cub->ry > 16384)
-		cub->ry = 16384;
-	// cub->vars.ZBuffer = malloc(sizeof(double) * cub->rx);
-	// cub->spriteOrder = malloc(sizeof(int) * cub->objects);
-	ft_mlx(cub, argv, argc);
-	//mlx_loop_hook(cub.vars.mlx,	render_next_frame(cub), cub.vars.mlx);
-	//if (cub->vars.ZBuffer)
-	// 	free(cub->vars.ZBuffer);
-	// if (cub->spriteOrder)
-	// 	free(cub->spriteOrder);
-	freevars(cub);
-	freemaps(cub);
-}
-
-int		main(int argc, char **argv)
-{
-	cub3d(argc, argv);
-	// while(1)		
-	// ;
-	return (0);
 }

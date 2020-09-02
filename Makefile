@@ -6,7 +6,7 @@
 #    By: akramp <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/05/06 13:52:49 by akramp        #+#    #+#                  #
-#    Updated: 2020/08/31 20:04:47 by akramp        ########   odam.nl          #
+#    Updated: 2020/09/02 22:34:11 by akramp        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,8 +39,16 @@ SRC2 =	parse_cub3d.c \
 		ft_bzero_mlx.c \
 		./libft/libft.a \
 		cub_mlx.c \
-		bitmappers.c
-		
+		bitmappers.c \
+		cub_sprite.c \
+		map_validate.c \
+		walksies.c \
+		calc.c \
+		mlx_utility.c \
+		verline.c \
+		keys.c \
+		main.c
+
 OBJ :=	${SRC:%.c=%.o}
 OBJ2 :=	${SRC2:%.c=%.o}
 
@@ -72,7 +80,7 @@ all: $(NAME)
 #	$(CC) -I/usr/include -Imlx_linux -c $< -o $@
 
 
-	
+
 $(NAME):$(OBJ)
 	@echo "\n$(X)$(Y)$(Z) ██████╗██╗   ██╗██████╗ ██████╗ ██████╗ ";
 	$(TZE)
@@ -88,9 +96,9 @@ $(NAME):$(OBJ)
 	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
 	@$(CC) $(FLAGSMLX) $< -o $(NAME) -I mlxs
 
-$(LIBFT):	
+$(LIBFT):
 	cd ./libft && $(MAKE) re && $(MAKE) bonus
-	
+
 ubuntu: $(OBJ2)
 	@echo "\n$(X)$(Y)$(Z) ██████╗██╗   ██╗██████╗ ██████╗ ██████╗ ";
 	$(TZE)
@@ -120,7 +128,7 @@ apple: $(LIBFT) $(OBJ2)
 	@echo "\n$(PINK2)\t🦄 ℂ𝕠𝕞𝕡𝕚𝕝𝕒𝕥𝕚𝕠𝕟 ℂ𝕠𝕞𝕡𝕝𝕖𝕥𝕖\n$(PINK) $(WHITE)"
 	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
 	$(CC) $(FLAGSMLX) -fsanitize=address -fno-omit-frame-pointer $^ -o $(NAME) -I mlxs -O3
-	
+
 clean:
 	@echo "$(PINK)🦄	Cleaning ...$(WHITE)\n"
 	rm -f $(OBJ) $(OBJ2)

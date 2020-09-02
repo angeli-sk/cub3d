@@ -1,8 +1,18 @@
-#include "./cub3d.h"
-#include "./libft/libft.h"
-#include "stdlib.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   cub_parse_map.c                                    :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2020/09/02 21:24:30 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/02 21:32:53 by akramp        ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
 
-void	check_if_empty_start(t_parse *cub) //error
+#include "./cub3d.h"
+
+void	check_if_empty_start(t_parse *cub)
 {
 	if (cub->rx < 0 || cub->ry < 0)
 		ft_exit_c3d(cub, "R is fricked", 12);
@@ -24,112 +34,40 @@ void	check_if_empty_start(t_parse *cub) //error
 		ft_exit_c3d(cub, "C is fricked", 12);
 }
 
-void	playerobjcheck(t_parse *cub) //map error
+static void	object_count(t_parse *cub, int x, int y)
 {
-	int x;
-	int y;
-
-	x = 0;
-	y = 0;
-	while (y < cub->max_y)
-	{
-		while (cub->mapcopy[y][x] != '\0')
-		{
-			if ((cub->mapcopy[y][x] != 'N' && cub->mapcopy[y][x] != 'S' &&
-				cub->mapcopy[y][x] != 'W'
-				&& cub->mapcopy[y][x] != 'E') && cub->mapcopy[y][x] != '2'
-				&& cub->mapcopy[y][x] != '1' && cub->mapcopy[y][x] != '0' &&
-				cub->mapcopy[y][x] != ' ')
-				ft_exit_c3d(cub, "Map is fricked", 14);
-			if (cub->mapcopy[y][x] == 'S' || cub->mapcopy[y][x] == 'W' ||
-				cub->mapcopy[y][x] == 'E' || cub->mapcopy[y][x] == 'N')
-			{
-				cub->players++;
-				cub->ltr = cub->mapcopy[y][x];
-				cub->startx = x;
-				cub->starty = y;
-			}
-			if (cub->mapcopy[y][x] == '2')
-				cub->objects++;
-			x++;
-		}
-		x = 0;
-		y++;
-	}
-}
-
-void	ft_floodfill(t_parse *cub, int y, int x) //map
-{
-	if (x == 0 || y == 0 || x == cub->maxstrlen || (y + 1) == cub->max_y ||
-		cub->mapcopy[y][x + 1] == '\0' || cub->mapcopy[y][x] == '\0')
-	{
-		ft_exit_c3d(cub, "Floodfill failed :((", 20);
-		return ;
-	}
-	cub->mapcopy[y][x] = 'x';
-	if (cub->mapcopy[y - 1][x] != '1' && cub->mapcopy[y - 1][x] != 'x')
-		ft_floodfill(cub, y - 1, x);
-	if (cub->mapcopy[y - 1][x + 1] != '1' && cub->mapcopy[y - 1][x + 1] != 'x')
-		ft_floodfill(cub, y - 1, x + 1);
-	if (cub->mapcopy[y][x + 1] != '1' && cub->mapcopy[y][x + 1] != 'x')
-		ft_floodfill(cub, y, x + 1);
-	if (cub->mapcopy[y + 1][x + 1] != '1' && cub->mapcopy[y + 1][x + 1] != 'x')
-		ft_floodfill(cub, y + 1, x + 1);
-	if (cub->mapcopy[y + 1][x] != '1'&& cub->mapcopy[y + 1][x] != 'x')
-		ft_floodfill(cub, y + 1, x);
-	if (cub->mapcopy[y + 1][x - 1] != '1'&& cub->mapcopy[y + 1][x - 1] != 'x')
-		ft_floodfill(cub, y + 1, x - 1);
-	if (cub->mapcopy[y][x - 1] != '1' && cub->mapcopy[y][x - 1] != 'x')
-		ft_floodfill(cub, y, x - 1);
-	if (cub->mapcopy[y - 1][x - 1] != '1' && cub->mapcopy[y - 1][x - 1] != 'x')
-		ft_floodfill(cub, y - 1, x - 1);
-}
-
-void	obj_array_fill(t_parse *cub)
-{
-	int x;
-	int y;
-	int i;
-
-	x = 0;
-	y = 0;
-	i = 0;
-	cub->arr = malloc(sizeof(t_array) * cub->objects + 1);
-	if (cub->arr == 0)
-		ft_exit_c3d(cub, "Malloc failed, u suck\n", 22);
-	while (y < cub->max_y)
-	{
-		while (cub->mapcopy[y][x] != '\0')
-		{
-			if (cub->mapcopy[y][x] == '2')
-			{
-				ft_bzero(&cub->arr[i], sizeof(t_array));
-				cub->arr[i].x = x;
-				cub->arr[i].y = y;
-				i++;
-			}
-			x++;
-		}
-		x = 0;
-		y++;
-	}
-}
-
-void	mapvalidity(t_parse *cub) // map
-{
-	playerobjcheck(cub);
-	obj_array_fill(cub); //to know location of obj
-	if (cub->players == 1)
-		ft_floodfill(cub, cub->starty, cub->startx);
-	else
+	if ((cub->mapcopy[y][x] != 'N' && cub->mapcopy[y][x] != 'S' &&
+		cub->mapcopy[y][x] != 'W'
+		&& cub->mapcopy[y][x] != 'E') && cub->mapcopy[y][x] != '2'
+		&& cub->mapcopy[y][x] != '1' && cub->mapcopy[y][x] != '0' &&
+		cub->mapcopy[y][x] != ' ')
 		ft_exit_c3d(cub, "Map is fricked", 14);
+	if (cub->mapcopy[y][x] == 'S' || cub->mapcopy[y][x] == 'W' ||
+		cub->mapcopy[y][x] == 'E' || cub->mapcopy[y][x] == 'N')
+	{
+		cub->players++;
+		cub->ltr = cub->mapcopy[y][x];
+		cub->startx = x;
+		cub->starty = y;
+	}
+	if (cub->mapcopy[y][x] == '2')
+		cub->objects++;
 }
 
-void	validity(t_parse *cub)
+void	playerobjcheck(t_parse *cub)
 {
-	check_if_empty_start(cub);
-	mapvalidity(cub);
-	for (int i = 0; i < cub->objects; i++)
-		printf("|%d| x = %d && y = %d \n", i, cub->arr[i].x, cub->arr[i].y);
-	
+	int x;
+	int y;
+
+	y = 0;
+	while (y < cub->max_y)
+	{
+		x = 0;
+		while (cub->mapcopy[y][x] != '\0')
+		{
+			object_count(cub, x, y);
+			x++;
+		}
+		y++;
+	}
 }
