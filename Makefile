@@ -6,7 +6,7 @@
 #    By: akramp <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/05/06 13:52:49 by akramp        #+#    #+#                  #
-#    Updated: 2020/09/02 22:34:11 by akramp        ########   odam.nl          #
+#    Updated: 2020/09/03 20:30:55 by akramp        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,30 +14,24 @@ NAME = cub3D
 OS = $(shell uname)
 CC = gcc
 LIBFT = libft/libft.a
+MLX = libmlx.dylib
 
 #✧･ﾟ: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ *✧･ﾟ:*  FLAGS  ✧*:･ﾟ✧: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ﾟ: *✧･ﾟ:#
 
-FLAGS = -Wall -Werror -Wextra -fsanitize=address -fno-omit-frame-pointer
-FLAGSMLX =  -L. -lmlx -framework OpenGL -framework AppKit -g
-F_MLX_UBUNTU = -I/usr/include -Imlx_linux
-FLAGMLX_UBUNTU = -Lmlx_linux -lmlx -lXext -lX11 -lm -lz
+FLAGS = -Wall -Werror -Wextra
 
 #✧･ﾟ: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ *✧･ﾟ:* SOURCES ✧*:･ﾟ✧: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ﾟ: *✧･ﾟ:#
 
-SRC = bleepbloop.c
-SRC2 =	parse_cub3d.c \
+_SRC =	parse_cub3d.c \
 		cub_num_parse.c \
 		cub_parse.c \
 		cub_parse_exit.c \
 		cub_parse_init.c \
 		cub_parse_map.c \
-		./get_next_line/get_next_line.c \
-		./get_next_line/get_next_line_utils.c \
 		ft_strjoin_c3d.c \
 		ft_split_c3d.c \
 		ft_calloc_mlx.c \
 		ft_bzero_mlx.c \
-		./libft/libft.a \
 		cub_mlx.c \
 		bitmappers.c \
 		cub_sprite.c \
@@ -47,10 +41,13 @@ SRC2 =	parse_cub3d.c \
 		mlx_utility.c \
 		verline.c \
 		keys.c \
+		file_checkor.c \
 		main.c
 
+SRC = $(addprefix SRCS/, $(_SRC)) \
+		./get_next_line/get_next_line.c \
+		./get_next_line/get_next_line_utils.c
 OBJ :=	${SRC:%.c=%.o}
-OBJ2 :=	${SRC2:%.c=%.o}
 
 #✧･ﾟ: *✧･ﾟ:*  *:･ﾟ✧*:･ﾟ✧✧･ *✧･ﾟ:* COLORS ✧*:･ﾟ✧: *✧･ﾟ:* ✧ *:･ﾟ✧*:･ﾟ✧✧･ﾟ: *✧･ﾟ:#
 
@@ -71,17 +68,10 @@ RANDOM := $$((RANDOM % 10))
 
 all: $(NAME)
 
-#for apple
 %.o: %.c
-	$(CC) -g -fsanitize=address -fno-omit-frame-pointer -Imlx -c $< -o $@
+	$(CC) -Imlx -c $< -o $@
 
-#ubuntu
-#%.o: %.c
-#	$(CC) -I/usr/include -Imlx_linux -c $< -o $@
-
-
-
-$(NAME):$(OBJ)
+$(NAME): $(LIBFT) $(OBJ) $(MLX)
 	@echo "\n$(X)$(Y)$(Z) ██████╗██╗   ██╗██████╗ ██████╗ ██████╗ ";
 	$(TZE)
 	@echo "$(X)$(Y)$(Z)██╔════╝██║   ██║██╔══██╗╚════██╗██╔══██╗";
@@ -94,50 +84,29 @@ $(NAME):$(OBJ)
 	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
 	@echo "\n$(PINK2)\t🦄 ℂ𝕠𝕞𝕡𝕚𝕝𝕒𝕥𝕚𝕠𝕟 ℂ𝕠𝕞𝕡𝕝𝕖𝕥𝕖\n$(PINK) $(WHITE)"
 	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
-	@$(CC) $(FLAGSMLX) $< -o $(NAME) -I mlxs
+	$(CC) $(FLAGS) $(MLX) $(LIBFT) $^ -o $(NAME) -I mlxs -O3
 
 $(LIBFT):
 	cd ./libft && $(MAKE) re && $(MAKE) bonus
 
-ubuntu: $(OBJ2)
-	@echo "\n$(X)$(Y)$(Z) ██████╗██╗   ██╗██████╗ ██████╗ ██████╗ ";
-	$(TZE)
-	@echo "$(X)$(Y)$(Z)██╔════╝██║   ██║██╔══██╗╚════██╗██╔══██╗";
-	$(TZE)
-	@echo "$(X)$(Y)$(Z)██║     ██║   ██║██████╔╝ █████╔╝██║  ██║";
-	$(TZE)
-	@echo "$(X)$(Y)$(Z)██║     ██║   ██║██╔══██╗ ╚═══██╗██║  ██║";
-	@echo "$(X)$(Y)$(Z)╚██████╗╚██████╔╝██████╔╝██████╔╝██████╔╝";
-	@echo "$(X)$(Y)$(Z) ╚═════╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚═════╝";
-	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
-	@echo "\n$(PINK2)\t🦄 ℂ𝕠𝕞𝕡𝕚𝕝𝕒𝕥𝕚𝕠𝕟 ℂ𝕠𝕞𝕡𝕝𝕖𝕥𝕖\n$(PINK) $(WHITE)"
-	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
-	$(CC) $(FLAGS) -I/usr/include -Imlx_linux $^ -Lmlx_linux -lmlx -lXext -lX11 -lm -lz -o a.out
-
-apple: $(LIBFT) $(OBJ2)
-	@echo "\n$(X)$(Y)$(Z) ██████╗██╗   ██╗██████╗ ██████╗ ██████╗ ";
-	$(TZE)
-	@echo "$(X)$(Y)$(Z)██╔════╝██║   ██║██╔══██╗╚════██╗██╔══██╗";
-	$(TZE)
-	@echo "$(X)$(Y)$(Z)██║     ██║   ██║██████╔╝ █████╔╝██║  ██║";
-	$(TZE)
-	@echo "$(X)$(Y)$(Z)██║     ██║   ██║██╔══██╗ ╚═══██╗██║  ██║";
-	@echo "$(X)$(Y)$(Z)╚██████╗╚██████╔╝██████╔╝██████╔╝██████╔╝";
-	@echo "$(X)$(Y)$(Z) ╚═════╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚═════╝";
-	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
-	@echo "\n$(PINK2)\t🦄 ℂ𝕠𝕞𝕡𝕚𝕝𝕒𝕥𝕚𝕠𝕟 ℂ𝕠𝕞𝕡𝕝𝕖𝕥𝕖\n$(PINK) $(WHITE)"
-	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
-	$(CC) $(FLAGSMLX) -fsanitize=address -fno-omit-frame-pointer $^ -o $(NAME) -I mlxs -O3
+$(MLX):
+	cd mlx && $(MAKE)
+	mv mlx/$(MLX) .
 
 clean:
 	@echo "$(PINK)🦄	Cleaning ...$(WHITE)\n"
-	rm -f $(OBJ) $(OBJ2)
+	rm -f $(OBJ)
+	cd ./libft && $(MAKE) clean
+	cd ./mlx && $(MAKE) clean
 	rm -f ./*~ ./*#
 	@echo "\n$(PINK2)✨	Cleaning Done!$(WHITE)"
 
 fclean: clean
 	@echo "$(PINK)🦄	Removing $(NAME) ...\n$(WHITE)"
-	-rm -f $(NAME)
+	rm -f $(NAME)
+	cd ./libft && $(MAKE) fclean
+	rm -f $(MLX)
+	rm -f screenshot.bmp libft.a
 	@echo "\n$(PINK2)✨	Removed $(NAME)!$(WHITE)"
 
 re: fclean all

@@ -6,7 +6,7 @@
 /*   By: akramp <marvin@codam.nl>                     +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/06/07 16:40:24 by akramp        #+#    #+#                 */
-/*   Updated: 2020/09/02 22:34:42 by akramp        ########   odam.nl         */
+/*   Updated: 2020/09/03 22:06:10 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,7 @@
 # define APPLE 1
 # endif
 
-# include "./libft/libft.h"
 # include <stdlib.h>
-# include <math.h>
-# include <mlx.h>
 
 typedef enum	e_rror
 {
@@ -43,185 +40,187 @@ typedef enum	e_rror
 	turn_l = 5
 }				t_rror;
 
-typedef struct	s_data
+typedef struct		s_data
 {
-	void		*img;
-	char		*addr;
-	int			bits_per_pixel;
-	int			line_length;
-	int			endian;
-}				t_data;
+	void			*img;
+	char			*addr;
+	int				bits_per_pixel;
+	int				line_length;
+	int				endian;
+}					t_data;
 
-typedef struct	s_vars
+typedef struct		s_vars
 {
-	void		*mlx;
-	void		*win;
-	int			x;
-	int			y;
-	int			xmax;
-	int			ymax;
-	int			img_width;
-	int			img_height;
-	double		cameraX;
-	double 		rayDirX;
-	double		rayDirY;
-	int			w;
-	int			h;
-	double		posX;
-	double		posY;
-	double		dirX;
-	double		dirY;
-	double		planeX;
-	double		planeY;
-	int 		mapX;
-	int 		mapY;
-	double 		sideDistX;
-	double 		sideDistY;
-	double 		deltaDistX;
-	double 		deltaDistY;
-	double		perpWallDist;
-	int 		lineHeight;
-	int 		drawStart;
-	int 		drawEnd;
-	int 		stepX;
-	int 		stepY;
-	int 		hit;
-	int 		side;
-	int 		colorwall;
-	int 		key;
-	double		 speedy;
-	double 		rotSpeed;
-	double 		oldDirX;
-	double 		oldPlaneX;
-	int			walksies[6];
-	double 		wallX;
-	double 		texX;
-	double 		texY;
-	double		step;
-	double 		texPos;
-	double 		*ZBuffer;
-}				t_vars;
+	void			*mlx;
+	void			*win;
+	int				x;
+	int				y;
+	int				xmax;
+	int				ymax;
+	int				img_width;
+	int				img_height;
+	double			cam_x;
+	double 			ray_x;
+	double			ray_y;
+	int				w;
+	int				h;
+	double			pos_x;
+	double			pos_y;
+	double			dir_x;
+	double			dir_y;
+	double			plane_x;
+	double			plane_y;
+	int 			map_x;
+	int 			map_y;
+	double 			side_d_x;
+	double 			side_d_y;
+	double 			delta_d_x;
+	double 			delta_d_y;
+	double			perp_w_d;
+	int 			line_h;
+	int 			draw_start;
+	int 			draw_end;
+	int 			step_x;
+	int 			step_y;
+	int 			hit;
+	int 			side;
+	int 			colorwall;
+	int 			key;
+	double			spd;
+	double 			rot_speed;
+	double 			olddir_x;
+	double 			oldplane_x;
+	int				walksies[6];
+	double 			wall_x;
+	double 			tex_x;
+	double 			tex_y;
+	double			step;
+	double 			tex_pos;
+	double 			*z_buff;
+}					t_vars;
 
-typedef struct	s_jonas
+typedef struct		s_sprite
 {
-	double 		spriteX;
-	double 		spriteY;
-	double 		invDet;
-	double 		transformX;
-	double 		transformY;
-	int 		spriteScreenX;
-	int 		spriteHeight;
-	int 		spriteWidth;
-	int 		drawStartY;
-	int			drawStartX;
-	int 		drawEndY;
-	int 		drawEndX;
-	int 		stripe;
-	int 		d;
-}				t_jonas;
+	double 			spr_x;
+	double 			spr_y;
+	double 			inv_det;
+	double 			trans_x;
+	double 			trans_y;
+	int 			spr_screen_y;
+	int 			spr_h;
+	int 			spr_w;
+	int 			draw_start_y;
+	int				draw_start_x;
+	int 			draw_end_y;
+	int 			draw_end_x;
+	int 			stripe;
+	int 			d;
+}					t_sprite;
 
-typedef struct	s_array
+typedef struct		s_array
 {
-	int 		x;
-	int 		y;
-	void 		*img;
-	char 		*addr;
-	double 		distance;
-	int			bits_per_pixel;
-	int 		line_length;
-	int 		endian;
-}				t_array;
+	int 			x;
+	int 			y;
+	void 			*img;
+	char 			*addr;
+	double 			distance;
+	int				bits_per_pixel;
+	int 			line_length;
+	int 			endian;
+}					t_array;
 
-typedef struct	s_parse
+typedef struct		s_parse
 {
-	int			rx;
-	int			ry;
-	char		*no;
-	char		*so;
-	char		*we;
-	char		*ea;
-	char		*s;
-	int			fr;
-	int			fg;
-	int			fb;
-	int			cr;
-	int			cg;
-	int			cb;
-	char		*temp;
-	char		**map;
-	char		**mapcopy;
-	int			beginmap;
-	int			error;
-	int			maxstrlen;
-	int			i;
-	int			maxrx;
-	int			maxry;
-	int			players;
-	int			objects;
-	int			startx;
-	int			starty;
-	int			max_y;
-	char		*line;
-	int			f;
-	int			c;
-	int			r;
-	int 		fd;
-	int			ret;
-	char		*free_temp;
-	char		*num_temp;
-	int			num_st;
-	int			num_check;
-	int			num_i;
-	char		num_ltr;
-	int			num_error;
-	char		ltr;
-	int			save;
-	int 		loop;
-	t_data		img;
-	t_vars		vars;
-	t_array 	*arr;
-	t_jonas 	sprite;
-	int			*spriteOrder;
-	t_array 	tex[5];
-}				t_parse;
+	int				rx;
+	int				ry;
+	char			*no;
+	char			*so;
+	char			*we;
+	char			*ea;
+	char			*s;
+	int				fr;
+	int				fg;
+	int				fb;
+	int				cr;
+	int				cg;
+	int				cb;
+	unsigned int	f_color;
+	unsigned int	c_color;
+	char			*temp;
+	char			**map;
+	char			**mapcopy;
+	int				beginmap;
+	int				error;
+	int				maxstrlen;
+	int				i;
+	int				maxrx;
+	int				maxry;
+	int				players;
+	int				objects;
+	int				startx;
+	int				starty;
+	int				max_y;
+	char			*line;
+	int				f;
+	int				c;
+	int				r;
+	int 			fd;
+	int				ret;
+	char			*free_temp;
+	char			*num_temp;
+	int				num_st;
+	int				num_check;
+	int				num_i;
+	char			num_ltr;
+	int				num_error;
+	char			ltr;
+	int				save;
+	int 			loop;
+	t_data			img;
+	t_vars			vars;
+	t_array 		*arr;
+	t_sprite 		sprite;
+	int				*sprite_order;
+	t_array 		tex[5];
+}					t_parse;
 
-typedef struct s_splitty
+typedef struct		s_splitty
 {
-	int			y;
-	int			len;
-	char		c;
-	int			maxlen;
-}				t_splitty;
+	int				y;
+	int				len;
+	char			c;
+	int				maxlen;
+}					t_splitty;
 
-typedef struct	s_struct_num
+typedef struct		s_struct_num
 {
-	int			st;
-	int			check;
-	char		*temp;
-	int			i;
-	char		ltr;
-	int			error;
-}				t_struct_num;
+	int				st;
+	int				check;
+	char			*temp;
+	int				i;
+	char			ltr;
+	int				error;
+}					t_struct_num;
 
-typedef struct	s_mapinfo
+typedef struct		s_mapinfo
 {
-	char 		wall;
-	char 		item;
-	char 		emptyspace;
-	char 		player;
-}				t_mapinfo;
+	char 			wall;
+	char 			item;
+	char 			emptyspace;
+	char 			player;
+}					t_mapinfo;
 
-typedef struct	s_boris
+typedef struct		s_move
 {
-	int 		y_up;
-	int 		y_down;
-	int 		y_left;
-	int 		y_right;
-	int 		x_up;
-	int 		x_down;
-	int 		x_left;
-	int 		x_right;
-}				t_boris;
+	int 			y_up;
+	int 			y_down;
+	int 			y_left;
+	int 			y_right;
+	int 			x_up;
+	int 			x_down;
+	int 			x_left;
+	int 			x_right;
+}					t_move;
 
 /*libft*/
 char			*ft_strjoin_c3d(t_parse *cub, char const *s1, char const *s2);
@@ -233,10 +232,7 @@ void			ft_bzero_mlx(void *s, size_t n);
 void			cub3d(int argc, char **argv);
 
 /*parse_cub3d*/
-void			read_map(t_parse *cub);
 int				ft_checkmapplacement(t_parse *cub);
-void			parsing(t_parse *cub);
-void			readfile(t_parse *cub, char *path);
 void			parser(t_parse *cub, char **argv, int argc);
 
 /*cub_num_parse*/
@@ -252,14 +248,12 @@ char			*struct_path(t_parse *cub);
 /*cub_parse_exit*/
 void			freemaps(t_parse *cub);
 void			freevars(t_parse *cub);
-void			ft_write_error(char *s, int len);
 void			ft_exit_c3d(t_parse *cub, char *s, int len);
 
 /*cub_parse_init*/
-void			struct_bzero(t_parse *cub);
 void			struct_init(t_parse *cub);
+void			get_tex(t_parse *cub);
 void			mlx_vars_init(t_parse *cub);
-void			view_init(t_parse *cub);
 
 /*cub_parse_map*/
 void			check_if_empty_start(t_parse *cub);
@@ -274,13 +268,12 @@ void			mlx_calc(t_parse *cub);
 
 void			bitmap(t_parse *cub);
 int				bitmap_header(t_parse *cub, int fd, int padding);
-void			get_tex(t_parse *cub);
 
 //sprite
 void			mlx_sprite(t_parse *cub);
 
 //walksies
-void			walksies(t_parse *cub, t_boris *move);
+void			walksies(t_parse *cub, t_move *move);
 
 //cal
 void			mlx_calc(t_parse *cub);
@@ -292,10 +285,12 @@ int				destroy(t_parse *cub);
 void			my_mlx_pixel_put(t_data *data, int x, int y, int color);
 
 //verline
-void			ft_verLine(int  drawStart, int   drawEnd, t_parse *cub);
+void			ft_verLine(int draw_start, int draw_end, t_parse *cub);
 
 //keys
 int				key_released(int keycode, t_parse *cub);
 int				key_pressed(int keycode, t_parse *cub);
+void			ft_verline(int draw_start, int draw_end, t_parse *cub);
 
+void			file_checkor(t_parse *cub);
 #endif

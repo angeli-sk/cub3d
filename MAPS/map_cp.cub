@@ -1,0 +1,14 @@
+R 1920 1080
+NO ./images/north.png
+SO ./images/south.png
+WE ./images/west.png
+EA ./images/east.png
+S ./images/barrel.png
+F 220,100,0
+C 225,30,255
+
+11111111111111111
+10000000022000001
+10000000022000001
+100000000000W0001
+11111111111111111
