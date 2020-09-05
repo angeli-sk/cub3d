@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   ft_split.c                                         :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: akramp <marvin@codam.nl>                     +#+                     */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/11/08 13:29:41 by akramp         #+#    #+#                */
-/*   Updated: 2019/11/17 19:16:51 by akramp        ########   odam.nl         */
+/*   Created: 2020/09/05 18:19:31 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/05 18:19:34 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

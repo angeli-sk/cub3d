@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   ft_memcmp.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: akramp <marvin@codam.nl>                     +#+                     */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/11/05 14:41:00 by akramp         #+#    #+#                */
-/*   Updated: 2019/11/14 21:53:38 by akramp        ########   odam.nl         */
+/*   Created: 2020/09/05 18:18:16 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/05 18:18:18 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

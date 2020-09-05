@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   ft_memset.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: akramp <marvin@codam.nl>                     +#+                     */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/11/03 18:34:03 by akramp         #+#    #+#                */
-/*   Updated: 2019/11/16 17:45:41 by akramp        ########   odam.nl         */
+/*   Created: 2020/09/05 18:18:40 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/05 18:18:43 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

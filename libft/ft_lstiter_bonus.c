@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   ft_lstiter_bonus.c                                 :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: akramp <marvin@codam.nl>                     +#+                     */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/11/08 18:16:42 by akramp         #+#    #+#                */
-/*   Updated: 2019/11/14 19:07:30 by akramp        ########   odam.nl         */
+/*   Created: 2020/09/05 18:17:07 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/05 18:17:15 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

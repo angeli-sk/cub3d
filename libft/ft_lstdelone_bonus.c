@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   ft_lstdelone_bonus.c                               :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: akramp <marvin@codam.nl>                     +#+                     */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/11/12 11:16:13 by akramp         #+#    #+#                */
-/*   Updated: 2019/11/17 19:14:14 by akramp        ########   odam.nl         */
+/*   Created: 2020/09/05 18:16:57 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/05 18:16:59 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

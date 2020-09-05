@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   ft_strdup.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: akramp <marvin@codam.nl>                     +#+                     */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/11/06 10:57:17 by akramp         #+#    #+#                */
-/*   Updated: 2019/11/17 19:08:33 by akramp        ########   odam.nl         */
+/*   Created: 2020/09/05 18:19:46 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/05 18:19:49 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

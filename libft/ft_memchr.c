@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   ft_memchr.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: akramp <marvin@codam.nl>                     +#+                     */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/11/05 14:18:43 by akramp         #+#    #+#                */
-/*   Updated: 2019/11/17 14:17:06 by akramp        ########   odam.nl         */
+/*   Created: 2020/09/05 18:18:05 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/05 18:18:08 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

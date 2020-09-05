@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   ft_memccpy.c                                       :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: akramp <marvin@codam.nl>                     +#+                     */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/11/04 14:50:45 by akramp         #+#    #+#                */
-/*   Updated: 2019/11/17 13:48:42 by akramp        ########   odam.nl         */
+/*   Created: 2020/09/05 18:17:56 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/05 18:17:59 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

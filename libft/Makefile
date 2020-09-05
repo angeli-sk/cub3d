@@ -3,10 +3,10 @@
 #                                                         ::::::::             #
 #    Makefile                                           :+:    :+:             #
 #                                                      +:+                     #
-#    By: akramp <marvin@codam.nl>                     +#+                      #
+#    By: akramp <akramp@student.codam.nl>             +#+                      #
 #                                                    +#+                       #
-#    Created: 2019/10/28 13:32:36 by akramp         #+#    #+#                 #
-#    Updated: 2019/11/14 21:18:13 by akramp        ########   odam.nl          #
+#    Created: 2020/09/05 18:22:25 by akramp        #+#    #+#                  #
+#    Updated: 2020/09/05 18:22:28 by akramp        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 

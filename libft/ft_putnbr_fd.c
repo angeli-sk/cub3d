@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   ft_putnbr_fd.c                                     :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: akramp <marvin@codam.nl>                     +#+                     */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/11/07 16:13:22 by akramp         #+#    #+#                */
-/*   Updated: 2019/11/17 13:46:07 by akramp        ########   odam.nl         */
+/*   Created: 2020/09/05 18:19:11 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/05 18:19:13 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   ft_lstsize_bonus.c                                 :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: akramp <marvin@codam.nl>                     +#+                     */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/11/08 17:16:22 by akramp         #+#    #+#                */
-/*   Updated: 2019/11/14 19:05:04 by akramp        ########   odam.nl         */
+/*   Created: 2020/09/05 18:17:48 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/05 18:17:50 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

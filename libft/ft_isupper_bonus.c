@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   ft_isupper_bonus.c                                 :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: akramp <marvin@codam.nl>                     +#+                     */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/10/29 12:23:35 by akramp         #+#    #+#                */
-/*   Updated: 2019/11/17 13:15:17 by akramp        ########   odam.nl         */
+/*   Created: 2020/09/05 18:16:04 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/05 18:16:08 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

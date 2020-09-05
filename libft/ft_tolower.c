@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   ft_tolower.c                                       :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: akramp <marvin@codam.nl>                     +#+                     */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/10/28 15:32:03 by akramp         #+#    #+#                */
-/*   Updated: 2019/11/14 19:16:58 by akramp        ########   odam.nl         */
+/*   Created: 2020/09/05 18:21:15 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/05 18:21:18 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -6,7 +6,7 @@
 /*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/02 22:38:49 by akramp        #+#    #+#                 */
-/*   Updated: 2020/09/05 15:06:56 by akramp        ########   odam.nl         */
+/*   Updated: 2020/09/05 17:50:03 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	num_check_aswell(t_parse *cub)
 	if (cub->num_ltr == 'R')
 		ft_exit_c3d(cub, "R is fricked", 12);
 	else if (cub->num_ltr == 'F')
-		ft_exit_c3d(cub, "F is frickes", 12);
+		ft_exit_c3d(cub, "F is fricked", 12);
 	else if (cub->num_ltr == 'C')
 		ft_exit_c3d(cub, "C is fricked", 12);
 	else

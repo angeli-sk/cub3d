@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   ft_strlen.c                                        :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: akramp <marvin@codam.nl>                     +#+                     */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/10/28 13:53:52 by akramp         #+#    #+#                */
-/*   Updated: 2019/11/14 19:00:11 by akramp        ########   odam.nl         */
+/*   Created: 2020/09/05 18:20:23 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/05 18:20:25 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   ft_putendl_fd.c                                    :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: akramp <marvin@codam.nl>                     +#+                     */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/11/07 15:50:32 by akramp         #+#    #+#                */
-/*   Updated: 2019/11/17 13:40:50 by akramp        ########   odam.nl         */
+/*   Created: 2020/09/05 18:19:00 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/05 18:19:03 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 

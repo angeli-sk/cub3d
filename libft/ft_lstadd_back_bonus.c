@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   ft_lstadd_back_bonus.c                             :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: akramp <marvin@codam.nl>                     +#+                     */
+/*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2019/11/08 17:56:15 by akramp         #+#    #+#                */
-/*   Updated: 2019/11/17 19:13:03 by akramp        ########   odam.nl         */
+/*   Created: 2020/09/05 18:16:26 by akramp        #+#    #+#                 */
+/*   Updated: 2020/09/05 18:16:30 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
