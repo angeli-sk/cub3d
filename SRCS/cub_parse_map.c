@@ -6,7 +6,7 @@
 /*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/02 21:24:30 by akramp        #+#    #+#                 */
-/*   Updated: 2020/09/03 17:00:11 by akramp        ########   odam.nl         */
+/*   Updated: 2020/09/05 09:42:42 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void		check_if_empty_start(t_parse *cub)
 {
 	if (cub->rx < 0 || cub->ry < 0)
-		ft_exit_c3d(cub, "R is fricked", 12);
+		ft_exit_c3d(cub, "R is fricked5", 12);
 	if (cub->no == 0)
 		ft_exit_c3d(cub, "NO is fricked", 13);
 	if (cub->so == 0)

@@ -6,7 +6,7 @@
 #    By: akramp <marvin@codam.nl>                     +#+                      #
 #                                                    +#+                       #
 #    Created: 2020/05/06 13:52:49 by akramp        #+#    #+#                  #
-#    Updated: 2020/09/03 20:30:55 by akramp        ########   odam.nl          #
+#    Updated: 2020/09/05 14:56:55 by akramp        ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -84,7 +84,7 @@ $(NAME): $(LIBFT) $(OBJ) $(MLX)
 	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
 	@echo "\n$(PINK2)\t🦄 ℂ𝕠𝕞𝕡𝕚𝕝𝕒𝕥𝕚𝕠𝕟 ℂ𝕠𝕞𝕡𝕝𝕖𝕥𝕖\n$(PINK) $(WHITE)"
 	@echo "$(WHITE)☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆"
-	$(CC) $(FLAGS) $(MLX) $(LIBFT) $^ -o $(NAME) -I mlxs -O3
+	$(CC) $(FLAGS) $(MLX) $(LIBFT) $^ -o $(NAME) -I mlxs -g
 
 $(LIBFT):
 	cd ./libft && $(MAKE) re && $(MAKE) bonus

@@ -6,7 +6,7 @@
 /*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/02 22:38:49 by akramp        #+#    #+#                 */
-/*   Updated: 2020/09/03 21:48:11 by akramp        ########   odam.nl         */
+/*   Updated: 2020/09/05 10:15:19 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,8 @@ void	struct_num(t_parse *cub, int *adr1, int *adr2, int *adr3)
 		if (cub->num_check > 3)
 			cub->num_error = too_many_nums;
 		num_check(cub);
-		cub->num_temp = malloc(((cub->num_i)
-			- (cub->num_st)) * sizeof(char) + 1);
+		cub->num_temp = malloc(((cub->num_i
+			- cub->num_st) + 1) * sizeof(char));
 		if (cub->num_temp == 0)
 			ft_exit_c3d(cub, "Malloc failed, u suck\n", 22);
 		ft_strlcpy(cub->num_temp, &(cub->line)[cub->num_st],

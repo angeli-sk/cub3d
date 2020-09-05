@@ -1,13 +1,13 @@
-R 1000 1000
-NO cub3d_tester/textures/wall_3.png
-SO cub3d_tester/textures/wall_3.png
-WE cub3d_tester/textures/wood.png
-EA cub3d_tester/textures/wood.png
+R 1920 1080
+NO images/north2.png
+SO images/south2.png
+WE images/west2.png
+EA images/east2.png
 
-S  cub3d_tester/textures/sprite 1.png
+S  images/smollsmollyolanda.png
 
-F 184,113,39
-C 51,198,227
+C 39,39,57
+F 194,174,246
 
         1111111111111111111111111
         1000000000110000000111211
