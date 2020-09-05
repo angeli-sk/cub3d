@@ -161,7 +161,7 @@ class WinEvent: NSWindow
         {
           _ = unsafeBitCast(eventFuncts[4],to:(@convention(c)(Int32, Int32, Int32, UnsafeRawPointer)->Int32).self)(Int32(button), Int32(thepoint.x), Int32(thepoint.y), eventParams[4])
         }
-  }
+  } 
 
 
   override func flagsChanged(with event: NSEvent)
@@ -324,13 +324,13 @@ public class MlxWin
        -1.0, 1.0, 0.0, 1.0,   0.0, 0.0, 0.0, 0.0,
        1.0, 1.0, 0.0, 1.0,    1.0, 0.0, 0.0, 0.0  ]
     var dataSize = vertexData.count * MemoryLayout.size(ofValue: vertexData[0])
-    vertexBuffer = device.makeBuffer(bytes: vertexData, length: dataSize, options: [])
+    vertexBuffer = device.makeBuffer(bytes: vertexData, length: dataSize, options: []) 
 
     let uniformData: [Float] = [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Float(vrect.size.width), Float(vrect.size.height), 0.0, 0.0, 0.0, 0.0,
     		     	       1.0, 1.0, 1.0, 1.0 ]
     dataSize = uniformData.count * MemoryLayout.size(ofValue: uniformData[0])
     for _ in 0...255
-    {
+    { 
       let uniformBuffer = device.makeBuffer(bytes: uniformData, length: dataSize, options: [])!
       let uniform_data = (uniformBuffer.contents()).assumingMemoryBound(to:Float.self)
       texture_list.append(textureList(uniformBuffer:uniformBuffer, uniform_data:uniform_data, image:pixel_image))
@@ -398,11 +398,11 @@ public class MlxWin
 	}
   }
 
-  public func putImage(image img:MlxImg, x pos_x:Int32, y pos_y:Int32)
+  public func putImage(image img:MlxImg, x posx:Int32, y posy:Int32)
   {
 	flushPixels()
-	putImageScale(image:img, sx:0, sy:0, sw:Int32(img.texture_width), sh:Int32(img.texture_height),
-			   dx:pos_x, dy:pos_y, dw:Int32(img.texture_width), dh:Int32(img.texture_height),
+	putImageScale(image:img, sx:0, sy:0, sw:Int32(img.texture_width), sh:Int32(img.texture_height), 
+			   dx:posx, dy:posy, dw:Int32(img.texture_width), dh:Int32(img.texture_height),
 			   c:UInt32(0xFFFFFFFF))
   }
 
@@ -432,7 +432,7 @@ public class MlxWin
 
 	texture_list[texture_list_count].image = img
 	img.onGPU += 1
-
+	
 	texture_list_count += 1
 	if (texture_list_count == 255) /// keep 1 slot for put_pixels image
 	{
