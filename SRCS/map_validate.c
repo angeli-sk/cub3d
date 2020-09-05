@@ -6,7 +6,7 @@
 /*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/02 21:28:53 by akramp        #+#    #+#                 */
-/*   Updated: 2020/09/03 17:00:35 by akramp        ########   odam.nl         */
+/*   Updated: 2020/09/05 15:16:30 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void	obj_array_fill(t_parse *cub)
 
 	y = 0;
 	i = 0;
-	cub->arr = malloc(sizeof(t_array) * cub->objects + 1);
+	cub->arr = ft_calloc(cub->objects + 1, sizeof(t_array));
 	if (cub->arr == 0)
 		ft_exit_c3d(cub, "Malloc failed, u suck\n", 22);
 	while (y < cub->max_y)

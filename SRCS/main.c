@@ -6,7 +6,7 @@
 /*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/02 22:33:26 by akramp        #+#    #+#                 */
-/*   Updated: 2020/09/05 14:50:03 by akramp        ########   odam.nl         */
+/*   Updated: 2020/09/05 15:15:58 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	cub3d(int argc, char **argv)
 {
 	t_parse *cub;
 
-	cub = malloc(sizeof(t_parse));
+	cub = ft_calloc(1, sizeof(t_parse));
 	if (cub == 0)
 		ft_exit_c3d(cub, "Malloc failed, u suck\n", 22);
 	cub->save = 0;

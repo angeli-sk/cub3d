@@ -6,7 +6,7 @@
 /*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/02 21:34:52 by akramp        #+#    #+#                 */
-/*   Updated: 2020/09/03 22:38:20 by akramp        ########   odam.nl         */
+/*   Updated: 2020/09/05 15:13:53 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,10 @@ void		mlx_vars_init(t_parse *cub)
 	cub->vars.w = cub->rx;
 	cub->vars.pos_x = (double)cub->startx + 0.5;
 	cub->vars.pos_y = (double)cub->starty + 0.5;
-	cub->vars.z_buff = malloc(sizeof(double) * cub->rx);
+	cub->vars.z_buff = ft_calloc(cub->rx, sizeof(double));
 	if (cub->vars.z_buff == 0)
 		ft_exit_c3d(cub, "Malloc failed, u suck\n", 22);
-	cub->sprite_order = malloc(sizeof(int) * cub->objects);
+	cub->sprite_order = ft_calloc(cub->objects, sizeof(int));
 	view_init(cub);
 }
 

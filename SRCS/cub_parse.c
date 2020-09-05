@@ -6,7 +6,7 @@
 /*   By: akramp <akramp@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/09/02 22:40:21 by akramp        #+#    #+#                 */
-/*   Updated: 2020/09/03 20:31:59 by akramp        ########   odam.nl         */
+/*   Updated: 2020/09/05 15:14:21 by akramp        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ char	*struct_path(t_parse *cub)
 	while ((cub->line)[tempi] != '\0')
 		tempi++;
 	len = tempi - cub->i;
-	temp = malloc(sizeof(char) * (len + 1));
+	temp = ft_calloc((len + 1), sizeof(char));
 	if (temp == 0)
 		ft_exit_c3d(cub, "Malloc failed, u suck", 21);
 	ft_strlcpy(temp, &((cub->line)[(cub->i)]), len + 1);
